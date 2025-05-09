@@ -8,9 +8,17 @@ import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Camera, Edit3 } from 'lucide-react-native';
+import { Camera, Edit3, UserCircle2 } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { saveProfile, getProfile } from '@/hooks/useStorage';
+
+type TrainingGoal = 
+  | 'Super Sprint (200m, 4km, 1km)'
+  | 'Sprint (750m, 20km, 5km)'
+  | 'Standard (1500m, 40km, 10km)'
+  | 'Ironman 70.3 (1900m, 90km, 21km)'
+  | 'Ironman 140.6 (3800m, 180km, 42km)'
+  | 'T100';
 
 interface Profile {
   name: string;
@@ -20,7 +28,8 @@ interface Profile {
   weight: string;
   photo?: string;
   experience: 'beginner' | 'intermediate' | 'advanced';
-  goal: string;
+  trainingGoal: TrainingGoal;
+  customGoal?: string;
 }
 
 export default function ProfileScreen() {
@@ -31,7 +40,7 @@ export default function ProfileScreen() {
     height: '',
     weight: '',
     experience: 'beginner',
-    goal: '',
+    trainingGoal: 'Sprint (750m, 20km, 5km)',
   });
   const [errors, setErrors] = useState<Partial<Profile>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -197,11 +206,51 @@ export default function ProfileScreen() {
             onValueChange={(value) => setProfile(prev => ({ ...prev, experience: value as 'beginner' | 'intermediate' | 'advanced' }))}
           />
 
+          <ThemedText 
+            style={styles.sectionLabel}
+            fontFamily="Inter-Medium"
+          >
+            Training Goal
+          </ThemedText>
+
+          <View style={styles.goalSelector}>
+            {[
+              'Super Sprint (200m, 4km, 1km)',
+              'Sprint (750m, 20km, 5km)',
+              'Standard (1500m, 40km, 10km)',
+              'Ironman 70.3 (1900m, 90km, 21km)',
+              'Ironman 140.6 (3800m, 180km, 42km)',
+              'T100'
+            ].map((goal) => (
+              <TouchableOpacity
+                key={goal}
+                style={[
+                  styles.goalOption,
+                  { borderColor },
+                  profile.trainingGoal === goal && { 
+                    backgroundColor: Colors.shared.profile,
+                    borderColor: Colors.shared.profile,
+                  }
+                ]}
+                onPress={() => setProfile(prev => ({ ...prev, trainingGoal: goal as TrainingGoal }))}
+              >
+                <ThemedText
+                  style={[
+                    styles.goalText,
+                    profile.trainingGoal === goal && styles.selectedGoalText
+                  ]}
+                >
+                  {goal}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+
           <ThemedInput
-            label="Training Goal"
-            value={profile.goal}
-            onChangeText={(text) => setProfile(prev => ({ ...prev, goal: text }))}
-            placeholder="e.g., Complete a marathon"
+            label="Custom Goal (optional)"
+            value={profile.customGoal}
+            onChangeText={(text) => setProfile(prev => ({ ...prev, customGoal: text }))}
+            placeholder="e.g., Improve my swimming technique"
             multiline
             numberOfLines={3}
             style={styles.goalInput}
@@ -281,6 +330,26 @@ const styles = StyleSheet.create({
   },
   halfInput: {
     flex: 1,
+  },
+  sectionLabel: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  goalSelector: {
+    gap: 8,
+    marginBottom: 16,
+  },
+  goalOption: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+  },
+  goalText: {
+    fontSize: 14,
+  },
+  selectedGoalText: {
+    color: '#FFFFFF',
+    fontFamily: 'Inter-Medium',
   },
   goalInput: {
     height: 80,

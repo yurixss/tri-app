@@ -1,7 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-// For web where SecureStore isn't available
 const webStorage = new Map<string, string>();
 
 async function saveValue(key: string, value: string): Promise<void> {
@@ -31,7 +30,6 @@ async function deleteValue(key: string): Promise<void> {
   await SecureStore.deleteItemAsync(key);
 }
 
-// Type for our stored data
 export interface TestResults {
   bike?: {
     ftp: number;
@@ -39,16 +37,35 @@ export interface TestResults {
   };
   run?: {
     testType: '3km' | '5km';
-    testTime: number; // in seconds
+    testTime: number;
     date: string;
   };
   swim?: {
-    time400m: number; // in seconds
+    time400m: number;
     date: string;
   };
 }
 
-// Specific functions for each sport
+type TrainingGoal = 
+  | 'Super Sprint (200m, 4km, 1km)'
+  | 'Sprint (750m, 20km, 5km)'
+  | 'Standard (1500m, 40km, 10km)'
+  | 'Ironman 70.3 (1900m, 90km, 21km)'
+  | 'Ironman 140.6 (3800m, 180km, 42km)'
+  | 'T100';
+
+export interface Profile {
+  name: string;
+  age: string;
+  gender: 'male' | 'female' | 'other';
+  height: string;
+  weight: string;
+  photo?: string;
+  experience: 'beginner' | 'intermediate' | 'advanced';
+  trainingGoal: TrainingGoal;
+  customGoal?: string;
+}
+
 export async function saveBikeTest(ftp: number): Promise<void> {
   const currentData = await getTestResults();
   const updatedData: TestResults = {
@@ -99,18 +116,6 @@ export async function getTestResults(): Promise<TestResults> {
     console.error('Error parsing stored test results', e);
     return {};
   }
-}
-
-// Add new profile types and functions
-export interface Profile {
-  name: string;
-  age: string;
-  gender: 'male' | 'female' | 'other';
-  height: string;
-  weight: string;
-  photo?: string;
-  experience: 'beginner' | 'intermediate' | 'advanced';
-  goal: string;
 }
 
 export async function saveProfile(profile: Profile): Promise<void> {
