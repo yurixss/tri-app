@@ -13,7 +13,11 @@ export function Header({ title, subtitle, color }: HeaderProps) {
   return (
     <ThemedView style={styles.header}>
       <ThemedText 
-        style={[styles.title, color ? { color } : null]}
+        style={[
+          styles.title, 
+          color ? { color } : null, 
+          subtitle ? { marginBottom: 8 } : null,  // Adicionando marginBottom condicional
+        ]}
         fontFamily="Inter-Bold"
       >
         {title}
@@ -38,7 +42,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: subtitle => subtitle ? 8 : 0,
   },
   subtitle: {
     fontSize: 16,

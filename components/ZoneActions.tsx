@@ -1,15 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Share2, Copy } from 'lucide-react-native';
+import { View, StyleSheet, Pressable } from 'react-native'; 
+import { Share2, Copy } from 'lucide-react-native'; 
 import { ThemedText } from './ThemedText';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { shareZones, copyZonesToClipboard } from '@/utils/shareUtils';
 
 interface ZoneActionsProps {
   title: string;
-  zones: any[];
+  zones: any[]; 
   color: string;
-  onCopySuccess?: () => void;
+  onCopySuccess?: () => void; 
 }
 
 export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsProps) {
@@ -26,25 +25,33 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={[styles.button, { borderColor: color }]} 
+      <Pressable 
+        style={({ pressed }) => [
+          styles.button,
+          { borderColor: color },
+          { opacity: pressed ? 0.6 : 1 },
+        ]}
         onPress={handleCopy}
       >
         <Copy size={20} color={color} />
         <ThemedText style={[styles.buttonText, { color }]}>
           Copy
         </ThemedText>
-      </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={[styles.button, { borderColor: color }]} 
+      </Pressable>
+
+      <Pressable 
+        style={({ pressed }) => [
+          styles.button,
+          { borderColor: color },
+          { opacity: pressed ? 0.6 : 1 },
+        ]}
         onPress={handleShare}
       >
         <Share2 size={20} color={color} />
         <ThemedText style={[styles.buttonText, { color }]}>
           Share
         </ThemedText>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
