@@ -41,7 +41,8 @@ export interface TestResults {
     date: string;
   };
   swim?: {
-    time400m: number;
+    testType: '200m' | '400m';
+    testTime: number;
     date: string;
   };
 }
@@ -57,7 +58,7 @@ type TrainingGoal =
 export interface Profile {
   name: string;
   age: string;
-  gender: 'male' | 'female' | 'other';
+  gender: 'male' | 'female';
   height: string;
   weight: string;
   photo?: string;
@@ -93,12 +94,13 @@ export async function saveRunTest(testType: '3km' | '5km', testTime: number): Pr
   await saveValue('testResults', JSON.stringify(updatedData));
 }
 
-export async function saveSwimTest(time400m: number): Promise<void> {
+export async function saveSwimTest(testType: '200m' | '400m', testTime: number): Promise<void> {
   const currentData = await getTestResults();
   const updatedData: TestResults = {
     ...currentData,
     swim: {
-      time400m,
+      testType,
+      testTime,
       date: new Date().toISOString(),
     }
   };

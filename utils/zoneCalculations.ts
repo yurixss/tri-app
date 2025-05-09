@@ -122,51 +122,54 @@ function formatRunPace(secondsPerKm: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Swimming pace zones based on 400m test
-export function calculateSwimPaceZones(time400mSeconds: number) {
+// Swimming pace zones based on test time
+export function calculateSwimPaceZones(testType: '200m' | '400m', testTimeSeconds: number) {
   // Base pace per 100m
-  const basePace = time400mSeconds / 4; // seconds per 100m
+  const basePace = testType === '200m' ? testTimeSeconds / 2 : testTimeSeconds / 4; // seconds per 100m
+  
+  // Adjustment factor for 200m test (slightly different zones due to shorter distance)
+  const adjustmentFactor = testType === '200m' ? 0.98 : 1;
   
   return [
     {
       zone: 1,
       name: 'Easy/Recovery',
       description: 'Very easy, technical focus',
-      range: `${formatSwimPace(Math.round(basePace * 1.20))} - ${formatSwimPace(Math.round(basePace * 1.30))}`,
-      min: Math.round(basePace * 1.20),
-      max: Math.round(basePace * 1.30)
+      range: `${formatSwimPace(Math.round(basePace * 1.20 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.30 * adjustmentFactor))}`,
+      min: Math.round(basePace * 1.20 * adjustmentFactor),
+      max: Math.round(basePace * 1.30 * adjustmentFactor)
     },
     {
       zone: 2,
       name: 'Endurance',
       description: 'Aerobic development',
-      range: `${formatSwimPace(Math.round(basePace * 1.10))} - ${formatSwimPace(Math.round(basePace * 1.20))}`,
-      min: Math.round(basePace * 1.10),
-      max: Math.round(basePace * 1.20)
+      range: `${formatSwimPace(Math.round(basePace * 1.10 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.20 * adjustmentFactor))}`,
+      min: Math.round(basePace * 1.10 * adjustmentFactor),
+      max: Math.round(basePace * 1.20 * adjustmentFactor)
     },
     {
       zone: 3,
       name: 'Moderate',
       description: 'Sustained effort',
-      range: `${formatSwimPace(Math.round(basePace * 1.05))} - ${formatSwimPace(Math.round(basePace * 1.10))}`,
-      min: Math.round(basePace * 1.05),
-      max: Math.round(basePace * 1.10)
+      range: `${formatSwimPace(Math.round(basePace * 1.05 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.10 * adjustmentFactor))}`,
+      min: Math.round(basePace * 1.05 * adjustmentFactor),
+      max: Math.round(basePace * 1.10 * adjustmentFactor)
     },
     {
       zone: 4,
       name: 'Threshold',
       description: 'Race-pace for longer distances',
-      range: `${formatSwimPace(Math.round(basePace * 0.95))} - ${formatSwimPace(Math.round(basePace * 1.05))}`,
-      min: Math.round(basePace * 0.95),
-      max: Math.round(basePace * 1.05)
+      range: `${formatSwimPace(Math.round(basePace * 0.95 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.05 * adjustmentFactor))}`,
+      min: Math.round(basePace * 0.95 * adjustmentFactor),
+      max: Math.round(basePace * 1.05 * adjustmentFactor)
     },
     {
       zone: 5,
       name: 'Speed',
       description: 'High-intensity intervals',
-      range: `${formatSwimPace(Math.round(basePace * 0.85))} - ${formatSwimPace(Math.round(basePace * 0.95))}`,
-      min: Math.round(basePace * 0.85),
-      max: Math.round(basePace * 0.95)
+      range: `${formatSwimPace(Math.round(basePace * 0.85 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 0.95 * adjustmentFactor))}`,
+      min: Math.round(basePace * 0.85 * adjustmentFactor),
+      max: Math.round(basePace * 0.95 * adjustmentFactor)
     },
   ];
 }

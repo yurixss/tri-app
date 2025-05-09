@@ -5,6 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
+import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
@@ -16,6 +17,7 @@ import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/uti
 
 export default function SwimScreen() {
   const [testTime, setTestTime] = useState('');
+  const [testType, setTestType] = useState<'200m' | '400m'>('400m');
   const [error, setError] = useState('');
   const [zones, setZones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,8 +46,9 @@ export default function SwimScreen() {
   const loadPreviousTest = async () => {
     const results = await getTestResults();
     if (results.swim) {
-      setTestTime(formatTimeFromSeconds(results.swim.time400m));
-      calculateZones(results.swim.time400m);
+      setTestType(results.swim.testType || '400m');
+      setTestTime(formatTimeFromSeconds(results.swim.testTime));
+      calculateZones(results.swim.testType || '400m', results.swim.testTime);
       setHasCalculated(true);
     }
   };
@@ -55,15 +58,15 @@ export default function SwimScreen() {
     setError('');
   };
 
-  const calculateZones = (timeInSeconds: number) => {
-    const calculatedZones = calculateSwimPaceZones(timeInSeconds);
+  const calculateZones = (type: '200m' | '400m', timeInSeconds: number) => {
+    const calculatedZones = calculateSwimPaceZones(type, timeInSeconds);
     setZones(calculatedZones);
     return calculatedZones;
   };
 
   const handleCalculate = async () => {
     if (!testTime) {
-      setError('Please enter your 400m time');
+      setError(`Please enter your ${testType} time`);
       return;
     }
     
@@ -76,8 +79,8 @@ export default function SwimScreen() {
     
     try {
       const timeInSeconds = parseTimeString(testTime);
-      calculateZones(timeInSeconds);
-      await saveSwimTest(timeInSeconds);
+      calculateZones(testType, timeInSeconds);
+      await saveSwimTest(testType, timeInSeconds);
       setHasCalculated(true);
     } catch (e) {
       console.error('Error saving swim test', e);
@@ -104,7 +107,7 @@ export default function SwimScreen() {
         >
           <Header
             title="Swimming Pace Zones"
-            subtitle="Calculate your training zones based on your 400m pace"
+            subtitle="Calculate your training zones based on your test time"
             color={Colors.shared.swim}
           />
           
@@ -119,18 +122,28 @@ export default function SwimScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your 400m test time
+              Enter your test time
             </ThemedText>
             
             <ThemedText style={commonStyles.infoText}>
-              Swim 400 meters (or yards) at the fastest pace you can maintain for the entire distance.
+              Swim the selected distance at the fastest pace you can maintain for the entire distance.
             </ThemedText>
+
+            <RadioSelector
+              label="Test Distance"
+              options={[
+                { label: '200m Test', value: '200m' },
+                { label: '400m Test', value: '400m' },
+              ]}
+              selectedValue={testType}
+              onValueChange={(value) => setTestType(value as '200m' | '400m')}
+            />
             
             <ThemedInput
-              label="400m Time (MM:SS)"
+              label={`${testType} Time (MM:SS)`}
               value={testTime}
               onChangeText={handleTestTimeChange}
-              placeholder="e.g. 7:30"
+              placeholder="e.g. 3:45"
               keyboardType="default"
               error={error}
             />
@@ -163,7 +176,7 @@ export default function SwimScreen() {
                 </ThemedText>
                 
                 <ZoneActions
-                  title={`Swimming Pace Zones (400m: ${testTime})`}
+                  title={`Swimming Pace Zones (${testType}: ${testTime})`}
                   zones={zones}
                   color={Colors.shared.swim}
                   onCopySuccess={handleCopySuccess}
@@ -180,7 +193,7 @@ export default function SwimScreen() {
               )}
 
               <ThemedText style={commonStyles.infoText}>
-                Based on 400m time: {testTime}
+                Based on {testType} time: {testTime}
               </ThemedText>
               
               <View style={styles.zonesContainer}>
