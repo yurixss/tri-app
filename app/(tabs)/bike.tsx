@@ -25,6 +25,19 @@ export default function BikeScreen() {
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
 
+  const getZoneColor = (zone: number) => {
+    switch (zone) {
+      case 1: return '#D1D5DB'; // Light gray
+      case 2: return '#3B82F6'; // Blue
+      case 3: return '#10B981'; // Green
+      case 4: return '#F59E0B'; // Yellow
+      case 5: return '#EF4444'; // Red
+      case 6: return '#DC2626'; // Darker red
+      case 7: return '#111827'; // Black
+      default: return Colors.shared.bike;
+    }
+  };
+
   useEffect(() => {
     loadPreviousTest();
   }, []);
@@ -176,7 +189,7 @@ export default function BikeScreen() {
                     ]}
                   >
                     <ThemedText 
-                      style={[styles.zoneNumber, { color: Colors.shared.bike }]}
+                      style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
                       fontFamily="Inter-SemiBold"
                     >
                       Z{zone.zone}
