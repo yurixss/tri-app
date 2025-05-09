@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { Header } from '@/components/Header';
+import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
@@ -18,6 +19,7 @@ export default function BikeScreen() {
   const [zones, setZones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const router = useRouter();
   
   const cardBg = useThemeColor({}, 'cardBackground');
@@ -68,6 +70,11 @@ export default function BikeScreen() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCopySuccess = () => {
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
   };
 
   return (
@@ -142,6 +149,22 @@ export default function BikeScreen() {
               <ThemedText style={commonStyles.infoText}>
                 Based on FTP: {ftp} watts
               </ThemedText>
+
+              {copySuccess && (
+                <ThemedText 
+                  style={[styles.copySuccess, { color: Colors.shared.bike }]}
+                  fontFamily="Inter-Medium"
+                >
+                  Zones copied to clipboard!
+                </ThemedText>
+              )}
+              
+              <ZoneActions
+                title={`Cycling Power Zones (FTP: ${ftp}w)`}
+                zones={zones}
+                color={Colors.shared.bike}
+                onCopySuccess={handleCopySuccess}
+              />
               
               <View style={styles.zonesContainer}>
                 {zones.map((zone, index) => (
@@ -249,5 +272,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
     fontVariant: ['tabular-nums'],
+  },
+  copySuccess: {
+    textAlign: 'center',
+    marginTop: 8,
+    fontSize: 14,
   },
 });
