@@ -52,7 +52,6 @@ export default function BikeScreen() {
   };
 
   const handleFtpChange = (text: string) => {
-    // Allow only numbers
     if (/^[0-9]*$/.test(text)) {
       setFtp(text);
       setError('');
@@ -153,15 +152,21 @@ export default function BikeScreen() {
                 }
               ]}
             >
-              <ThemedText 
-                style={[styles.zonesTitle, { color: Colors.shared.bike }]}
-                fontFamily="Inter-Bold"
-              >
-                Your Power Zones
-              </ThemedText>
-              <ThemedText style={commonStyles.infoText}>
-                Based on FTP: {ftp} watts
-              </ThemedText>
+              <View style={styles.titleContainer}>
+                <ThemedText 
+                  style={[styles.zonesTitle, { color: Colors.shared.bike }]}
+                  fontFamily="Inter-Bold"
+                >
+                  Your Power Zones
+                </ThemedText>
+                
+                <ZoneActions
+                  title={`Cycling Power Zones (FTP: ${ftp}w)`}
+                  zones={zones}
+                  color={Colors.shared.bike}
+                  onCopySuccess={handleCopySuccess}
+                />
+              </View>
 
               {copySuccess && (
                 <ThemedText 
@@ -172,12 +177,9 @@ export default function BikeScreen() {
                 </ThemedText>
               )}
               
-              <ZoneActions
-                title={`Cycling Power Zones (FTP: ${ftp}w)`}
-                zones={zones}
-                color={Colors.shared.bike}
-                onCopySuccess={handleCopySuccess}
-              />
+              <ThemedText style={commonStyles.infoText}>
+                Based on FTP: {ftp} watts
+              </ThemedText>
               
               <View style={styles.zonesContainer}>
                 {zones.map((zone, index) => (
@@ -250,10 +252,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 8,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   zonesTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  copySuccess: {
+    textAlign: 'center',
+    marginTop: 4,
     marginBottom: 8,
+    fontSize: 14,
   },
   zonesContainer: {
     marginTop: 16,
@@ -285,10 +298,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
     fontVariant: ['tabular-nums'],
-  },
-  copySuccess: {
-    textAlign: 'center',
-    marginTop: 8,
-    fontSize: 14,
   },
 });
