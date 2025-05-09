@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Bike, FileWarning as Running, SwissFranc as Swim, Chrome as Home, Apple } from 'lucide-react-native';
+import { Chrome as Home, Apple } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -28,14 +28,6 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="bike"
-        options={{
-          title: '',
-          tabBarIcon: ({ color, size }) => <Bike color={color} size={size} />,
-          tabBarActiveTintColor: Colors.shared.bike,
         }}
       />
       <Tabs.Screen
