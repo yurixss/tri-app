@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Chrome as Home, Apple, UserCircle2 } from 'lucide-react-native';
+import { Home, Apple, UserCircle2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -26,14 +26,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: '',
+          title: 'Home',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="nutrition"
         options={{
-          title: '',
+          title: 'Nutrition',
           tabBarIcon: ({ color, size }) => <Apple color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.nutrition,
         }}
@@ -41,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: '',
+          title: 'Profile',
           tabBarIcon: ({ color, size }) => <UserCircle2 color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.profile,
         }}
