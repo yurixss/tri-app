@@ -8,7 +8,7 @@ import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Camera, Edit3, UserCircle2 } from 'lucide-react-native';
+import { Camera, Edit3, UserCircle2, CheckCircle2 } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { saveProfile, getProfile } from '@/hooks/useStorage';
 
@@ -23,7 +23,7 @@ type TrainingGoal =
 interface Profile {
   name: string;
   age: string;
-  gender: 'male' | 'female' | 'other';
+  gender: 'male' | 'female';
   height: string;
   weight: string;
   photo?: string;
@@ -44,6 +44,7 @@ export default function ProfileScreen() {
   });
   const [errors, setErrors] = useState<Partial<Profile>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
@@ -90,7 +91,8 @@ export default function ProfileScreen() {
     setIsLoading(true);
     try {
       await saveProfile(profile);
-      // Show success feedback here if needed
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     } catch (e) {
       console.error('Error saving profile', e);
     } finally {
@@ -166,10 +168,9 @@ export default function ProfileScreen() {
             options={[
               { label: 'Male', value: 'male' },
               { label: 'Female', value: 'female' },
-              { label: 'Other', value: 'other' },
             ]}
             selectedValue={profile.gender}
-            onValueChange={(value) => setProfile(prev => ({ ...prev, gender: value as 'male' | 'female' | 'other' }))}
+            onValueChange={(value) => setProfile(prev => ({ ...prev, gender: value as 'male' | 'female' }))}
           />
 
           <View style={styles.row}>
@@ -226,22 +227,23 @@ export default function ProfileScreen() {
                 key={goal}
                 style={[
                   styles.goalOption,
-                  { borderColor },
-                  profile.trainingGoal === goal && { 
-                    backgroundColor: Colors.shared.profile,
-                    borderColor: Colors.shared.profile,
-                  }
+                  profile.trainingGoal === goal && styles.selectedGoalOption
                 ]}
                 onPress={() => setProfile(prev => ({ ...prev, trainingGoal: goal as TrainingGoal }))}
               >
-                <ThemedText
-                  style={[
-                    styles.goalText,
-                    profile.trainingGoal === goal && styles.selectedGoalText
-                  ]}
-                >
-                  {goal}
-                </ThemedText>
+                <View style={styles.goalContent}>
+                  <ThemedText
+                    style={[
+                      styles.goalText,
+                      profile.trainingGoal === goal && styles.selectedGoalText
+                    ]}
+                  >
+                    {goal}
+                  </ThemedText>
+                  {profile.trainingGoal === goal && (
+                    <CheckCircle2 size={20} color="#fff" />
+                  )}
+                </View>
               </TouchableOpacity>
             ))}
           </View>
@@ -264,6 +266,13 @@ export default function ProfileScreen() {
           />
         </View>
       </ScrollView>
+
+      {showToast && (
+        <View style={[styles.toast, { backgroundColor: Colors.light.success }]}>
+          <CheckCircle2 color="#fff" size={20} />
+          <ThemedText style={styles.toastText}>Profile saved successfully!</ThemedText>
+        </View>
+      )}
     </ThemedView>
   );
 }
@@ -333,7 +342,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   goalSelector: {
     gap: 8,
@@ -343,9 +352,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
+    borderColor: '#E5E7EB',
+  },
+  selectedGoalOption: {
+    backgroundColor: Colors.shared.profile,
+    borderColor: Colors.shared.profile,
+  },
+  goalContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   goalText: {
     fontSize: 14,
+    flex: 1,
   },
   selectedGoalText: {
     color: '#FFFFFF',
@@ -355,5 +375,30 @@ const styles = StyleSheet.create({
     height: 80,
     textAlignVertical: 'top',
     paddingTop: 12,
+  },
+  toast: {
+    position: 'absolute',
+    bottom: 24,
+    left: 16,
+    right: 16,
+    backgroundColor: '#10B981',
+    borderRadius: 8,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  toastText: {
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
   },
 });
