@@ -16,7 +16,7 @@ export function Header({ title, subtitle, color }: HeaderProps) {
         style={[
           styles.title, 
           color ? { color } : null, 
-          subtitle ? { marginBottom: 8 } : null,  // Adicionando marginBottom condicional
+          subtitle ? { marginBottom: 8 } : null,  
         ]}
         fontFamily="Inter-Bold"
       >
@@ -38,6 +38,7 @@ export function Header({ title, subtitle, color }: HeaderProps) {
 const styles = StyleSheet.create({
   header: {
     marginBottom: 16,
+    paddingTop: 50, 
   },
   title: {
     fontSize: 32,
