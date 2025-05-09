@@ -26,6 +26,17 @@ export default function RunScreen() {
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
 
+  const getZoneColor = (zone: number) => {
+    switch (zone) {
+      case 1: return '#D1D5DB'; // Light gray
+      case 2: return '#3B82F6'; // Blue
+      case 3: return '#10B981'; // Green
+      case 4: return '#F59E0B'; // Yellow
+      case 5: return '#EF4444'; // Red
+      default: return Colors.shared.run;
+    }
+  };
+
   useEffect(() => {
     loadPreviousTest();
   }, []);
@@ -41,7 +52,6 @@ export default function RunScreen() {
   };
 
   const handleTestTimeChange = (text: string) => {
-    // Time format validation happens when calculating
     setTestTime(text);
     setError('');
   };
@@ -170,7 +180,7 @@ export default function RunScreen() {
                     ]}
                   >
                     <ThemedText 
-                      style={[styles.zoneNumber, { color: Colors.shared.run }]}
+                      style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
                       fontFamily="Inter-SemiBold"
                     >
                       Z{zone.zone}
