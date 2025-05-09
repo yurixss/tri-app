@@ -106,7 +106,6 @@ function SportCard({
   backgroundColor,
   borderColor
 }: SportCardProps) {
-  // Format date if available
   const formattedDate = testDate 
     ? new Date(testDate).toLocaleDateString(undefined, { 
         year: 'numeric', 
@@ -176,12 +175,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 32,
+    paddingBottom: 24,
   },
   card: {
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -192,31 +191,31 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardContent: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   cardTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   cardDescription: {
-    fontSize: 16,
-    marginBottom: 16,
+    fontSize: 14,
+    marginBottom: 8,
     opacity: 0.8,
   },
   testDataContainer: {
-    marginTop: 8,
-    padding: 12,
-    borderRadius: 8,
+    marginTop: 4,
+    padding: 8,
+    borderRadius: 6,
     backgroundColor: 'rgba(0,0,0,0.03)',
   },
   testData: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
   },
   testDate: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: 11,
+    marginTop: 2,
     opacity: 0.6,
   },
 });
