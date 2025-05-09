@@ -16,6 +16,7 @@ export default function TabLayout() {
           height: 60,
           paddingBottom: 8,
           paddingTop: 8,
+          backgroundColor: Colors[colorScheme].background,
         },
         tabBarLabelStyle: {
           fontFamily: 'Inter-Medium',
@@ -25,32 +26,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="bike"
         options={{
-          title: 'Bike',
+          title: '',
           tabBarIcon: ({ color, size }) => <Bike color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.bike,
-        }}
-      />
-      <Tabs.Screen
-        name="run"
-        options={{
-          title: 'Run',
-          tabBarIcon: ({ color, size }) => <Running color={color} size={size} />,
-          tabBarActiveTintColor: Colors.shared.run,
-        }}
-      />
-      <Tabs.Screen
-        name="swim"
-        options={{
-          title: 'Swim',
-          tabBarIcon: ({ color, size }) => <Swim color={color} size={size} />,
-          tabBarActiveTintColor: Colors.shared.swim,
         }}
       />
       <Tabs.Screen
