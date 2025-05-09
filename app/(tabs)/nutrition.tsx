@@ -1,26 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
+import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { getProfile } from '@/hooks/useStorage';
+
+interface Profile {
+  weight: string;
+  height: string;
+  gender: 'male' | 'female';
+}
 
 export default function NutritionScreen() {
   const [trainingTime, setTrainingTime] = useState('');
+  const [intensity, setIntensity] = useState<'low' | 'moderate' | 'high'>('moderate');
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState('');
   const [calculatedValues, setCalculatedValues] = useState<{
     carbs: number;
     sodium: number;
+    protein: number;
+    hydration: number;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = async () => {
+    const userProfile = await getProfile();
+    if (userProfile) {
+      setProfile({
+        weight: userProfile.weight,
+        height: userProfile.height,
+        gender: userProfile.gender,
+      });
+    }
+  };
 
   const handleTimeChange = (text: string) => {
     setTrainingTime(text);
@@ -37,25 +64,59 @@ export default function NutritionScreen() {
       setError('Please enter a valid time format (MM:SS or H:MM:SS)');
       return;
     }
+
+    if (!profile) {
+      setError('Please complete your profile first');
+      return;
+    }
     
     setIsLoading(true);
     
     try {
       const timeInSeconds = parseTimeString(trainingTime);
       const timeInHours = timeInSeconds / 3600;
+      const weight = parseFloat(profile.weight);
       
-      // Calculate nutrition needs
-      // Carbs: 30-60g per hour of training
-      // Sodium: 500-700mg per hour of training
-      const carbsPerHour = 45; // Using middle range value
-      const sodiumPerHour = 600; // Using middle range value
+      // Base values per hour adjusted by intensity
+      const intensityFactors = {
+        low: { carbs: 30, sodium: 500 },
+        moderate: { carbs: 45, sodium: 600 },
+        high: { carbs: 60, sodium: 700 },
+      };
+
+      // Weight-based adjustments (per kg of body weight)
+      const weightFactor = weight / 70; // normalized to 70kg reference weight
       
-      const recommendedCarbs = Math.round(carbsPerHour * timeInHours);
-      const recommendedSodium = Math.round(sodiumPerHour * timeInHours);
+      // Gender-based adjustments
+      const genderFactor = profile.gender === 'male' ? 1.1 : 1.0;
+      
+      // Calculate base values
+      const baseCarbs = intensityFactors[intensity].carbs * timeInHours;
+      const baseSodium = intensityFactors[intensity].sodium * timeInHours;
+      
+      // Apply adjustments
+      const recommendedCarbs = Math.round(baseCarbs * weightFactor * genderFactor);
+      const recommendedSodium = Math.round(baseSodium * weightFactor * genderFactor);
+      
+      // Calculate protein needs (post-workout)
+      const recommendedProtein = Math.round(weight * 0.3); // 0.3g per kg body weight
+      
+      // Calculate hydration needs (ml per hour)
+      const baseHydration = 500; // base 500ml per hour
+      const intensityHydrationFactor = {
+        low: 1,
+        moderate: 1.2,
+        high: 1.5,
+      };
+      const recommendedHydration = Math.round(
+        baseHydration * timeInHours * intensityHydrationFactor[intensity] * weightFactor
+      );
       
       setCalculatedValues({
         carbs: recommendedCarbs,
         sodium: recommendedSodium,
+        protein: recommendedProtein,
+        hydration: recommendedHydration,
       });
     } catch (e) {
       console.error('Error calculating nutrition', e);
@@ -64,6 +125,26 @@ export default function NutritionScreen() {
       setIsLoading(false);
     }
   };
+
+  if (!profile) {
+    return (
+      <ThemedView style={styles.container}>
+        <Header
+          title="Nutrition Calculator"
+          subtitle="Please complete your profile first"
+          color={Colors.shared.nutrition}
+        />
+        <ThemedText style={styles.noProfileText}>
+          To get accurate nutrition recommendations, please complete your profile with your weight, height, and gender information.
+        </ThemedText>
+        <ThemedButton
+          title="Go to Profile"
+          color={Colors.shared.nutrition}
+          onPress={() => navigation.navigate('Profile')}
+        />
+      </ThemedView>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -78,7 +159,7 @@ export default function NutritionScreen() {
         >
           <Header
             title="Nutrition Calculator"
-            subtitle="Calculate your nutrition needs based on training time"
+            subtitle="Calculate your nutrition needs based on training time and intensity"
             color={Colors.shared.nutrition}
           />
           
@@ -93,20 +174,27 @@ export default function NutritionScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your training duration
-            </ThemedText>
-            
-            <ThemedText style={commonStyles.infoText}>
-              Enter the total time you plan to train to calculate recommended carbohydrate and sodium intake.
+              Enter your training details
             </ThemedText>
             
             <ThemedInput
               label="Training Time (HH:MM:SS)"
               value={trainingTime}
               onChangeText={handleTimeChange}
-              placeholder="05:30:00"
+              placeholder="01:30:00"
               keyboardType="default"
               error={error}
+            />
+
+            <RadioSelector
+              label="Training Intensity"
+              options={[
+                { label: 'Low', value: 'low' },
+                { label: 'Moderate', value: 'moderate' },
+                { label: 'High', value: 'high' },
+              ]}
+              selectedValue={intensity}
+              onValueChange={(value) => setIntensity(value as 'low' | 'moderate' | 'high')}
             />
             
             <ThemedButton
@@ -135,7 +223,7 @@ export default function NutritionScreen() {
                 Recommended Intake
               </ThemedText>
               
-              <View style={styles.resultRow}>
+              <View style={styles.resultGrid}>
                 <View style={styles.resultItem}>
                   <ThemedText 
                     style={styles.resultValue}
@@ -145,6 +233,9 @@ export default function NutritionScreen() {
                   </ThemedText>
                   <ThemedText style={styles.resultLabel}>
                     Carbohydrates
+                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>
+                    During training
                   </ThemedText>
                 </View>
                 
@@ -158,11 +249,44 @@ export default function NutritionScreen() {
                   <ThemedText style={styles.resultLabel}>
                     Sodium
                   </ThemedText>
+                  <ThemedText style={styles.resultDescription}>
+                    Electrolytes
+                  </ThemedText>
+                </View>
+
+                <View style={styles.resultItem}>
+                  <ThemedText 
+                    style={styles.resultValue}
+                    fontFamily="Inter-Bold"
+                  >
+                    {calculatedValues.protein}g
+                  </ThemedText>
+                  <ThemedText style={styles.resultLabel}>
+                    Protein
+                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>
+                    Post-workout
+                  </ThemedText>
+                </View>
+
+                <View style={styles.resultItem}>
+                  <ThemedText 
+                    style={styles.resultValue}
+                    fontFamily="Inter-Bold"
+                  >
+                    {calculatedValues.hydration}ml
+                  </ThemedText>
+                  <ThemedText style={styles.resultLabel}>
+                    Water
+                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>
+                    During training
+                  </ThemedText>
                 </View>
               </View>
               
               <ThemedText style={styles.note}>
-                Note: These are general recommendations. Adjust based on intensity, weather conditions, and personal needs.
+                These recommendations are based on your weight ({profile.weight}kg), gender, training duration, and intensity level. Adjust based on personal needs and conditions.
               </ThemedText>
             </View>
           )}
@@ -205,13 +329,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  resultRow: {
+  resultGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 16,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 16,
   },
   resultItem: {
+    flex: 1,
+    minWidth: '45%',
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    padding: 16,
+    borderRadius: 12,
   },
   resultValue: {
     fontSize: 24,
@@ -219,12 +349,23 @@ const styles = StyleSheet.create({
   },
   resultLabel: {
     fontSize: 16,
-    opacity: 0.7,
+    marginBottom: 2,
+  },
+  resultDescription: {
+    fontSize: 12,
+    opacity: 0.6,
   },
   note: {
     fontSize: 14,
     fontStyle: 'italic',
     opacity: 0.7,
     textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 8,
+  },
+  noProfileText: {
+    textAlign: 'center',
+    marginVertical: 24,
+    paddingHorizontal: 32,
   },
 });
