@@ -7,6 +7,7 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
+import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
@@ -21,6 +22,7 @@ export default function RunScreen() {
   const [zones, setZones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const router = useRouter();
   
   const cardBg = useThemeColor({}, 'cardBackground');
@@ -85,6 +87,11 @@ export default function RunScreen() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCopySuccess = () => {
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
   };
 
   return (
@@ -160,12 +167,31 @@ export default function RunScreen() {
                 }
               ]}
             >
-              <ThemedText 
-                style={[styles.zonesTitle, { color: Colors.shared.run }]}
-                fontFamily="Inter-Bold"
-              >
-                Your Running Pace Zones
-              </ThemedText>
+              <View style={styles.titleContainer}>
+                <ThemedText 
+                  style={[styles.zonesTitle, { color: Colors.shared.run }]}
+                  fontFamily="Inter-Bold"
+                >
+                  Your Running Pace Zones
+                </ThemedText>
+                
+                <ZoneActions
+                  title={`Running Pace Zones (${testType}: ${testTime})`}
+                  zones={zones}
+                  color={Colors.shared.run}
+                  onCopySuccess={handleCopySuccess}
+                />
+              </View>
+
+              {copySuccess && (
+                <ThemedText 
+                  style={[styles.copySuccess, { color: Colors.shared.run }]}
+                  fontFamily="Inter-Medium"
+                >
+                  Zones copied to clipboard!
+                </ThemedText>
+              )}
+
               <ThemedText style={commonStyles.infoText}>
                 Based on {testType} test: {testTime}
               </ThemedText>
@@ -241,10 +267,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 8,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   zonesTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  copySuccess: {
+    textAlign: 'center',
+    marginTop: 4,
     marginBottom: 8,
+    fontSize: 14,
   },
   zonesContainer: {
     marginTop: 16,

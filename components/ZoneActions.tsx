@@ -33,7 +33,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
         ]}
         onPress={handleCopy}
       >
-        <Copy size={20} color={color} />
+        <Copy size={16} color={color} />
         <ThemedText style={[styles.buttonText, { color }]}>
           Copy
         </ThemedText>
@@ -47,7 +47,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
         ]}
         onPress={handleShare}
       >
-        <Share2 size={20} color={color} />
+        <Share2 size={16} color={color} />
         <ThemedText style={[styles.buttonText, { color }]}>
           Share
         </ThemedText>
@@ -59,21 +59,19 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
-    marginBottom: 16,
+    gap: 6,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
     borderWidth: 1,
-    gap: 6,
+    gap: 4,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Inter-Medium',
   },
 });

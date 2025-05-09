@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { Header } from '@/components/Header';
+import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
@@ -19,6 +20,7 @@ export default function SwimScreen() {
   const [zones, setZones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const router = useRouter();
   
   const cardBg = useThemeColor({}, 'cardBackground');
@@ -84,6 +86,11 @@ export default function SwimScreen() {
     }
   };
 
+  const handleCopySuccess = () => {
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -147,12 +154,31 @@ export default function SwimScreen() {
                 }
               ]}
             >
-              <ThemedText 
-                style={[styles.zonesTitle, { color: Colors.shared.swim }]}
-                fontFamily="Inter-Bold"
-              >
-                Your Swimming Pace Zones
-              </ThemedText>
+              <View style={styles.titleContainer}>
+                <ThemedText 
+                  style={[styles.zonesTitle, { color: Colors.shared.swim }]}
+                  fontFamily="Inter-Bold"
+                >
+                  Your Swimming Pace Zones
+                </ThemedText>
+                
+                <ZoneActions
+                  title={`Swimming Pace Zones (400m: ${testTime})`}
+                  zones={zones}
+                  color={Colors.shared.swim}
+                  onCopySuccess={handleCopySuccess}
+                />
+              </View>
+
+              {copySuccess && (
+                <ThemedText 
+                  style={[styles.copySuccess, { color: Colors.shared.swim }]}
+                  fontFamily="Inter-Medium"
+                >
+                  Zones copied to clipboard!
+                </ThemedText>
+              )}
+
               <ThemedText style={commonStyles.infoText}>
                 Based on 400m time: {testTime}
               </ThemedText>
@@ -228,10 +254,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 8,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   zonesTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  copySuccess: {
+    textAlign: 'center',
+    marginTop: 4,
     marginBottom: 8,
+    fontSize: 14,
   },
   zonesContainer: {
     marginTop: 16,
