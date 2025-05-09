@@ -126,7 +126,7 @@ export const commonStyles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     fontStyle: 'italic',
-    marginBottom: 16,
+    marginBottom: 8,
     opacity: 0.7,
   },
 });

@@ -101,10 +101,10 @@ export default function NutritionScreen() {
             </ThemedText>
             
             <ThemedInput
-              label="Training Time (HH:MM or MM:SS)"
+              label="Training Time (HH:MM:SS)"
               value={trainingTime}
               onChangeText={handleTimeChange}
-              placeholder="e.g. 1:30 or 90:00"
+              placeholder="05:30:00"
               keyboardType="default"
               error={error}
             />

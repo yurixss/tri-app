@@ -107,7 +107,7 @@ export default function RunScreen() {
         >
           <Header
             title="Running Pace Zones"
-            subtitle="Calculate your training zones based on your test pace"
+            // subtitle="Calculate your training zones based on your test pace"
             color={Colors.shared.run}
           />
           
@@ -172,7 +172,7 @@ export default function RunScreen() {
                   style={[styles.zonesTitle, { color: Colors.shared.run }]}
                   fontFamily="Inter-Bold"
                 >
-                  Your Running Pace Zones
+                  Your Pace Zones
                 </ThemedText>
                 
                 <ZoneActions
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   zonesTitle: {
     fontSize: 24,
@@ -279,12 +279,10 @@ const styles = StyleSheet.create({
   },
   copySuccess: {
     textAlign: 'center',
-    marginTop: 4,
-    marginBottom: 8,
+    marginBottom: 2,
     fontSize: 14,
   },
   zonesContainer: {
-    marginTop: 16,
   },
   zoneRow: {
     flexDirection: 'row',

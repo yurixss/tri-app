@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native'; 
 import { Share2, Copy } from 'lucide-react-native'; 
+import { copyZonesToClipboard, shareZones } from '@/utils/shareUtils';
 
 interface ZoneActionsProps {
   title: string;

@@ -33,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="nutrition"
         options={{
-          title: 'Nutrition',
+          title: '',
           tabBarIcon: ({ color, size }) => <Apple color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.nutrition,
         }}

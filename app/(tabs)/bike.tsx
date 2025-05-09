@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   zonesTitle: {
     fontSize: 24,
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   zonesContainer: {
-    marginTop: 16,
   },
   zoneRow: {
     flexDirection: 'row',
