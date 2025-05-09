@@ -101,6 +101,34 @@ export async function getTestResults(): Promise<TestResults> {
   }
 }
 
+// Add new profile types and functions
+export interface Profile {
+  name: string;
+  age: string;
+  gender: 'male' | 'female' | 'other';
+  height: string;
+  weight: string;
+  photo?: string;
+  experience: 'beginner' | 'intermediate' | 'advanced';
+  goal: string;
+}
+
+export async function saveProfile(profile: Profile): Promise<void> {
+  await saveValue('userProfile', JSON.stringify(profile));
+}
+
+export async function getProfile(): Promise<Profile | null> {
+  const data = await getValue('userProfile');
+  if (!data) return null;
+  
+  try {
+    return JSON.parse(data) as Profile;
+  } catch (e) {
+    console.error('Error parsing stored profile', e);
+    return null;
+  }
+}
+
 export default {
   saveValue,
   getValue,
@@ -109,4 +137,6 @@ export default {
   saveRunTest,
   saveSwimTest,
   getTestResults,
+  saveProfile,
+  getProfile,
 };

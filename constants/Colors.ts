@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 const tintColorLight = '#2563EB';
 const tintColorDark = '#3B82F6';
 
@@ -29,11 +31,11 @@ export default {
     warning: '#FBBF24',
   },
   shared: {
-    // Common colors across themes
     swim: '#0EA5E9',   // Blue
     bike: '#10B981',   // Green
     run: '#F97316',    // Orange
     nutrition: '#EC4899', // Pink
+    profile: '#8B5CF6', // Purple
     primary: '#2563EB',
     secondary: '#8B5CF6',
     accent: '#EC4899',
