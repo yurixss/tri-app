@@ -32,6 +32,7 @@ async function deleteValue(key: string): Promise<void> {
 
 export interface TestResults {
   bike?: {
+    testType: '20min' | '60min';
     ftp: number;
     date: string;
   };
@@ -67,11 +68,12 @@ export interface Profile {
   customGoal?: string;
 }
 
-export async function saveBikeTest(ftp: number): Promise<void> {
+export async function saveBikeTest(testType: '20min' | '60min', ftp: number): Promise<void> {
   const currentData = await getTestResults();
   const updatedData: TestResults = {
     ...currentData,
     bike: {
+      testType,
       ftp,
       date: new Date().toISOString(),
     }

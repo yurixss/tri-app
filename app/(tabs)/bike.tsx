@@ -5,6 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
+import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
@@ -15,6 +16,7 @@ import { calculatePowerZones } from '@/utils/zoneCalculations';
 
 export default function BikeScreen() {
   const [ftp, setFtp] = useState('');
+  const [testType, setTestType] = useState<'20min' | '60min'>('60min');
   const [error, setError] = useState('');
   const [zones, setZones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,8 +47,9 @@ export default function BikeScreen() {
   const loadPreviousTest = async () => {
     const results = await getTestResults();
     if (results.bike) {
+      setTestType(results.bike.testType);
       setFtp(results.bike.ftp.toString());
-      calculateZones(results.bike.ftp);
+      calculateZones(results.bike.testType, results.bike.ftp);
       setHasCalculated(true);
     }
   };
@@ -58,15 +61,17 @@ export default function BikeScreen() {
     }
   };
 
-  const calculateZones = (ftpValue: number) => {
-    const calculatedZones = calculatePowerZones(ftpValue);
+  const calculateZones = (type: '20min' | '60min', ftpValue: number) => {
+    // Apply 5% reduction for 20-minute test
+    const adjustedFTP = type === '20min' ? Math.round(ftpValue * 0.95) : ftpValue;
+    const calculatedZones = calculatePowerZones(adjustedFTP);
     setZones(calculatedZones);
     return calculatedZones;
   };
 
   const handleCalculate = async () => {
     if (!ftp || isNaN(Number(ftp)) || Number(ftp) <= 0) {
-      setError('Please enter a valid FTP value');
+      setError('Please enter a valid power value');
       return;
     }
     
@@ -74,8 +79,8 @@ export default function BikeScreen() {
     
     try {
       const ftpValue = Number(ftp);
-      calculateZones(ftpValue);
-      await saveBikeTest(ftpValue);
+      calculateZones(testType, ftpValue);
+      await saveBikeTest(testType, ftpValue);
       setHasCalculated(true);
     } catch (e) {
       console.error('Error saving bike test', e);
@@ -102,7 +107,7 @@ export default function BikeScreen() {
         >
           <Header
             title="Cycling Power Zones"
-            subtitle="Calculate your training zones based on your FTP"
+            subtitle="Calculate your training zones based on your FTP test"
             color={Colors.shared.bike}
           />
           
@@ -117,18 +122,30 @@ export default function BikeScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your FTP (Functional Threshold Power)
+              Enter your test result
             </ThemedText>
             
+            <RadioSelector
+              label="Test Type"
+              options={[
+                { label: '20min Test', value: '20min' },
+                { label: '60min Test', value: '60min' },
+              ]}
+              selectedValue={testType}
+              onValueChange={(value) => setTestType(value as '20min' | '60min')}
+            />
+            
             <ThemedText style={commonStyles.infoText}>
-              Your FTP represents the highest average power you can sustain for approximately one hour.
+              {testType === '20min' 
+                ? 'Ride as hard as you can for 20 minutes. Your FTP will be calculated as 95% of your average power.'
+                : 'Ride as hard as you can sustain for 60 minutes. This is your FTP.'}
             </ThemedText>
             
             <ThemedInput
-              label="FTP (watts)"
+              label="Average Power (watts)"
               value={ftp}
               onChangeText={handleFtpChange}
-              placeholder="Enter your FTP in watts"
+              placeholder="Enter your average power"
               keyboardType="numeric"
               error={error}
             />
@@ -161,7 +178,7 @@ export default function BikeScreen() {
                 </ThemedText>
                 
                 <ZoneActions
-                  title={`Cycling Power Zones (FTP: ${ftp}w)`}
+                  title={`Cycling Power Zones (${testType} Test: ${ftp}w)`}
                   zones={zones}
                   color={Colors.shared.bike}
                   onCopySuccess={handleCopySuccess}
@@ -178,7 +195,9 @@ export default function BikeScreen() {
               )}
               
               <ThemedText style={commonStyles.infoText}>
-                Based on FTP: {ftp} watts
+                {testType === '20min'
+                  ? `Based on 20min test: ${ftp}w (FTP: ${Math.round(Number(ftp) * 0.95)}w)`
+                  : `Based on 60min test: ${ftp}w`}
               </ThemedText>
               
               <View style={styles.zonesContainer}>
