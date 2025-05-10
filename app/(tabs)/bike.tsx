@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
@@ -11,7 +11,6 @@ import { ZoneActions } from '@/components/ZoneActions';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
-import { saveBikeTest, getTestResults } from '@/hooks/useStorage';
 import { calculatePowerZones } from '@/utils/zoneCalculations';
 
 export default function BikeScreen() {
@@ -29,28 +28,14 @@ export default function BikeScreen() {
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
-      case 1: return '#D1D5DB'; // Light gray
-      case 2: return '#3B82F6'; // Blue
-      case 3: return '#10B981'; // Green
-      case 4: return '#F59E0B'; // Yellow
-      case 5: return '#EF4444'; // Red
-      case 6: return '#DC2626'; // Darker red
-      case 7: return '#111827'; // Black
+      case 1: return '#D1D5DB';
+      case 2: return '#3B82F6';
+      case 3: return '#10B981';
+      case 4: return '#F59E0B';
+      case 5: return '#EF4444';
+      case 6: return '#DC2626';
+      case 7: return '#111827';
       default: return Colors.shared.bike;
-    }
-  };
-
-  useEffect(() => {
-    loadPreviousTest();
-  }, []);
-
-  const loadPreviousTest = async () => {
-    const results = await getTestResults();
-    if (results.bike) {
-      setTestType(results.bike.testType);
-      setFtp(results.bike.ftp.toString());
-      calculateZones(results.bike.testType, results.bike.ftp);
-      setHasCalculated(true);
     }
   };
 
@@ -80,10 +65,9 @@ export default function BikeScreen() {
     try {
       const ftpValue = Number(ftp);
       calculateZones(testType, ftpValue);
-      await saveBikeTest(testType, ftpValue);
       setHasCalculated(true);
     } catch (e) {
-      console.error('Error saving bike test', e);
+      console.error('Error calculating zones', e);
     } finally {
       setIsLoading(false);
     }
