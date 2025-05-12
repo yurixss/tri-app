@@ -11,6 +11,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { useRouter } from 'expo-router';
+import { getProfile } from '@/hooks/useStorage';
 
 
 interface Profile {

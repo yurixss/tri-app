@@ -10,6 +10,7 @@ import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { Camera, Edit3, UserCircle2, CheckCircle2 } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { getProfile, saveProfile } from '@/hooks/useStorage';
 
 type TrainingGoal = 
   | 'Super Sprint (200m, 4km, 1km)'

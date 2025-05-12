@@ -42,6 +42,18 @@ interface OnboardingData {
   onboardingComplete?: boolean;
 }
 
+export interface Profile {
+  name: string;
+  age: string;
+  gender: 'male' | 'female';
+  height: string;
+  weight: string;
+  photo?: string;
+  experience: 'beginner' | 'intermediate' | 'advanced';
+  trainingGoal: string;
+  customGoal?: string;
+}
+
 export async function saveOnboardingData(data: Partial<OnboardingData>): Promise<void> {
   const currentData = await getOnboardingData();
   const updatedData = { ...currentData, ...data };
@@ -60,10 +72,58 @@ export async function getOnboardingData(): Promise<OnboardingData | null> {
   }
 }
 
+export async function saveProfile(profile: Profile): Promise<void> {
+  await saveValue('userProfile', JSON.stringify(profile));
+}
+
+export async function getProfile(): Promise<Profile | null> {
+  const data = await getValue('userProfile');
+  if (!data) return null;
+  
+  try {
+    return JSON.parse(data) as Profile;
+  } catch (e) {
+    console.error('Error parsing stored profile data', e);
+    return null;
+  }
+}
+
+export interface TestResults {
+  bike?: {
+    ftp: number;
+    testType: '20min' | '60min';
+    date: string;
+  };
+  run?: {
+    testType: '3km' | '5km';
+    testTime: number;
+    date: string;
+  };
+  swim?: {
+    time400m: number;
+    date: string;
+  };
+}
+
+export async function getTestResults(): Promise<TestResults> {
+  const data = await getValue('testResults');
+  if (!data) return {};
+  
+  try {
+    return JSON.parse(data) as TestResults;
+  } catch (e) {
+    console.error('Error parsing stored test results', e);
+    return {};
+  }
+}
+
 export default {
   saveValue,
   getValue,
   deleteValue,
   saveOnboardingData,
   getOnboardingData,
+  saveProfile,
+  getProfile,
+  getTestResults,
 };
