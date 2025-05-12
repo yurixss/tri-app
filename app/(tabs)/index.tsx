@@ -27,8 +27,9 @@ export default function HomeScreen() {
   };
 
   const navigateToTest = (screen: string) => {
-    router.push(screen);
+    router.push(`/screens${screen}`);
   };
+  
 
   return (
     <ThemedView style={styles.container}>

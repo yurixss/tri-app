@@ -26,14 +26,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="nutrition"
         options={{
-          title: 'Nutrition',
+          title: '',
           tabBarIcon: ({ color, size }) => <Apple color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.nutrition,
         }}
@@ -41,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: '',
           tabBarIcon: ({ color, size }) => <UserCircle2 color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.profile,
         }}
