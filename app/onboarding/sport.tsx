@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedButton } from '@/components/ThemedButton';
-import { Bike, Running, Waves, Trophy } from 'lucide-react-native';
+import { Bike, MountainSnow, Waves, Trophy } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData } from '@/hooks/useStorage';
 
@@ -27,7 +27,7 @@ const sports: SportOption[] = [
   {
     id: 'runner',
     label: 'Runner',
-    icon: Running,
+    icon: MountainSnow,
     color: Colors.shared.run,
   },
   {

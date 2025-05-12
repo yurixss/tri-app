@@ -10,7 +10,8 @@ import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
-import { getProfile } from '@/hooks/useStorage';
+import { useRouter } from 'expo-router';
+
 
 interface Profile {
   weight: string;
@@ -33,6 +34,8 @@ export default function NutritionScreen() {
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const router = useRouter();
+
 
   useEffect(() => {
     loadProfile();
@@ -140,7 +143,7 @@ export default function NutritionScreen() {
         <ThemedButton
           title="Go to Profile"
           color={Colors.shared.nutrition}
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() => router.push('/(tabs)/profile')}
         />
       </ThemedView>
     );
