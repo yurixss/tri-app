@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
@@ -12,6 +12,7 @@ import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculatePowerZones } from '@/utils/zoneCalculations';
+import { getTestResults, saveBikeTest } from '@/hooks/useStorage';
 
 export default function BikeScreen() {
   const [ftp, setFtp] = useState('');
@@ -36,6 +37,20 @@ export default function BikeScreen() {
       case 6: return '#DC2626';
       case 7: return '#111827';
       default: return Colors.shared.bike;
+    }
+  };
+
+  useEffect(() => {
+    loadPreviousTest();
+  }, []);
+
+  const loadPreviousTest = async () => {
+    const results = await getTestResults();
+    if (results.bike) {
+      setTestType(results.bike.testType);
+      setFtp(results.bike.ftp.toString());
+      calculateZones(results.bike.testType, results.bike.ftp);
+      setHasCalculated(true);
     }
   };
 
@@ -65,9 +80,10 @@ export default function BikeScreen() {
     try {
       const ftpValue = Number(ftp);
       calculateZones(testType, ftpValue);
+      await saveBikeTest(testType, ftpValue);
       setHasCalculated(true);
     } catch (e) {
-      console.error('Error calculating zones', e);
+      console.error('Error saving bike test', e);
     } finally {
       setIsLoading(false);
     }

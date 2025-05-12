@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
@@ -13,6 +13,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculateSwimPaceZones } from '@/utils/zoneCalculations';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { getTestResults, saveSwimTest } from '@/hooks/useStorage';
 
 export default function SwimScreen() {
   const [testTime, setTestTime] = useState('');
@@ -35,6 +36,20 @@ export default function SwimScreen() {
       case 4: return '#F59E0B';
       case 5: return '#EF4444';
       default: return Colors.shared.swim;
+    }
+  };
+
+  useEffect(() => {
+    loadPreviousTest();
+  }, []);
+
+  const loadPreviousTest = async () => {
+    const results = await getTestResults();
+    if (results.swim) {
+      setTestType(results.swim.testType || '400m');
+      setTestTime(formatTimeFromSeconds(results.swim.testTime));
+      calculateZones(results.swim.testType || '400m', results.swim.testTime);
+      setHasCalculated(true);
     }
   };
 
@@ -65,9 +80,10 @@ export default function SwimScreen() {
     try {
       const timeInSeconds = parseTimeString(testTime);
       calculateZones(testType, timeInSeconds);
+      await saveSwimTest(testType, timeInSeconds);
       setHasCalculated(true);
     } catch (e) {
-      console.error('Error calculating zones', e);
+      console.error('Error saving swim test', e);
     } finally {
       setIsLoading(false);
     }

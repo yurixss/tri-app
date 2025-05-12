@@ -3,6 +3,64 @@ import { Platform } from 'react-native';
 
 const webStorage = new Map<string, string>();
 
+export async function saveTestResults(results: TestResults): Promise<void> {
+  await saveValue('testResults', JSON.stringify(results));
+}
+
+export async function getTestResults(): Promise<TestResults> {
+  const data = await getValue('testResults');
+  if (!data) return {};
+  
+  try {
+    return JSON.parse(data) as TestResults;
+  } catch (e) {
+    console.error('Error parsing stored test results', e);
+    return {};
+  }
+}
+
+export async function saveBikeTest(testType: '20min' | '60min', ftp: number): Promise<void> {
+  const currentData = await getTestResults();
+  const updatedData: TestResults = {
+    ...currentData,
+    bike: {
+      testType,
+      ftp,
+      date: new Date().toISOString(),
+    }
+  };
+  
+  await saveValue('testResults', JSON.stringify(updatedData));
+}
+
+export async function saveRunTest(testType: '3km' | '5km', testTime: number): Promise<void> {
+  const currentData = await getTestResults();
+  const updatedData: TestResults = {
+    ...currentData,
+    run: {
+      testType,
+      testTime,
+      date: new Date().toISOString(),
+    }
+  };
+  
+  await saveValue('testResults', JSON.stringify(updatedData));
+}
+
+export async function saveSwimTest(testType: '200m' | '400m', testTime: number): Promise<void> {
+  const currentData = await getTestResults();
+  const updatedData: TestResults = {
+    ...currentData,
+    swim: {
+      testType,
+      testTime,
+      date: new Date().toISOString(),
+    }
+  };
+  
+  await saveValue('testResults', JSON.stringify(updatedData));
+}
+
 async function saveValue(key: string, value: string): Promise<void> {
   if (Platform.OS === 'web') {
     webStorage.set(key, value);
@@ -100,21 +158,10 @@ export interface TestResults {
     date: string;
   };
   swim?: {
-    time400m: number;
+    testType: '200m' | '400m';
+    testTime: number;
     date: string;
   };
-}
-
-export async function getTestResults(): Promise<TestResults> {
-  const data = await getValue('testResults');
-  if (!data) return {};
-  
-  try {
-    return JSON.parse(data) as TestResults;
-  } catch (e) {
-    console.error('Error parsing stored test results', e);
-    return {};
-  }
 }
 
 export default {
@@ -126,4 +173,8 @@ export default {
   saveProfile,
   getProfile,
   getTestResults,
+  saveTestResults,
+  saveBikeTest, 
+  saveRunTest,
+  saveSwimTest
 };

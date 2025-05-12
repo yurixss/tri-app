@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
@@ -13,6 +13,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculateRunningPaceZones } from '@/utils/zoneCalculations';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { getTestResults, saveRunTest } from '@/hooks/useStorage';
 
 export default function RunScreen() {
   const [testTime, setTestTime] = useState('');
@@ -35,6 +36,20 @@ export default function RunScreen() {
       case 4: return '#F59E0B';
       case 5: return '#EF4444';
       default: return Colors.shared.run;
+    }
+  };
+
+  useEffect(() => {
+    loadPreviousTest();
+  }, []);
+
+  const loadPreviousTest = async () => {
+    const results = await getTestResults();
+    if (results.run) {
+      setTestType(results.run.testType);
+      setTestTime(formatTimeFromSeconds(results.run.testTime));
+      calculateZones(results.run.testType, results.run.testTime);
+      setHasCalculated(true);
     }
   };
 
@@ -65,9 +80,10 @@ export default function RunScreen() {
     try {
       const timeInSeconds = parseTimeString(testTime);
       calculateZones(testType, timeInSeconds);
+      await saveRunTest(testType, timeInSeconds);
       setHasCalculated(true);
     } catch (e) {
-      console.error('Error calculating zones', e);
+      console.error('Error saving run test', e);
     } finally {
       setIsLoading(false);
     }
