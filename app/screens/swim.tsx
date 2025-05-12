@@ -107,8 +107,8 @@ export default function SwimScreen() {
         >
           <Header
             title="Swimming Pace Zones"
-            subtitle="Calculate your training zones based on your test time"
             color={Colors.shared.swim}
+            onBackPress={() => router.back()} 
           />
           
           <View 

@@ -107,8 +107,8 @@ export default function RunScreen() {
         >
           <Header
             title="Running Pace Zones"
-            subtitle="Calculate your training zones based on your test pace"
             color={Colors.shared.run}
+            onBackPress={() => router.back()} 
           />
           
           <View 

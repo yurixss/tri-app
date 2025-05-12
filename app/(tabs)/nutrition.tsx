@@ -163,7 +163,6 @@ export default function NutritionScreen() {
         >
           <Header
             title="Nutrition Calculator"
-            subtitle="Calculate your nutrition needs based on training time and intensity"
             color={Colors.shared.nutrition}
           />
           

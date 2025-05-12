@@ -23,13 +23,7 @@ export default function TabLayout() {
           fontSize: 12,
         },
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: '',
-          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
-        }}
-      />
+ 
       <Tabs.Screen
         name="nutrition"
         options={{
@@ -38,6 +32,15 @@ export default function TabLayout() {
           tabBarActiveTintColor: Colors.shared.nutrition,
         }}
       />
+
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: '',
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+        }}
+      />
+      
       <Tabs.Screen
         name="profile"
         options={{

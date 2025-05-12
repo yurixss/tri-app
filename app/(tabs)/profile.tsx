@@ -109,7 +109,6 @@ export default function ProfileScreen() {
       >
         <Header
           title="Profile"
-          subtitle="Manage your personal information"
           color={Colors.shared.profile}
         />
         

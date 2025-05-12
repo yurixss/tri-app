@@ -107,8 +107,8 @@ export default function BikeScreen() {
         >
           <Header
             title="Cycling Power Zones"
-            subtitle="Calculate your training zones based on your FTP test"
             color={Colors.shared.bike}
+            onBackPress={() => router.back()} 
           />
           
           <View 

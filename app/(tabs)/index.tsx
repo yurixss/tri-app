@@ -40,7 +40,6 @@ export default function HomeScreen() {
       >
         <Header 
           title="Training Zones"
-          subtitle="Calculate your personalized training zones for each sport"
         />
 
         <SportCard
