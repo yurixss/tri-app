@@ -1,35 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, Dimensions } from 'react-native';
+import React from 'react';
+import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
-import { ThemedButton } from '@/components/ThemedButton';
 import Colors from '@/constants/Colors';
-import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
-import { getTestResults, TestResults } from '@/hooks/useStorage';
-import { formatTimeFromSeconds } from '@/utils/timeUtils';
+import { Apple, Activity, Calculator } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [testResults, setTestResults] = useState<TestResults>({});
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-
-  useEffect(() => {
-    loadTestResults();
-  }, []);
-
-  const loadTestResults = async () => {
-    const results = await getTestResults();
-    setTestResults(results);
-  };
-
-  const navigateToTest = (screen: string) => {
-    router.push(`/screens${screen}`);
-  };
-  
 
   return (
     <ThemedView style={styles.container}>
@@ -39,44 +21,36 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Header 
-          title="Training Zones"
+          title="Home"
         />
 
-        <SportCard
-          title="Cycling"
-          color={Colors.shared.bike}
-          description="Calculate power zones based on your FTP"
-          testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
-          testDate={testResults.bike?.date}
-          onPress={() => navigateToTest('/bike')}
+        <HomeCard
+          title="Tempo de Prova"
+          icon={<Calculator size={32} color={Colors.shared.secondary} />}
+          color={Colors.shared.secondary}
+          description="Calculate your total triathlon race time"
+          onPress={() => router.push('/screens/race-calculator')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
-        
-        <SportCard
-          title="Running"
-          color={Colors.shared.run}
-          description="Calculate pace zones based on 3km or 5km test"
-          testData={testResults.run 
-            ? `${testResults.run.testType}: ${formatTimeFromSeconds(testResults.run.testTime)}`
-            : undefined
-          }
-          testDate={testResults.run?.date}
-          onPress={() => navigateToTest('/run')}
+
+        <HomeCard
+          title="Zonas de Treino"
+          icon={<Activity size={32} color={Colors.shared.primary} />}
+          color={Colors.shared.primary}
+          description="Calculate training zones"
+          onPress={() => router.push('/screens/training-zones')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
-        
-        <SportCard
-          title="Swimming"
-          color={Colors.shared.swim}
-          description="Calculate pace zones based on 400m test"
-          testData={testResults.swim 
-            ? `400m: ${formatTimeFromSeconds(testResults.swim.time400m)}` 
-            : undefined
-          }
-          testDate={testResults.swim?.date}
-          onPress={() => navigateToTest('/swim')}
+
+
+        <HomeCard
+          title="Nutrição"
+          icon={<Apple size={32} color={Colors.shared.nutrition} />}
+          color={Colors.shared.nutrition}
+          description="Calculate your nutrition needs for training"
+          onPress={() => router.push('/(tabs)/nutrition')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
@@ -85,84 +59,61 @@ export default function HomeScreen() {
   );
 }
 
-interface SportCardProps {
+interface HomeCardProps {
   title: string;
+  icon: React.ReactNode;
   color: string;
   description: string;
-  testData?: string;
-  testDate?: string;
   onPress: () => void;
   backgroundColor: string;
   borderColor: string;
 }
 
-function SportCard({ 
+function HomeCard({ 
   title, 
+  icon,
   color, 
   description, 
-  testData, 
-  testDate,
   onPress,
   backgroundColor,
   borderColor
-}: SportCardProps) {
-  const formattedDate = testDate 
-    ? new Date(testDate).toLocaleDateString(undefined, { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-      })
-    : null;
-
+}: HomeCardProps) {
   return (
-    <View 
-      style={[
-        styles.card, 
-        { 
-          backgroundColor,
-          borderLeftColor: color,
-          borderLeftWidth: 4,
-          borderColor: borderColor,
-          borderWidth: 1,
-        }
-      ]}
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
     >
-      <View style={styles.cardContent}>
-        <ThemedText 
-          style={[styles.cardTitle, { color }]}
-          fontFamily="Inter-Bold"
-        >
-          {title}
-        </ThemedText>
-        
-        <ThemedText style={styles.cardDescription}>
-          {description}
-        </ThemedText>
-        
-        {testData && (
-          <View style={styles.testDataContainer}>
+      <View 
+        style={[
+          styles.card, 
+          { 
+            backgroundColor,
+            borderLeftColor: color,
+            borderLeftWidth: 4,
+            borderColor: borderColor,
+            borderWidth: 1,
+          }
+        ]}
+      >
+        <View style={styles.cardHeader}>
+          <View style={styles.iconContainer}>
+            {icon}
+          </View>
+          <View style={styles.cardContent}>
             <ThemedText 
-              style={styles.testData}
-              fontFamily="Inter-Medium"
+              style={[styles.cardTitle, { color }]}
+              fontFamily="Inter-Bold"
             >
-              {testData}
+              {title}
             </ThemedText>
             
-            {formattedDate && (
-              <ThemedText style={styles.testDate}>
-                Last updated: {formattedDate}
-              </ThemedText>
-            )}
+            <ThemedText style={styles.cardDescription}>
+              {description}
+            </ThemedText>
           </View>
-        )}
+        </View>
       </View>
-      
-      <ThemedButton 
-        title={testData ? "Update" : "Calculate"}
-        color={color}
-        onPress={onPress}
-      />
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -178,9 +129,9 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   card: {
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -190,32 +141,25 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  iconContainer: {
+    marginRight: 16,
+    paddingTop: 4,
+  },
   cardContent: {
-    marginBottom: 12,
+    flex: 1,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 8,
   },
   cardDescription: {
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 15,
     opacity: 0.8,
-  },
-  testDataContainer: {
-    marginTop: 4,
-    padding: 8,
-    borderRadius: 6,
-    backgroundColor: 'rgba(0,0,0,0.03)',
-  },
-  testData: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  testDate: {
-    fontSize: 11,
-    marginTop: 2,
-    opacity: 0.6,
+    lineHeight: 22,
   },
 });
