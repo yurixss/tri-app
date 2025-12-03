@@ -21,14 +21,14 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Header 
-          title="Home"
+          title="Início"
         />
 
         <HomeCard
           title="Tempo de Prova"
           icon={<Calculator size={32} color={Colors.shared.secondary} />}
           color={Colors.shared.secondary}
-          description="Calculate your total triathlon race time"
+          description="Calculadora de tempo de prova"
           onPress={() => router.push('/screens/race-calculator')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -38,7 +38,7 @@ export default function HomeScreen() {
           title="Zonas de Treino"
           icon={<Activity size={32} color={Colors.shared.primary} />}
           color={Colors.shared.primary}
-          description="Calculate training zones"
+          description="Calculadora de zonas de treino"
           onPress={() => router.push('/screens/training-zones')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -49,7 +49,7 @@ export default function HomeScreen() {
           title="Nutrição"
           icon={<Apple size={32} color={Colors.shared.nutrition} />}
           color={Colors.shared.nutrition}
-          description="Calculate your nutrition needs for training"
+          description="Calculadora de nutrição"
           onPress={() => router.push('/(tabs)/nutrition')}
           backgroundColor={cardBg}
           borderColor={borderColor}

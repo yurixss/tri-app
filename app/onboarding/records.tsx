@@ -85,7 +85,7 @@ export default function PersonalRecords() {
     
     records.forEach(record => {
       if (record.time && !isValidTimeFormat(record.time)) {
-        newErrors[record.distance] = 'Invalid time format (use MM:SS)';
+        newErrors[record.distance] = 'Formato de tempo inválido (use MM:SS)';
       }
     });
     
@@ -108,11 +108,11 @@ export default function PersonalRecords() {
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
-            Personal Records
+            Recordes Pessoais
           </ThemedText>
           
           <ThemedText style={styles.subtitle}>
-            Add your best times (optional)
+            Adicione seus melhores tempos (opcional)
           </ThemedText>
 
           <View style={styles.recordsContainer}>
@@ -127,7 +127,7 @@ export default function PersonalRecords() {
                   
                   <View style={styles.inputContainer}>
                     <ThemedInput
-                      label="Time (MM:SS)"
+                      label="Tempo (MM:SS)"
                       value={record?.time || ''}
                       onChangeText={(time) => handleTimeChange(distance, time)}
                       placeholder="23:45"

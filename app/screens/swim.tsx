@@ -66,12 +66,12 @@ export default function SwimScreen() {
 
   const handleCalculate = async () => {
     if (!testTime) {
-      setError(`Please enter your ${testType} time`);
+      setError(`Por favor, insira o tempo de ${testType}`);
       return;
     }
     
     if (!isValidTimeFormat(testTime)) {
-      setError('Please enter a valid time format (MM:SS or H:MM:SS)');
+      setError('Por favor, insira um formato de tempo válido (MM:SS ou H:MM:SS)');
       return;
     }
     
@@ -106,7 +106,7 @@ export default function SwimScreen() {
           showsVerticalScrollIndicator={false}
         >
           <Header
-            title="Swimming Pace Zones"
+            title="Zonas de Ritmo - Natação"
             color={Colors.shared.swim}
             onBackPress={() => router.back()} 
           />
@@ -122,34 +122,34 @@ export default function SwimScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your test time
+              Insira o tempo do seu teste
             </ThemedText>
             
             <ThemedText style={commonStyles.infoText}>
-              Swim the selected distance at the fastest pace you can maintain for the entire distance.
+              Nade a distância selecionada no ritmo mais rápido que conseguir manter durante toda a prova.
             </ThemedText>
 
             <RadioSelector
-              label="Test Distance"
+              label="Distância do Teste"
               options={[
-                { label: '200m Test', value: '200m' },
-                { label: '400m Test', value: '400m' },
+                { label: 'Teste 200m', value: '200m' },
+                { label: 'Teste 400m', value: '400m' },
               ]}
               selectedValue={testType}
               onValueChange={(value) => setTestType(value as '200m' | '400m')}
             />
             
             <ThemedInput
-              label={`${testType} Time (MM:SS)`}
+              label={`Tempo ${testType} (MM:SS)`}
               value={testTime}
               onChangeText={handleTestTimeChange}
-              placeholder="e.g. 3:45"
+              placeholder="ex. 3:45"
               keyboardType="default"
               error={error}
             />
             
             <ThemedButton
-              title="Calculate Zones"
+              title="Calcular Zonas"
               color={Colors.shared.swim}
               onPress={handleCalculate}
               isLoading={isLoading}
@@ -172,11 +172,11 @@ export default function SwimScreen() {
                   style={[styles.zonesTitle, { color: Colors.shared.swim }]}
                   fontFamily="Inter-Bold"
                 >
-                  Your Pace Zones
+                  Suas Zonas de Ritmo
                 </ThemedText>
                 
                 <ZoneActions
-                  title={`Swimming Pace Zones (${testType}: ${testTime})`}
+                  title={`Zonas de Ritmo - Natação (${testType}: ${testTime})`}
                   zones={zones}
                   color={Colors.shared.swim}
                   onCopySuccess={handleCopySuccess}
@@ -188,12 +188,12 @@ export default function SwimScreen() {
                   style={[styles.copySuccess, { color: Colors.shared.swim }]}
                   fontFamily="Inter-Medium"
                 >
-                  Zones copied to clipboard!
+                  Zonas copiadas para a área de transferência!
                 </ThemedText>
               )}
 
               <ThemedText style={commonStyles.infoText}>
-                Based on {testType} time: {testTime}
+                Baseado no tempo {testType}: {testTime}
               </ThemedText>
               
               <View style={styles.zonesContainer}>

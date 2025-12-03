@@ -5,12 +5,15 @@ import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { SplashScreen } from 'expo-router';
 import useCachedResources from '@/hooks/useCachedResources';
 import { getOnboardingData } from '@/hooks/useStorage';
+import ThemeProvider, { useTheme } from '@/constants/Theme';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useFrameworkReady();
   const { isLoadingComplete } = useCachedResources();
+  // chamar o hook de tema aqui (sempre) para manter a ordem dos hooks consistente
+  const theme = useTheme();
   const [isOnboardingComplete, setIsOnboardingComplete] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -35,8 +38,9 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <Stack screenOptions={{ headerShown: false }}>
+    <ThemeProvider>
+      <>
+        <Stack screenOptions={{ headerShown: false }}>
         {!isOnboardingComplete ? (
           <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         ) : (
@@ -46,7 +50,8 @@ export default function RootLayout() {
           </>
         )}
       </Stack>
-      <StatusBar style="auto" />
-    </>
+        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+      </>
+    </ThemeProvider>
   );
 }

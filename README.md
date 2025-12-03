@@ -1,1 +1,1 @@
-tri-app
+TriCalc Pro

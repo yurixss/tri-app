@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
+import { TimeInput } from '@/components/TimeInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { DropdownSelector } from '@/components/DropdownSelector';
 import { Header } from '@/components/Header';
@@ -28,6 +30,7 @@ const RACE_DISTANCES: Record<RaceDistance, RaceDistances> = {
 };
 
 export default function RaceCalculatorScreen() {
+  const router = useRouter();
   const [raceDistance, setRaceDistance] = useState<RaceDistance>('sprint');
   const [swimTime, setSwimTime] = useState('');
   const [t1Time, setT1Time] = useState('');
@@ -44,7 +47,70 @@ export default function RaceCalculatorScreen() {
 
   const distances = RACE_DISTANCES[raceDistance];
 
-  // Calculate paces automatically when times are entered
+  // Helper function to parse partial time strings from TimeInput
+  // TimeInput returns formats like: "1", "1:30", "1:30:45" (without padding while typing)
+  const parsePartialTime = (timeStr: string, hasHours: boolean): number => {
+    if (!timeStr || timeStr.trim() === '') return 0;
+    
+    // Split by colon and keep all parts (including empty strings to preserve position)
+    const allParts = timeStr.split(':');
+    const parts = allParts.map(p => p.trim()).filter(p => p !== '');
+    
+    if (parts.length === 0) return 0;
+    
+    let totalSeconds = 0;
+    
+    if (hasHours) {
+      // With hours: TimeInput format is H, H:M, H:M:S, H:MM:SS, etc.
+      // The number of colons tells us which fields are filled
+      const colonCount = (timeStr.match(/:/g) || []).length;
+      
+      if (colonCount === 2) {
+        // Format: H:M:S or H:MM:SS (all three fields)
+        totalSeconds = (parseInt(parts[0]) || 0) * 3600 + 
+                       (parseInt(parts[1]) || 0) * 60 + 
+                       (parseInt(parts[2]) || 0);
+      } else if (colonCount === 1) {
+        // Format: H:M (hours and minutes only)
+        totalSeconds = (parseInt(parts[0]) || 0) * 3600 + 
+                       (parseInt(parts[1]) || 0) * 60;
+      } else if (colonCount === 0 && parts.length === 1) {
+        // Only one value - could be hours, minutes, or seconds
+        // Check position by looking at the original string structure
+        // If it's the first field (hours), it comes before any colon
+        // For now, assume it's hours if reasonable (< 24), otherwise minutes
+        const value = parseInt(parts[0]) || 0;
+        if (value < 24) {
+          totalSeconds = value * 3600; // Assume hours
+        } else if (value < 60) {
+          totalSeconds = value * 60; // Assume minutes
+        } else {
+          totalSeconds = value; // Assume seconds
+        }
+      }
+    } else {
+      // Without hours: TimeInput format is M, M:S, MM:SS
+      const colonCount = (timeStr.match(/:/g) || []).length;
+      
+      if (colonCount === 1) {
+        // Format: M:S (minutes and seconds)
+        totalSeconds = (parseInt(parts[0]) || 0) * 60 + 
+                       (parseInt(parts[1]) || 0);
+      } else if (colonCount === 0 && parts.length === 1) {
+        // Only one value - could be minutes or seconds
+        const value = parseInt(parts[0]) || 0;
+        if (value > 59) {
+          totalSeconds = value * 60; // Likely minutes
+        } else {
+          totalSeconds = value; // Assume seconds
+        }
+      }
+    }
+    
+    return totalSeconds;
+  };
+
+  // Calculate paces automatically when times are entered (even partial)
   const paces = useMemo(() => {
     const result: {
       swim?: string;
@@ -52,23 +118,31 @@ export default function RaceCalculatorScreen() {
       run?: string;
     } = {};
 
-    if (swimTime && isValidTimeFormat(swimTime)) {
-      const timeInSeconds = parseTimeString(swimTime);
-      const secondsPer100m = (timeInSeconds / distances.swim) * 100;
-      result.swim = formatPace(secondsPer100m);
+    if (swimTime && swimTime.trim() !== '') {
+      const timeInSeconds = parsePartialTime(swimTime, true); // swim has hours
+      if (timeInSeconds > 0) {
+        const secondsPer100m = (timeInSeconds / distances.swim) * 100;
+        result.swim = formatPace(secondsPer100m);
+      }
     }
 
-    if (bikeTime && isValidTimeFormat(bikeTime)) {
-      const timeInSeconds = parseTimeString(bikeTime);
-      const timeInHours = timeInSeconds / 3600;
-      const kmh = distances.bike / timeInHours;
-      result.bike = `${kmh.toFixed(1)} km/h`;
+    if (bikeTime && bikeTime.trim() !== '') {
+      const timeInSeconds = parsePartialTime(bikeTime, true); // bike has hours
+      if (timeInSeconds > 0) {
+        const timeInHours = timeInSeconds / 3600;
+        if (timeInHours > 0) {
+          const kmh = distances.bike / timeInHours;
+          result.bike = `${kmh.toFixed(1)} km/h`;
+        }
+      }
     }
 
-    if (runTime && isValidTimeFormat(runTime)) {
-      const timeInSeconds = parseTimeString(runTime);
-      const secondsPerKm = timeInSeconds / distances.run;
-      result.run = formatRunPace(secondsPerKm);
+    if (runTime && runTime.trim() !== '') {
+      const timeInSeconds = parsePartialTime(runTime, true); // run has hours
+      if (timeInSeconds > 0) {
+        const secondsPerKm = timeInSeconds / distances.run;
+        result.run = formatRunPace(secondsPerKm);
+      }
     }
 
     return result;
@@ -81,20 +155,20 @@ export default function RaceCalculatorScreen() {
     try {
       const times: { [key: string]: number } = {};
       const requiredFields = [
-        { name: 'Swim', value: swimTime, key: 'swim' },
+        { name: 'Natação', value: swimTime, key: 'swim' },
         { name: 'Bike', value: bikeTime, key: 'bike' },
-        { name: 'Run', value: runTime, key: 'run' },
+        { name: 'Corrida', value: runTime, key: 'run' },
       ];
 
       // Validate required fields
       for (const field of requiredFields) {
         if (!field.value) {
-          setError(`Please enter ${field.name} time`);
+          setError(`Por favor, insira o tempo de ${field.name}`);
           setIsLoading(false);
           return;
         }
         if (!isValidTimeFormat(field.value)) {
-          setError(`Please enter a valid ${field.name} time format (MM:SS or H:MM:SS)`);
+          setError(`Por favor, insira um formato válido para ${field.name} (MM:SS ou H:MM:SS)`);
           setIsLoading(false);
           return;
         }
@@ -105,7 +179,7 @@ export default function RaceCalculatorScreen() {
       if (t1Time && isValidTimeFormat(t1Time)) {
         times.t1 = parseTimeString(t1Time);
       } else if (t1Time) {
-        setError('Please enter a valid T1 time format (MM:SS or H:MM:SS)');
+        setError('Por favor, insira um formato válido para T1 (MM:SS ou H:MM:SS)');
         setIsLoading(false);
         return;
       } else {
@@ -115,7 +189,7 @@ export default function RaceCalculatorScreen() {
       if (t2Time && isValidTimeFormat(t2Time)) {
         times.t2 = parseTimeString(t2Time);
       } else if (t2Time) {
-        setError('Please enter a valid T2 time format (MM:SS or H:MM:SS)');
+        setError('Por favor, insira um formato válido para T2 (MM:SS ou H:MM:SS)');
         setIsLoading(false);
         return;
       } else {
@@ -126,8 +200,8 @@ export default function RaceCalculatorScreen() {
       const total = times.swim + times.t1 + times.bike + times.t2 + times.run;
       setTotalTime(total);
     } catch (e) {
-      console.error('Error calculating race time', e);
-      setError('An error occurred while calculating');
+      console.error('Erro ao calcular tempo de prova', e);
+      setError('Ocorreu um erro ao calcular');
     } finally {
       setIsLoading(false);
     }
@@ -245,17 +319,16 @@ export default function RaceCalculatorScreen() {
       style={{ flex: 1 }}
     >
       <ThemedView style={styles.container}>
+          <Header
+            title="Calculadora de Tempo"
+            color={Colors.shared.primary}
+            onBackPress={() => router.back()}
+          />
         <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <Header
-            title="Race Time Calculator"
-            subtitle="Calculate your total triathlon time"
-            color={Colors.shared.primary}
-          />
-          
           <View 
             style={[
               styles.card, 
@@ -267,7 +340,7 @@ export default function RaceCalculatorScreen() {
             ]}
           >
             <DropdownSelector
-              label="Race Distance"
+              label="Distância da Prova"
               options={[
                 { label: 'Sprint (750m / 20km / 5km)', value: 'sprint' },
                 { label: 'Olímpico (1500m / 40km / 10km)', value: 'olympic' },
@@ -276,7 +349,7 @@ export default function RaceCalculatorScreen() {
               ]}
               selectedValue={raceDistance}
               onValueChange={(value: string) => setRaceDistance(value as RaceDistance)}
-              placeholder="Select race distance"
+              placeholder="Selecione a distância da prova"
             />
           </View>
 
@@ -297,7 +370,7 @@ export default function RaceCalculatorScreen() {
                   style={styles.inputLabel}
                   fontFamily="Inter-Medium"
                 >
-                  Swim Time (MM:SS or H:MM:SS)
+                  Tempo Natação
                 </ThemedText>
                 {paces.swim && (
                   <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
@@ -305,21 +378,19 @@ export default function RaceCalculatorScreen() {
                   </ThemedText>
                 )}
               </View>
-              <ThemedInput
+              <TimeInput
                 label=""
                 value={swimTime}
-                onChangeText={(text) => {
+                onChange={(text) => {
                   setSwimTime(text);
                   setError('');
                 }}
-                placeholder="25:30"
-                keyboardType="default"
-                style={styles.compactInput}
+                showHours={true}
               />
             </View>
 
             <ThemedInput
-              label="T1 - Transition 1 (MM:SS) - Optional"
+              label="T1 - Transição 1 (MM:SS) - Opcional"
               value={t1Time}
               onChangeText={(text) => {
                 setT1Time(text);
@@ -332,32 +403,30 @@ export default function RaceCalculatorScreen() {
             <View style={styles.inputWrapper}>
               <View style={styles.labelRow}>
                 <ThemedText 
-                  style={styles.inputLabel}
-                  fontFamily="Inter-Medium"
-                >
-                  Bike Time (MM:SS or H:MM:SS)
-                </ThemedText>
+                    style={styles.inputLabel}
+                    fontFamily="Inter-Medium"
+                  >
+                    Tempo Bike
+                  </ThemedText>
                 {paces.bike && (
                   <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
                     {paces.bike}
                   </ThemedText>
                 )}
               </View>
-              <ThemedInput
+              <TimeInput
                 label=""
                 value={bikeTime}
-                onChangeText={(text) => {
+                onChange={(text) => {
                   setBikeTime(text);
                   setError('');
                 }}
-                placeholder="1:15:00"
-                keyboardType="default"
-                style={styles.compactInput}
+                showHours={true}
               />
             </View>
 
             <ThemedInput
-              label="T2 - Transition 2 (MM:SS) - Optional"
+              label="T2 - Transição 2 (MM:SS) - Opcional"
               value={t2Time}
               onChangeText={(text) => {
                 setT2Time(text);
@@ -370,46 +439,44 @@ export default function RaceCalculatorScreen() {
             <View style={styles.inputWrapper}>
               <View style={styles.labelRow}>
                 <ThemedText 
-                  style={styles.inputLabel}
-                  fontFamily="Inter-Medium"
-                >
-                  Run Time (MM:SS or H:MM:SS)
-                </ThemedText>
+                    style={styles.inputLabel}
+                    fontFamily="Inter-Medium"
+                  >
+                    Tempo Corrida
+                  </ThemedText>
                 {paces.run && (
                   <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
                     {paces.run}
                   </ThemedText>
                 )}
               </View>
-              <ThemedInput
+              <TimeInput
                 label=""
                 value={runTime}
-                onChangeText={(text) => {
+                onChange={(text) => {
                   setRunTime(text);
                   setError('');
                 }}
-                placeholder="45:00"
-                keyboardType="default"
-                style={styles.compactInput}
+                showHours={true}
               />
             </View>
 
             {error && (
-              <ThemedText style={[styles.errorText, { color: '#EF4444' }]}>
+              <ThemedText style={[styles.errorText, { color: '#E84A4A' }]}> 
                 {error}
               </ThemedText>
             )}
 
             <View style={styles.buttonRow}>
               <ThemedButton
-                title="Calculate"
+                title="Calcular"
                 color={Colors.shared.primary}
                 onPress={validateAndCalculate}
                 isLoading={isLoading}
               />
               <ThemedButton
-                title="Clear"
-                color={Colors.shared.secondary}
+                title="Limpar"
+                color={Colors.shared.neutrals.gray500}
                 onPress={clearAll}
               />
             </View>
@@ -432,7 +499,7 @@ export default function RaceCalculatorScreen() {
                   style={[styles.resultsTitle, { color: Colors.shared.primary }]}
                   fontFamily="Inter-Bold"
                 >
-                  Total Race Time
+                  Tempo Total
                 </ThemedText>
                 
                 <View style={styles.actionsContainer}>
@@ -462,11 +529,11 @@ export default function RaceCalculatorScreen() {
 
               {copySuccess && (
                 <ThemedText 
-                  style={[styles.copySuccess, { color: Colors.shared.primary }]}
-                  fontFamily="Inter-Medium"
-                >
-                  Race time copied to clipboard!
-                </ThemedText>
+                    style={[styles.copySuccess, { color: Colors.shared.primary }]}
+                    fontFamily="Inter-Medium"
+                  >
+                    Tempo copiado para a área de transferência!
+                  </ThemedText>
               )}
               
               <View style={styles.totalTimeContainer}>
@@ -481,7 +548,7 @@ export default function RaceCalculatorScreen() {
               <View style={styles.breakdown}>
                 <View style={styles.breakdownItem}>
                   <View style={styles.breakdownLeft}>
-                    <ThemedText style={styles.breakdownLabel}>Swim:</ThemedText>
+                    <ThemedText style={styles.breakdownLabel}>Natação:</ThemedText>
                     {paces.swim && (
                       <ThemedText style={styles.breakdownPace}>
                         {paces.swim}
@@ -523,7 +590,7 @@ export default function RaceCalculatorScreen() {
                 )}
                 <View style={styles.breakdownItem}>
                   <View style={styles.breakdownLeft}>
-                    <ThemedText style={styles.breakdownLabel}>Run:</ThemedText>
+                    <ThemedText style={styles.breakdownLabel}>Corrida:</ThemedText>
                     {paces.run && (
                       <ThemedText style={styles.breakdownPace}>
                         {paces.run}

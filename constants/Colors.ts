@@ -1,43 +1,73 @@
 import { Platform } from 'react-native';
 
-const tintColorLight = '#2563EB';
-const tintColorDark = '#3B82F6';
+// Palette
+// New Zwift-like palette (primary laranja + accents ciano/azul)
+const primary = '#FF8C36'; // Zwift Orange Base (principal)
+const primaryDeep = '#FF6A00'; // Zwift Orange Deep (darker for highlights)
+
+const blackCarbon = '#0D0D0D';
+const graphiteDark = '#1A1A1A';
+const slateGray = '#2B2B2B';
+const pureWhite = '#FFFFFF';
+
+const gray500 = '#7A7A7A';
+const gray300 = '#CFCFCF';
+
+// Accent/secondary (Zwift style warm/cold contrast)
+const cyanLight = '#4EDFFF';
+const cyanStrong = '#00B7EB';
+const blueElectric = '#2D7FF9';
 
 export default {
   light: {
     text: '#000000',
-    background: '#F9FAFB',
-    tint: tintColorLight,
-    tabIconDefault: '#6B7280',
-    tabIconSelected: tintColorLight,
-    cardBackground: '#FFFFFF',
-    border: '#E5E7EB',
-    notification: '#FF3B30',
-    error: '#EF4444',
-    success: '#10B981',
-    warning: '#F59E0B',
+    background: pureWhite,
+    tint: primary,
+    tabIconDefault: gray500,
+    tabIconSelected: primary,
+    cardBackground: pureWhite,
+    border: gray300,
+    notification: cyanStrong,
+    error: '#E84A4A',
+    success: '#3CCF91',
+    warning: primaryDeep,
   },
   dark: {
-    text: '#FFFFFF',
-    background: '#111827',
-    tint: tintColorDark,
-    tabIconDefault: '#9CA3AF',
-    tabIconSelected: tintColorDark,
-    cardBackground: '#1F2937',
-    border: '#374151',
-    notification: '#FF453A',
-    error: '#F87171',
-    success: '#34D399',
-    warning: '#FBBF24',
+    text: pureWhite,
+    background: blackCarbon,
+    tint: primary,
+    tabIconDefault: gray300,
+    tabIconSelected: primary,
+    cardBackground: graphiteDark,
+    border: slateGray,
+    notification: cyanLight,
+    error: '#E84A4A',
+    success: '#3CCF91',
+    warning: primaryDeep,
   },
   shared: {
-    swim: '#0EA5E9',   // Blue
-    bike: '#10B981',   // Green
-    run: '#F97316',    // Orange
-    nutrition: '#EC4899', // Pink
-    profile: '#8B5CF6', // Purple
-    primary: '#2563EB',
-    secondary: '#8B5CF6',
-    accent: '#EC4899',
+    swim: '#0EA5E9',
+    bike: '#10B981',
+    run: '#F97316',
+    nutrition: '#EC4899',
+    profile: '#8B5CF6',
+    // Core palette
+    primary,
+    primaryDeep,
+    backgrounds: {
+      blackCarbon,
+      graphiteDark,
+      slateGray,
+      pureWhite,
+    },
+    neutrals: {
+      gray500,
+      gray300,
+    },
+    accents: {
+      cyanLight,
+      cyanStrong,
+      blueElectric,
+    },
   },
 };

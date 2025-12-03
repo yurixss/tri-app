@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -13,6 +13,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculatePowerZones } from '@/utils/zoneCalculations';
 import { getTestResults, saveBikeTest } from '@/hooks/useStorage';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 export default function BikeScreen() {
   const [ftp, setFtp] = useState('');
@@ -26,6 +27,8 @@ export default function BikeScreen() {
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const scrollRef = useRef<ScrollView | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
@@ -43,6 +46,11 @@ export default function BikeScreen() {
   useEffect(() => {
     loadPreviousTest();
   }, []);
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = e.nativeEvent.contentOffset.y;
+    setShowScrollTop(y > 220);
+  };
 
   const loadPreviousTest = async () => {
     const results = await getTestResults();
@@ -101,12 +109,15 @@ export default function BikeScreen() {
     >
       <ThemedView style={styles.container}>
         <ScrollView 
+          ref={scrollRef}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
           <Header
-            title="Cycling Power Zones"
+            title="Zonas de Potência - Ciclismo"
             color={Colors.shared.bike}
             onBackPress={() => router.back()} 
           />
@@ -122,14 +133,14 @@ export default function BikeScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your test result
+              Insira o resultado do seu teste
             </ThemedText>
             
             <RadioSelector
-              label="Test Type"
+              label="Tipo de Teste"
               options={[
-                { label: '20min Test', value: '20min' },
-                { label: '60min Test', value: '60min' },
+                { label: 'Teste 20min', value: '20min' },
+                { label: 'Teste 60min', value: '60min' },
               ]}
               selectedValue={testType}
               onValueChange={(value) => setTestType(value as '20min' | '60min')}
@@ -137,21 +148,21 @@ export default function BikeScreen() {
             
             <ThemedText style={commonStyles.infoText}>
               {testType === '20min' 
-                ? 'Ride as hard as you can for 20 minutes. Your FTP will be calculated as 95% of your average power.'
-                : 'Ride as hard as you can sustain for 60 minutes. This is your FTP.'}
+                ? 'Pedale o mais forte que puder por 20 minutos. Seu FTP será calculado como 95% da sua potência média.'
+                : 'Pedale o mais forte que conseguir sustentar por 60 minutos. Esse é seu FTP.'}
             </ThemedText>
             
             <ThemedInput
-              label="Average Power (watts)"
+              label="Potência média (watts)"
               value={ftp}
               onChangeText={handleFtpChange}
-              placeholder="Enter your average power"
+              placeholder="Insira sua potência média"
               keyboardType="numeric"
               error={error}
             />
             
             <ThemedButton
-              title="Calculate Zones"
+              title="Calcular Zonas"
               color={Colors.shared.bike}
               onPress={handleCalculate}
               isLoading={isLoading}
@@ -174,11 +185,11 @@ export default function BikeScreen() {
                   style={[styles.zonesTitle, { color: Colors.shared.bike }]}
                   fontFamily="Inter-Bold"
                 >
-                  Your Power Zones
+                  Suas Zonas de Potência
                 </ThemedText>
                 
                 <ZoneActions
-                  title={`Cycling Power Zones (${testType} Test: ${ftp}w)`}
+                  title={`Zonas de Potência - Ciclismo (${testType} Teste: ${ftp}w)`}
                   zones={zones}
                   color={Colors.shared.bike}
                   onCopySuccess={handleCopySuccess}
@@ -190,14 +201,14 @@ export default function BikeScreen() {
                   style={[styles.copySuccess, { color: Colors.shared.bike }]}
                   fontFamily="Inter-Medium"
                 >
-                  Zones copied to clipboard!
+                  Zonas copiadas para a área de transferência!
                 </ThemedText>
               )}
               
               <ThemedText style={commonStyles.infoText}>
                 {testType === '20min'
-                  ? `Based on 20min test: ${ftp}w (FTP: ${Math.round(Number(ftp) * 0.95)}w)`
-                  : `Based on 60min test: ${ftp}w`}
+                  ? `Baseado no teste de 20min: ${ftp}w (FTP: ${Math.round(Number(ftp) * 0.95)}w)`
+                  : `Baseado no teste de 60min: ${ftp}w`}
               </ThemedText>
               
               <View style={styles.zonesContainer}>
@@ -238,6 +249,10 @@ export default function BikeScreen() {
             </View>
           )}
         </ScrollView>
+        <ScrollToTopButton
+          visible={showScrollTop}
+          onPress={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
+        />
       </ThemedView>
     </KeyboardAvoidingView>
   );

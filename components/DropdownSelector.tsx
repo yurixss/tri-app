@@ -23,7 +23,7 @@ export function DropdownSelector({
   options,
   selectedValue,
   onValueChange,
-  placeholder = 'Select an option',
+  placeholder = 'Selecione uma opção',
 }: DropdownSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const backgroundColor = useThemeColor({}, 'cardBackground');
@@ -128,7 +128,6 @@ export function DropdownSelector({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
   },
   dropdown: {
     flexDirection: 'row',

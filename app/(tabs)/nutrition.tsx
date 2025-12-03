@@ -20,8 +20,10 @@ interface Profile {
   gender: 'male' | 'female';
 }
 
+
 export default function NutritionScreen() {
   const [trainingTime, setTrainingTime] = useState('');
+  const [temperature, setTemperature] = useState('');
   const [intensity, setIntensity] = useState<'low' | 'moderate' | 'high'>('moderate');
   const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState('');
@@ -33,8 +35,8 @@ export default function NutritionScreen() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
-  const cardBg = useThemeColor({}, 'cardBackground');
-  const borderColor = useThemeColor({}, 'border');
+  const cardBg = Colors.shared.primary + '10'; 
+  const borderColor = Colors.shared.primaryDeep;
   const router = useRouter();
 
 
@@ -60,51 +62,40 @@ export default function NutritionScreen() {
 
   const calculateNutrition = () => {
     if (!trainingTime) {
-      setError('Please enter your training time');
+      setError('Por favor, insira o tempo do seu treino');
       return;
     }
-    
     if (!isValidTimeFormat(trainingTime)) {
-      setError('Please enter a valid time format (MM:SS or H:MM:SS)');
+      setError('Por favor, insira um formato de tempo válido (MM:SS ou H:MM:SS)');
       return;
     }
-
     if (!profile) {
-      setError('Please complete your profile first');
+      setError('Por favor, complete seu perfil primeiro');
       return;
     }
-    
     setIsLoading(true);
-    
     try {
       const timeInSeconds = parseTimeString(trainingTime);
       const timeInHours = timeInSeconds / 3600;
       const weight = parseFloat(profile.weight);
-      
       // Base values per hour adjusted by intensity
       const intensityFactors = {
         low: { carbs: 30, sodium: 500 },
         moderate: { carbs: 45, sodium: 600 },
         high: { carbs: 60, sodium: 700 },
       };
-
       // Weight-based adjustments (per kg of body weight)
       const weightFactor = weight / 70; // normalized to 70kg reference weight
-      
       // Gender-based adjustments
       const genderFactor = profile.gender === 'male' ? 1.1 : 1.0;
-      
       // Calculate base values
       const baseCarbs = intensityFactors[intensity].carbs * timeInHours;
       const baseSodium = intensityFactors[intensity].sodium * timeInHours;
-      
       // Apply adjustments
       const recommendedCarbs = Math.round(baseCarbs * weightFactor * genderFactor);
       const recommendedSodium = Math.round(baseSodium * weightFactor * genderFactor);
-      
       // Calculate protein needs (post-workout)
       const recommendedProtein = Math.round(weight * 0.3); // 0.3g per kg body weight
-      
       // Calculate hydration needs (ml per hour)
       const baseHydration = 500; // base 500ml per hour
       const intensityHydrationFactor = {
@@ -112,10 +103,14 @@ export default function NutritionScreen() {
         moderate: 1.2,
         high: 1.5,
       };
-      const recommendedHydration = Math.round(
-        baseHydration * timeInHours * intensityHydrationFactor[intensity] * weightFactor
-      );
-      
+      let hydration = baseHydration * timeInHours * intensityHydrationFactor[intensity] * weightFactor;
+      // Ajuste por temperatura: acima de 25°C, aumenta 10% a cada 5°C
+      const temp = parseFloat(temperature);
+      if (!isNaN(temp) && temp > 25) {
+        const extraSteps = Math.floor((temp - 25) / 5);
+        hydration = hydration * (1 + 0.1 * extraSteps);
+      }
+      const recommendedHydration = Math.round(hydration);
       setCalculatedValues({
         carbs: recommendedCarbs,
         sodium: recommendedSodium,
@@ -134,16 +129,16 @@ export default function NutritionScreen() {
     return (
       <ThemedView style={styles.container}>
         <Header
-          title="Nutrition Calculator"
-          subtitle="Please complete your profile first"
-          color={Colors.shared.nutrition}
+          title="Calculadora de Nutrição"
+          subtitle="Por favor, complete seu perfil primeiro"
+          color={Colors.shared.primary}
         />
         <ThemedText style={styles.noProfileText}>
-          To get accurate nutrition recommendations, please complete your profile with your weight, height, and gender information.
+          Para obter recomendações de nutrição precisas, preencha seu perfil com peso, altura e gênero.
         </ThemedText>
         <ThemedButton
-          title="Go to Profile"
-          color={Colors.shared.nutrition}
+          title="Ir para Perfil"
+          color={Colors.shared.primary}
           onPress={() => router.push('/(tabs)/profile')}
         />
       </ThemedView>
@@ -162,8 +157,8 @@ export default function NutritionScreen() {
           showsVerticalScrollIndicator={false}
         >
           <Header
-            title="Nutrition Calculator"
-            color={Colors.shared.nutrition}
+            title="Calculadora de Nutrição"
+            color={Colors.shared.primary}
           />
           
           <View 
@@ -176,33 +171,39 @@ export default function NutritionScreen() {
               }
             ]}
           >
-            <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your training details
-            </ThemedText>
-            
             <ThemedInput
-              label="Training Time (HH:MM:SS)"
+              label="Tempo de Treino (HH:MM:SS)"
               value={trainingTime}
               onChangeText={handleTimeChange}
               placeholder="01:30:00"
               keyboardType="default"
               error={error}
+              style={{ borderColor: Colors.shared.primaryDeep }}
+            />
+
+            <ThemedInput
+              label="Temperatura Ambiente (°C)"
+              value={temperature}
+              onChangeText={setTemperature}
+              placeholder="25"
+              keyboardType="numeric"
+              style={{ borderColor: Colors.shared.primaryDeep }}
             />
 
             <RadioSelector
-              label="Training Intensity"
+              label="Intensidade"
               options={[
-                { label: 'Low', value: 'low' },
-                { label: 'Moderate', value: 'moderate' },
-                { label: 'High', value: 'high' },
+                { label: 'Baixa', value: 'low' },
+                { label: 'Moderada', value: 'moderate' },
+                { label: 'Alta', value: 'high' },
               ]}
               selectedValue={intensity}
               onValueChange={(value) => setIntensity(value as 'low' | 'moderate' | 'high')}
             />
             
             <ThemedButton
-              title="Calculate Needs"
-              color={Colors.shared.nutrition}
+              title="Calcular"
+              color={Colors.shared.primary}
               onPress={calculateNutrition}
               isLoading={isLoading}
             />
@@ -220,76 +221,80 @@ export default function NutritionScreen() {
               ]}
             >
               <ThemedText 
-                style={[styles.resultsTitle, { color: Colors.shared.nutrition }]}
+                style={[styles.resultsTitle, { color: Colors.shared.primary }]}
                 fontFamily="Inter-Bold"
               >
-                Recommended Intake
+                Ingestão Recomendada
+              </ThemedText>
+
+              <ThemedText style={{textAlign: 'center', marginBottom: 8, fontSize: 16, color: Colors.shared.primary}}>
+                Temperatura considerada: {temperature ? `${temperature}°C` : 'não informada'}
               </ThemedText>
               
               <View style={styles.resultGrid}>
-                <View style={styles.resultItem}>
+                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
                   <ThemedText 
-                    style={styles.resultValue}
+                    style={[styles.resultValue, { color: Colors.shared.primary }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.carbs}g
                   </ThemedText>
-                  <ThemedText style={styles.resultLabel}>
-                    Carbohydrates
+                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                    Carboidratos
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
-                    During training
+                    Durante o treino
                   </ThemedText>
                 </View>
                 
-                <View style={styles.resultItem}>
+                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
                   <ThemedText 
-                    style={styles.resultValue}
+                    style={[styles.resultValue, { color: Colors.shared.primary }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.sodium}mg
                   </ThemedText>
-                  <ThemedText style={styles.resultLabel}>
-                    Sodium
+                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                    Sódio
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
-                    Electrolytes
+                    Eletrólitos
                   </ThemedText>
                 </View>
 
-                <View style={styles.resultItem}>
+                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
                   <ThemedText 
-                    style={styles.resultValue}
+                    style={[styles.resultValue, { color: Colors.shared.primary }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.protein}g
                   </ThemedText>
-                  <ThemedText style={styles.resultLabel}>
-                    Protein
+                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                    Proteína
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
-                    Post-workout
+                    Pós-treino
                   </ThemedText>
                 </View>
 
-                <View style={styles.resultItem}>
+                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
                   <ThemedText 
-                    style={styles.resultValue}
+                    style={[styles.resultValue, { color: Colors.shared.primary }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.hydration}ml
                   </ThemedText>
-                  <ThemedText style={styles.resultLabel}>
-                    Water
+                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                    Hidratação
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
-                    During training
+                    Durante o treino
                   </ThemedText>
                 </View>
               </View>
               
-              <ThemedText style={styles.note}>
-                These recommendations are based on your weight ({profile.weight}kg), gender, training duration, and intensity level. Adjust based on personal needs and conditions.
+              <ThemedText style={[styles.note, { color: Colors.shared.primary }]}> 
+                Estas recomendações são baseadas no seu peso ({profile.weight}kg), gênero, duração, intensidade do treino e temperatura ambiente. Ajuste conforme suas necessidades pessoais.
               </ThemedText>
             </View>
           )}

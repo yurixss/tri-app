@@ -16,7 +16,7 @@ export default function Index() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.text} fontFamily="Inter-Bold">
-        Loading...
+        Carregando...
       </ThemedText>
     </ThemedView>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Platform, Switch } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
@@ -8,6 +8,7 @@ import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
+import { useTheme } from '@/constants/Theme';
 import { Camera, Edit3, UserCircle2, CheckCircle2 } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getProfile, saveProfile } from '@/hooks/useStorage';
@@ -48,6 +49,7 @@ export default function ProfileScreen() {
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const theme = useTheme();
 
   useEffect(() => {
     loadProfile();
@@ -108,7 +110,7 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Header
-          title="Profile"
+          title="Perfil"
           color={Colors.shared.profile}
         />
         
@@ -122,6 +124,17 @@ export default function ProfileScreen() {
             }
           ]}
         >
+            <View style={styles.themeRow}>
+              <ThemedText style={{ fontSize: 16, marginRight: 12 }} fontFamily="Inter-Medium">Tema do app</ThemedText>
+              <View style={{ flex: 1 }} />
+              <Switch
+                value={theme.choice === 'dark'}
+                onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
+                trackColor={{ false: '#767577', true: Colors.shared.primary }}
+                thumbColor={theme.choice === 'dark' ? '#fff' : '#fff'}
+              />
+            </View>
+
           <View style={styles.photoContainer}>
             <View style={[styles.photoWrapper, { borderColor }]}>
               {profile.photo ? (
@@ -374,6 +387,11 @@ const styles = StyleSheet.create({
     height: 80,
     textAlignVertical: 'top',
     paddingTop: 12,
+  },
+  themeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   toast: {
     position: 'absolute',

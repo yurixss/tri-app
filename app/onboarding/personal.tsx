@@ -24,11 +24,11 @@ export default function PersonalInfo() {
     const newErrors: typeof errors = {};
     
     if (!weight || isNaN(Number(weight)) || Number(weight) <= 0) {
-      newErrors.weight = 'Please enter a valid weight';
+      newErrors.weight = 'Por favor, insira um peso válido';
     }
     
     if (!height || isNaN(Number(height)) || Number(height) <= 0) {
-      newErrors.height = 'Please enter a valid height';
+      newErrors.height = 'Por favor, insira uma altura válida';
     }
     
     setErrors(newErrors);
@@ -51,16 +51,16 @@ export default function PersonalInfo() {
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
-            Personal Information
+            Informações Pessoais
           </ThemedText>
           
           <ThemedText style={styles.subtitle}>
-            Help us personalize your experience
+            Ajude-nos a personalizar sua experiência
           </ThemedText>
 
           <View style={styles.form}>
             <ThemedInput
-              label="Weight (kg)"
+              label="Peso (kg)"
               value={weight}
               onChangeText={setWeight}
               placeholder="70"
@@ -69,7 +69,7 @@ export default function PersonalInfo() {
             />
 
             <ThemedInput
-              label="Height (cm)"
+              label="Altura (cm)"
               value={height}
               onChangeText={setHeight}
               placeholder="175"
@@ -78,10 +78,10 @@ export default function PersonalInfo() {
             />
 
             <RadioSelector
-              label="Gender"
+              label="Gênero"
               options={[
-                { label: 'Male', value: 'male' },
-                { label: 'Female', value: 'female' },
+                { label: 'Masculino', value: 'male' },
+                { label: 'Feminino', value: 'female' },
               ]}
               selectedValue={gender}
               onValueChange={(value) => setGender(value as 'male' | 'female')}
@@ -91,7 +91,7 @@ export default function PersonalInfo() {
       </ScrollView>
 
       <ThemedButton
-        title="Continue"
+        title="Continuar"
         color={Colors.shared.primary}
         onPress={handleContinue}
       />

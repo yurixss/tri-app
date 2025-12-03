@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -14,6 +14,7 @@ import { useThemeColor } from '@/constants/Styles';
 import { calculateRunningPaceZones } from '@/utils/zoneCalculations';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { getTestResults, saveRunTest } from '@/hooks/useStorage';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 export default function RunScreen() {
   const [testTime, setTestTime] = useState('');
@@ -27,6 +28,8 @@ export default function RunScreen() {
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const scrollRef = useRef<ScrollView | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
@@ -42,6 +45,11 @@ export default function RunScreen() {
   useEffect(() => {
     loadPreviousTest();
   }, []);
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = e.nativeEvent.contentOffset.y;
+    setShowScrollTop(y > 220);
+  };
 
   const loadPreviousTest = async () => {
     const results = await getTestResults();
@@ -66,12 +74,12 @@ export default function RunScreen() {
 
   const handleCalculate = async () => {
     if (!testTime) {
-      setError('Please enter your test time');
+      setError('Por favor, insira o tempo do seu teste');
       return;
     }
     
     if (!isValidTimeFormat(testTime)) {
-      setError('Please enter a valid time format (MM:SS or H:MM:SS)');
+      setError('Por favor, insira um formato de tempo válido (MM:SS ou H:MM:SS)');
       return;
     }
     
@@ -101,12 +109,15 @@ export default function RunScreen() {
     >
       <ThemedView style={styles.container}>
         <ScrollView 
+          ref={scrollRef}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
           <Header
-            title="Running Pace Zones"
+            title="Zonas de Ritmo - Corrida"
             color={Colors.shared.run}
             onBackPress={() => router.back()} 
           />
@@ -122,34 +133,34 @@ export default function RunScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Enter your test information
+              Insira os dados do seu teste
             </ThemedText>
             
             <ThemedText style={commonStyles.infoText}>
-              Run as fast as you can maintain for the entire distance.
+              Corra o mais rápido que conseguir manter durante toda a distância.
             </ThemedText>
             
             <RadioSelector
-              label="Test Distance"
+              label="Distância do Teste"
               options={[
-                { label: '3km Test', value: '3km' },
-                { label: '5km Test', value: '5km' },
+                { label: 'Teste 3km', value: '3km' },
+                { label: 'Teste 5km', value: '5km' },
               ]}
               selectedValue={testType}
               onValueChange={(value) => setTestType(value as '3km' | '5km')}
             />
             
             <ThemedInput
-              label="Test Time (MM:SS)"
+              label="Tempo do Teste (MM:SS)"
               value={testTime}
               onChangeText={handleTestTimeChange}
-              placeholder="e.g. 23:45"
+              placeholder="ex. 23:45"
               keyboardType="default"
               error={error}
             />
             
             <ThemedButton
-              title="Calculate Zones"
+              title="Calcular Zonas"
               color={Colors.shared.run}
               onPress={handleCalculate}
               isLoading={isLoading}
@@ -172,7 +183,7 @@ export default function RunScreen() {
                   style={[styles.zonesTitle, { color: Colors.shared.run }]}
                   fontFamily="Inter-Bold"
                 >
-                  Your Pace Zones
+                  Suas Zonas de Ritmo
                 </ThemedText>
                 
                 <ZoneActions
@@ -188,12 +199,12 @@ export default function RunScreen() {
                   style={[styles.copySuccess, { color: Colors.shared.run }]}
                   fontFamily="Inter-Medium"
                 >
-                  Zones copied to clipboard!
+                  Zonas copiadas para a área de transferência!
                 </ThemedText>
               )}
 
               <ThemedText style={commonStyles.infoText}>
-                Based on {testType} test: {testTime}
+                Baseado no teste {testType}: {testTime}
               </ThemedText>
               
               <View style={styles.zonesContainer}>
@@ -234,6 +245,10 @@ export default function RunScreen() {
             </View>
           )}
         </ScrollView>
+        <ScrollToTopButton
+          visible={showScrollTop}
+          onPress={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
+        />
       </ThemedView>
     </KeyboardAvoidingView>
   );

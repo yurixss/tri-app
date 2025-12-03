@@ -31,20 +31,20 @@ export default function TrainingZonesScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <Header 
+        title="Zonas de Treino"
+        onBackPress={() => router.back()}
+      />
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Header 
-          title="Training Zones"
-          subtitle="Calculate and view your training zones"
-        />
 
         <SportCard
-          title="Cycling"
+          title="Ciclismo"
           color={Colors.shared.bike}
-          description="Calculate power zones based on your FTP"
+          description="Calcular zonas de potência com base no seu FTP"
           testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
           testDate={testResults.bike?.date}
           onPress={() => navigateToTest('/bike')}
@@ -53,9 +53,9 @@ export default function TrainingZonesScreen() {
         />
         
         <SportCard
-          title="Running"
+          title="Corrida"
           color={Colors.shared.run}
-          description="Calculate pace zones based on 3km or 5km test"
+          description="Calcular zonas de ritmo com base no teste de 3km ou 5km"
           testData={testResults.run 
             ? `${testResults.run.testType}: ${formatTimeFromSeconds(testResults.run.testTime)}`
             : undefined
@@ -67,9 +67,9 @@ export default function TrainingZonesScreen() {
         />
         
         <SportCard
-          title="Swimming"
+          title="Natação"
           color={Colors.shared.swim}
-          description="Calculate pace zones based on 400m test"
+          description="Calcular zonas de ritmo com base no teste de 400m"
           testData={testResults.swim 
             ? `400m: ${formatTimeFromSeconds(testResults.swim.time400m)}` 
             : undefined
@@ -149,7 +149,7 @@ function SportCard({
             
             {formattedDate && (
               <ThemedText style={styles.testDate}>
-                Last updated: {formattedDate}
+                Última atualização: {formattedDate}
               </ThemedText>
             )}
           </View>
@@ -157,7 +157,7 @@ function SportCard({
       </View>
       
       <ThemedButton 
-        title={testData ? "Update" : "Calculate"}
+        title={testData ? "Atualizar" : "Calcular"}
         color={color}
         onPress={onPress}
       />

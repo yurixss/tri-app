@@ -1,15 +1,19 @@
 {
   "expo": {
-    "name": "bolt-expo-nativewind",
-    "slug": "bolt-expo-nativewind",
+    "name": "TriCalc Pro",
+    "slug": "tricalc-pro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "tricalcpro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yurixss.tricalcpro"
+    },
+    "android": {
+      "package": "com.yurixss.tricalcpro"
     },
     "web": {
       "bundler": "metro",

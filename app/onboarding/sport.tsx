@@ -20,25 +20,25 @@ interface SportOption {
 const sports: SportOption[] = [
   {
     id: 'triathlete',
-    label: 'Triathlete',
+    label: 'Triatleta',
     icon: Trophy,
     color: Colors.shared.profile,
   },
   {
     id: 'runner',
-    label: 'Runner',
+    label: 'Corredor',
     icon: MountainSnow,
     color: Colors.shared.run,
   },
   {
     id: 'swimmer',
-    label: 'Swimmer',
+    label: 'Nadador',
     icon: Waves,
     color: Colors.shared.swim,
   },
   {
     id: 'cyclist',
-    label: 'Cyclist',
+    label: 'Ciclista',
     icon: Bike,
     color: Colors.shared.bike,
   },
@@ -59,11 +59,11 @@ export default function SportSelection() {
     <ThemedView style={styles.container}>
       <View style={styles.content}>
         <ThemedText style={styles.title} fontFamily="Inter-Bold">
-          Welcome! Let's get started
+          Bem-vindo! Vamos começar
         </ThemedText>
         
         <ThemedText style={styles.subtitle}>
-          What's your main sport?
+          Qual é seu esporte principal?
         </ThemedText>
 
         <View style={styles.grid}>
@@ -101,7 +101,7 @@ export default function SportSelection() {
       </View>
 
       <ThemedButton
-        title="Continue"
+        title="Continuar"
         color={selectedSport ? Colors.shared.primary : '#A1A1AA'}
         onPress={handleContinue}
         disabled={!selectedSport}

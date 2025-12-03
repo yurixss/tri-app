@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
   },
   subtitle: {

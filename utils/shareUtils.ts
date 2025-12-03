@@ -28,13 +28,13 @@ export async function copyZonesToClipboard(title: string, zones: any[]) {
 
 function formatZonesForSharing(title: string, zones: any[]): string {
   let text = `${title}\n\n`;
-  
+
   zones.forEach(zone => {
-    text += `Zone ${zone.zone}: ${zone.name}\n`;
+    text += `Zona ${zone.zone}: ${zone.name}\n`;
     text += `${zone.range}\n`;
     text += `${zone.description}\n\n`;
   });
-  
+
   return text;
 }
 
@@ -70,7 +70,7 @@ export async function shareRaceTime(data: RaceTimeData) {
   try {
     await Share.share({
       message: formattedText,
-      title: 'Race Time Results',
+      title: 'Resultado do Tempo de Prova',
     });
   } catch (error) {
     console.error('Error sharing race time:', error);
@@ -90,38 +90,38 @@ export async function copyRaceTimeToClipboard(data: RaceTimeData) {
 }
 
 function formatRaceTimeForSharing(data: RaceTimeData): string {
-  let text = `🏊‍♂️ Triathlon Race Time - ${data.raceDistance}\n\n`;
-  text += `⏱️ Total Time: ${data.totalTime}\n\n`;
-  
-  text += `🏊 Swim (${data.swim.distance})\n`;
-  text += `   Time: ${data.swim.time}\n`;
+  let text = `🏊‍♂️ Tempo de Prova - ${data.raceDistance}\n\n`;
+  text += `⏱️ Tempo Total: ${data.totalTime}\n\n`;
+
+  text += `🏊 Natação (${data.swim.distance})\n`;
+  text += `   Tempo: ${data.swim.time}\n`;
   if (data.swim.pace) {
-    text += `   Pace: ${data.swim.pace}\n`;
+    text += `   Ritmo: ${data.swim.pace}\n`;
   }
   text += `\n`;
-  
+
   if (data.t1) {
-    text += `🔄 T1 (Transition 1)\n`;
-    text += `   Time: ${data.t1.time}\n\n`;
+    text += `🔄 T1 (Transição 1)\n`;
+    text += `   Tempo: ${data.t1.time}\n\n`;
   }
-  
-  text += `🚴 Bike (${data.bike.distance})\n`;
-  text += `   Time: ${data.bike.time}\n`;
+
+  text += `🚴 Ciclismo (${data.bike.distance})\n`;
+  text += `   Tempo: ${data.bike.time}\n`;
   if (data.bike.pace) {
-    text += `   Pace: ${data.bike.pace}\n`;
+    text += `   Ritmo: ${data.bike.pace}\n`;
   }
   text += `\n`;
-  
+
   if (data.t2) {
-    text += `🔄 T2 (Transition 2)\n`;
-    text += `   Time: ${data.t2.time}\n\n`;
+    text += `🔄 T2 (Transição 2)\n`;
+    text += `   Tempo: ${data.t2.time}\n\n`;
   }
-  
-  text += `🏃 Run (${data.run.distance})\n`;
-  text += `   Time: ${data.run.time}\n`;
+
+  text += `🏃 Corrida (${data.run.distance})\n`;
+  text += `   Tempo: ${data.run.time}\n`;
   if (data.run.pace) {
-    text += `   Pace: ${data.run.pace}\n`;
+    text += `   Ritmo: ${data.run.pace}\n`;
   }
-  
+
   return text;
 }
