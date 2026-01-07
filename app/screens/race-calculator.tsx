@@ -10,7 +10,7 @@ import { DropdownSelector } from '@/components/DropdownSelector';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat, formatPace, formatRunPace } from '@/utils/timeUtils';
+import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
 import { Share2, Copy } from 'lucide-react-native';
 import { shareRaceTime, copyRaceTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
 
@@ -71,9 +71,17 @@ export default function RaceCalculatorScreen() {
                        (parseInt(parts[1]) || 0) * 60 + 
                        (parseInt(parts[2]) || 0);
       } else if (colonCount === 1) {
-        // Format: H:M (hours and minutes only)
-        totalSeconds = (parseInt(parts[0]) || 0) * 3600 + 
-                       (parseInt(parts[1]) || 0) * 60;
+        // Format: H:M (hours and minutes only, no seconds)
+        const firstValue = parseInt(parts[0]) || 0;
+        if (firstValue > 59) {
+          // If first value > 59, treat as minutes:something
+          totalSeconds = firstValue * 60 + 
+                         (parseInt(parts[1]) || 0);
+        } else {
+          // Format: H:M (hours and minutes)
+          totalSeconds = firstValue * 3600 + 
+                         (parseInt(parts[1]) || 0) * 60;
+        }
       } else if (colonCount === 0 && parts.length === 1) {
         // Only one value - could be hours, minutes, or seconds
         // Check position by looking at the original string structure
@@ -167,12 +175,13 @@ export default function RaceCalculatorScreen() {
           setIsLoading(false);
           return;
         }
-        if (!isValidTimeFormat(field.value)) {
-          setError(`Por favor, insira um formato válido para ${field.name} (MM:SS ou H:MM:SS)`);
+        // swim, bike, run use H:M format (no seconds)
+        if (!isValidTimeFormatWithoutSeconds(field.value)) {
+          setError(`Por favor, insira um formato válido para ${field.name} (H:M ou H:MM)`);
           setIsLoading(false);
           return;
         }
-        times[field.key] = parseTimeString(field.value);
+        times[field.key] = parseTimeStringWithoutSeconds(field.value);
       }
 
       // Optional transition times
@@ -240,17 +249,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeString(swimTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeString(bikeTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeString(runTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -278,17 +287,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeString(swimTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeString(bikeTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeString(runTime)),
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -386,6 +395,7 @@ export default function RaceCalculatorScreen() {
                   setError('');
                 }}
                 showHours={true}
+                showSeconds={false}
               />
             </View>
 
@@ -422,6 +432,7 @@ export default function RaceCalculatorScreen() {
                   setError('');
                 }}
                 showHours={true}
+                showSeconds={false}
               />
             </View>
 
@@ -458,6 +469,7 @@ export default function RaceCalculatorScreen() {
                   setError('');
                 }}
                 showHours={true}
+                showSeconds={false}
               />
             </View>
 
@@ -556,7 +568,7 @@ export default function RaceCalculatorScreen() {
                     )}
                   </View>
                   <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeString(swimTime))}
+                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime))}
                   </ThemedText>
                 </View>
                 {t1Time && (
@@ -577,7 +589,7 @@ export default function RaceCalculatorScreen() {
                     )}
                   </View>
                   <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeString(bikeTime))}
+                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime))}
                   </ThemedText>
                 </View>
                 {t2Time && (
@@ -598,7 +610,7 @@ export default function RaceCalculatorScreen() {
                     )}
                   </View>
                   <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeString(runTime))}
+                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime))}
                   </ThemedText>
                 </View>
               </View>

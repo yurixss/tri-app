@@ -4,13 +4,17 @@
     "slug": "tricalc-pro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/tri-icon.png",
     "scheme": "tricalcpro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.yurixss.tricalcpro",
+      "buildNumber": "1",
       "supportsTablet": true,
-      "bundleIdentifier": "com.yurixss.tricalcpro"
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.yurixss.tricalcpro"
@@ -28,6 +32,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bd3a21e0-9952-4caf-8510-8e253933bd2d"
+      }
     }
   }
 }

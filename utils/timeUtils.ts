@@ -42,7 +42,28 @@ export function parseTimeString(timeString: string): number {
   return 0;
 }
 
+export function parseTimeStringWithoutSeconds(timeString: string): number {
+  // Handles formats like "30" (30 minutes), "1:30" (1 hour 30 minutes)
+  const parts = timeString.split(':').map(part => parseInt(part, 10));
+  
+  if (parts.length === 2) {
+    // Hours, minutes (no seconds)
+    return parts[0] * 3600 + parts[1] * 60;
+  } else if (parts.length === 1 && !isNaN(parts[0])) {
+    // Just minutes (not seconds!)
+    return parts[0] * 60;
+  }
+  
+  return 0;
+}
+
 export function isValidTimeFormat(timeString: string): boolean {
   // Check if the string matches the format "MM:SS" or "H:MM:SS"
   return /^(\d+:)?[0-5]?\d:[0-5]\d$/.test(timeString);
+}
+
+export function isValidTimeFormatWithoutSeconds(timeString: string): boolean {
+  // Check if the string matches the format "H:M" or "H:MM" or just "M"
+  // Accepts: "5", "30", "1:30", "2:45", etc.
+  return /^\d{1,2}(?::\d{1,2})?$/.test(timeString);
 }

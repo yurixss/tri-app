@@ -16,7 +16,7 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const system = useSystemColorScheme() ?? 'light';
-  const [choice, setChoiceState] = useState<ThemeChoice>('dark');
+  const [choice, setChoiceState] = useState<ThemeChoice>('light');
 
   useEffect(() => {
     let mounted = true;
@@ -27,9 +27,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         if (saved === 'light' || saved === 'dark' || saved === 'system') {
           setChoiceState(saved);
         } else {
-          // se não houver preferência salva, ativar dark por padrão conforme solicitado
-          setChoiceState('dark');
-          await storage.saveValue(STORAGE_KEY, 'dark');
+          // se não houver preferência salva, ativar light por padrão conforme solicitado
+          setChoiceState('light');
+          await storage.saveValue(STORAGE_KEY, 'light');
         }
       } catch (e) {
         console.warn('Failed to load theme choice', e);
@@ -68,8 +68,8 @@ export function useTheme() {
   if (!ctx) {
     // Retorno padrão caso o provedor ainda não esteja montado (evita crashes em hooks)
     return {
-      choice: 'dark' as ThemeChoice,
-      colorScheme: 'dark' as 'light' | 'dark',
+      choice: 'light' as ThemeChoice,
+      colorScheme: 'light' as 'light' | 'dark',
       setChoice: () => {},
     };
   }

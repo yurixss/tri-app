@@ -9,6 +9,7 @@ interface TimeInputProps {
   value: string; // Format: "HH:MM:SS" or "MM:SS"
   onChange: (time: string) => void;
   showHours?: boolean;
+  showSeconds?: boolean;
   placeholder?: string;
 }
 
@@ -17,6 +18,7 @@ export function TimeInput({
   value,
   onChange,
   showHours = false,
+  showSeconds = true,
   placeholder,
 }: TimeInputProps) {
   const backgroundColor = useThemeColor({}, 'cardBackground');
@@ -90,23 +92,29 @@ export function TimeInput({
         const parts = [];
         if (hours) parts.push(hours);
         if (minutes) parts.push(minutes);
-        if (seconds) parts.push(seconds);
+        if (showSeconds && seconds) parts.push(seconds);
         return parts.length > 0 ? parts.join(':') : '';
       }
       const h = hours ? hours.padStart(2, '0') : '00';
       const m = minutes ? minutes.padStart(2, '0') : '00';
-      const s = seconds ? seconds.padStart(2, '0') : '00';
-      return `${h}:${m}:${s}`;
+      if (showSeconds) {
+        const s = seconds ? seconds.padStart(2, '0') : '00';
+        return `${h}:${m}:${s}`;
+      }
+      return `${h}:${m}`;
     } else {
       if (skipPadding) {
         const parts = [];
         if (minutes) parts.push(minutes);
-        if (seconds) parts.push(seconds);
+        if (showSeconds && seconds) parts.push(seconds);
         return parts.length > 0 ? parts.join(':') : '';
       }
       const m = minutes ? minutes.padStart(2, '0') : '00';
-      const s = seconds ? seconds.padStart(2, '0') : '00';
-      return `${m}:${s}`;
+      if (showSeconds) {
+        const s = seconds ? seconds.padStart(2, '0') : '00';
+        return `${m}:${s}`;
+      }
+      return m;
     }
   };
 
@@ -197,24 +205,28 @@ export function TimeInput({
           <ThemedText style={styles.unitLabel}>m</ThemedText>
         </View>
         
-        <ThemedText style={styles.separator}>:</ThemedText>
-        
-        <View style={styles.inputGroup}>
-          <TextInput
-            style={[
-              styles.timeInput,
-              { backgroundColor, color: textColor, borderColor }
-            ]}
-            value={timeParts.seconds}
-            onChangeText={(text) => handleChange('seconds', text)}
-            placeholder="00"
-            placeholderTextColor="#9CA3AF"
-            keyboardType="number-pad"
-            maxLength={2}
-            selectTextOnFocus
-          />
-          <ThemedText style={styles.unitLabel}>s</ThemedText>
-        </View>
+        {showSeconds && (
+          <>
+            <ThemedText style={styles.separator}>:</ThemedText>
+            
+            <View style={styles.inputGroup}>
+              <TextInput
+                style={[
+                  styles.timeInput,
+                  { backgroundColor, color: textColor, borderColor }
+                ]}
+                value={timeParts.seconds}
+                onChangeText={(text) => handleChange('seconds', text)}
+                placeholder="00"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="number-pad"
+                maxLength={2}
+                selectTextOnFocus
+              />
+              <ThemedText style={styles.unitLabel}>s</ThemedText>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
