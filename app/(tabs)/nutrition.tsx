@@ -11,7 +11,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { useRouter } from 'expo-router';
-import { getProfile } from '@/hooks/useStorage';
+import { getProfile, getOnboardingData } from '@/hooks/useStorage';
 
 
 interface Profile {
@@ -34,6 +34,7 @@ export default function NutritionScreen() {
     hydration: number;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   
   const cardBg = Colors.shared.primary + '10'; 
   const borderColor = Colors.shared.primaryDeep;
@@ -52,7 +53,18 @@ export default function NutritionScreen() {
         height: userProfile.height,
         gender: userProfile.gender,
       });
+    } else {
+      // Se não houver perfil completo, tenta carregar dados do onboarding
+      const onboardingData = await getOnboardingData();
+      if (onboardingData?.weight && onboardingData?.height && onboardingData?.gender) {
+        setProfile({
+          weight: onboardingData.weight,
+          height: onboardingData.height,
+          gender: onboardingData.gender,
+        });
+      }
     }
+    setIsLoadingProfile(false);
   };
 
   const handleTimeChange = (text: string) => {
@@ -124,6 +136,21 @@ export default function NutritionScreen() {
       setIsLoading(false);
     }
   };
+
+  if (isLoadingProfile) {
+    return (
+      <ThemedView style={styles.container}>
+        <Header
+          title="Calculadora de Nutrição"
+          subtitle="Carregando seu perfil..."
+          color={Colors.shared.primary}
+        />
+        <ThemedText style={styles.noProfileText}>
+          Por favor, aguarde...
+        </ThemedText>
+      </ThemedView>
+    );
+  }
 
   if (!profile) {
     return (

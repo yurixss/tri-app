@@ -164,6 +164,14 @@ export interface TestResults {
   };
 }
 
+export async function deleteAllData(): Promise<void> {
+  await deleteValue('userProfile');
+  await deleteValue('onboardingData');
+  await deleteValue('testResults');
+  // Reset onboarding to show it again on next launch
+  await saveOnboardingData({ onboardingComplete: false });
+}
+
 export default {
   saveValue,
   getValue,
@@ -176,5 +184,6 @@ export default {
   saveTestResults,
   saveBikeTest, 
   saveRunTest,
-  saveSwimTest
+  saveSwimTest,
+  deleteAllData
 };

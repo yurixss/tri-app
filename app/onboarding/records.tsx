@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
-import { Check } from 'lucide-react-native';
+import { Check, ChevronLeft } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData, getOnboardingData } from '@/hooks/useStorage';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
@@ -28,13 +28,13 @@ interface SportRecords {
 
 const sportRecords: SportRecords = {
   triathlete: {
-    bike: ['20km', '50km', '100km'],
-    swim: ['200m', '400m', '1500m', '1900m', '3800m'],
-    run: ['5km', '10km', '21km', '42km'],
+    bike: ['FTP (20min)', 'FTP (1hr)'],
+    swim: ['400m'],
+    run: ['5km'],
   },
-  cyclist: ['20km', '50km', '100km'],
-  swimmer: ['200m', '400m', '1500m', '1900m', '3800m'],
-  runner: ['5km', '10km', '21km', '42km'],
+  cyclist: ['FTP (20min)', 'FTP (1hr)'],
+  swimmer: ['400m'],
+  runner: ['5km'],
 };
 
 export default function PersonalRecords() {
@@ -103,8 +103,17 @@ export default function PersonalRecords() {
     }
   };
 
+  const handleSkip = async () => {
+    await saveOnboardingData({ onboardingComplete: true });
+    router.replace('/(tabs)');
+  };
+
   return (
     <ThemedView style={styles.container}>
+      <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <ChevronLeft size={24} color={Colors.shared.primary} />
+      </Pressable>
+
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
@@ -130,11 +139,11 @@ export default function PersonalRecords() {
                       label="Tempo (MM:SS)"
                       value={record?.time || ''}
                       onChangeText={(time) => handleTimeChange(distance, time)}
-                      placeholder="23:45"
+                      placeholder="MM:SS"
                       error={errors[distance]}
                     />
                     
-                    {record?.time && !errors[distance] && (
+                    {record?.time && isValidTimeFormat(record.time) && !errors[distance] && (
                       <View style={styles.checkmark}>
                         <Check size={20} color={Colors.light.success} />
                       </View>
@@ -152,6 +161,10 @@ export default function PersonalRecords() {
         color={Colors.shared.primary}
         onPress={handleComplete}
       />
+
+      <Pressable style={styles.skipButton} onPress={handleSkip}>
+        <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }
@@ -161,12 +174,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  backButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    marginBottom: 12,
+  },
   scrollView: {
     flex: 1,
   },
   content: {
     flex: 1,
-    paddingTop: 60,
+    justifyContent: 'center',
     paddingBottom: 32,
   },
   title: {
@@ -196,5 +214,20 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     marginTop: -16,
+  },
+  skipButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: Colors.shared.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: Colors.shared.primary,
   },
 });

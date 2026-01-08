@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
+import { ChevronLeft } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData } from '@/hooks/useStorage';
 
@@ -46,8 +47,17 @@ export default function PersonalInfo() {
     }
   };
 
+  const handleSkip = async () => {
+    await saveOnboardingData({ onboardingComplete: true });
+    router.replace('/(tabs)');
+  };
+
   return (
     <ThemedView style={styles.container}>
+      <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <ChevronLeft size={24} color={Colors.shared.primary} />
+      </Pressable>
+
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
@@ -95,6 +105,10 @@ export default function PersonalInfo() {
         color={Colors.shared.primary}
         onPress={handleContinue}
       />
+
+      <Pressable style={styles.skipButton} onPress={handleSkip}>
+        <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }
@@ -104,12 +118,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  backButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    marginBottom: 12,
+  },
   scrollView: {
     flex: 1,
   },
   content: {
     flex: 1,
-    paddingTop: 60,
+    justifyContent: 'center',
+    paddingBottom: 32,
   },
   title: {
     fontSize: 28,
@@ -124,5 +144,20 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 16,
+  },
+  skipButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: Colors.shared.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: Colors.shared.primary,
   },
 });

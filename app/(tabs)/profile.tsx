@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Platform, Switch } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Platform, Switch, Alert } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
@@ -9,9 +9,10 @@ import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTheme } from '@/constants/Theme';
-import { Camera, Edit3, UserCircle2, CheckCircle2 } from 'lucide-react-native';
+import { Camera, Edit3, UserCircle2, CheckCircle2, Trash2 } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { getProfile, saveProfile } from '@/hooks/useStorage';
+import { getProfile, saveProfile, deleteAllData, getOnboardingData } from '@/hooks/useStorage';
+import { useRouter } from 'expo-router';
 
 type TrainingGoal = 
   | 'Super Sprint (200m, 4km, 1km)'
@@ -45,11 +46,13 @@ export default function ProfileScreen() {
   });
   const [errors, setErrors] = useState<Partial<Profile>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showToast, setShowToast] = useState(false);
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const theme = useTheme();
+  const router = useRouter();
 
   useEffect(() => {
     loadProfile();
@@ -59,6 +62,17 @@ export default function ProfileScreen() {
     const savedProfile = await getProfile();
     if (savedProfile) {
       setProfile(savedProfile);
+    } else {
+      // Se não houver perfil salvo, tenta carregar dados do onboarding
+      const onboardingData = await getOnboardingData();
+      if (onboardingData) {
+        setProfile(prev => ({
+          ...prev,
+          weight: onboardingData.weight || prev.weight,
+          height: onboardingData.height || prev.height,
+          gender: onboardingData.gender || prev.gender,
+        }));
+      }
     }
   };
 
@@ -99,6 +113,39 @@ export default function ProfileScreen() {
       console.error('Error saving profile', e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account? This action will permanently remove all your data including your profile, training records, and test results. This cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: confirmDeleteAccount,
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const confirmDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      await deleteAllData();
+      // Navigate to onboarding after deletion
+      router.replace('/onboarding/sport');
+    } catch (e) {
+      console.error('Error deleting account', e);
+      Alert.alert('Error', 'Failed to delete account. Please try again.');
+      setIsDeletingAccount(false);
     }
   };
 
@@ -276,6 +323,19 @@ export default function ProfileScreen() {
             onPress={handleSave}
             isLoading={isLoading}
           />
+
+          <View style={styles.deleteButtonContainer}>
+            <TouchableOpacity
+              style={[styles.deleteButton, { borderColor: Colors.shared.delete || '#EF4444' }]}
+              onPress={handleDeleteAccount}
+              disabled={isDeletingAccount}
+            >
+              <Trash2 size={20} color={Colors.shared.delete || '#EF4444'} />
+              <ThemedText style={[styles.deleteButtonText, { color: Colors.shared.delete || '#EF4444' }]}>
+                {isDeletingAccount ? 'Deleting Account...' : 'Delete Account'}
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
@@ -415,6 +475,24 @@ const styles = StyleSheet.create({
   },
   toastText: {
     color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+  },
+  deleteButtonContainer: {
+    marginTop: 12,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    backgroundColor: 'transparent',
+  },
+  deleteButtonText: {
     fontSize: 14,
     fontFamily: 'Inter-Medium',
   },

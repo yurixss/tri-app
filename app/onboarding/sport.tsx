@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedButton } from '@/components/ThemedButton';
-import { Bike, MountainSnow, Waves, Trophy } from 'lucide-react-native';
+import { Bike, MountainSnow, Waves, Trophy, User } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData } from '@/hooks/useStorage';
 
@@ -27,7 +27,7 @@ const sports: SportOption[] = [
   {
     id: 'runner',
     label: 'Corredor',
-    icon: MountainSnow,
+    icon: User,
     color: Colors.shared.run,
   },
   {
@@ -55,6 +55,11 @@ export default function SportSelection() {
     }
   };
 
+  const handleSkip = async () => {
+    await saveOnboardingData({ onboardingComplete: true });
+    router.replace('/(tabs)');
+  };
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.content}>
@@ -63,7 +68,7 @@ export default function SportSelection() {
         </ThemedText>
         
         <ThemedText style={styles.subtitle}>
-          Qual é seu esporte principal?
+          O que você é?
         </ThemedText>
 
         <View style={styles.grid}>
@@ -76,24 +81,26 @@ export default function SportSelection() {
                 key={sport.id}
                 style={[
                   styles.sportOption,
-                  isSelected && { borderColor: sport.color, borderWidth: 2 }
+                  isSelected && { borderColor: sport.color }
                 ]}
                 onPress={() => setSelectedSport(sport.id)}
               >
-                <Icon
-                  size={32}
-                  color={isSelected ? sport.color : '#6B7280'}
-                  style={styles.icon}
-                />
-                <ThemedText
-                  style={[
-                    styles.sportLabel,
-                    isSelected && { color: sport.color }
-                  ]}
-                  fontFamily="Inter-Medium"
-                >
-                  {sport.label}
-                </ThemedText>
+                <View style={styles.sportContent}>
+                  <Icon
+                    size={32}
+                    color={isSelected ? sport.color : '#6B7280'}
+                    style={styles.icon}
+                  />
+                  <ThemedText
+                    style={[
+                      styles.sportLabel,
+                      isSelected && { color: sport.color }
+                    ]}
+                    fontFamily="Inter-Medium"
+                  >
+                    {sport.label}
+                  </ThemedText>
+                </View>
               </Pressable>
             );
           })}
@@ -106,6 +113,10 @@ export default function SportSelection() {
         onPress={handleContinue}
         disabled={!selectedSport}
       />
+
+      <Pressable style={styles.skipButton} onPress={handleSkip}>
+        <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }
@@ -114,6 +125,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  skipButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: Colors.shared.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipText: {
+    fontSize: 14,
+    opacity: 0.6,
+    fontWeight: '500',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: Colors.shared.primary,
   },
   content: {
     flex: 1,
@@ -133,23 +164,32 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
-    paddingHorizontal: 16,
+    gap: 12,
+    paddingHorizontal: 8,
   },
   sportOption: {
     flex: 1,
     minWidth: '45%',
-    aspectRatio: 1,
+    aspectRatio: 1.1,
     backgroundColor: 'rgba(0,0,0,0.03)',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sportContent: {
+    flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   icon: {
-    marginBottom: 12,
+    marginBottom: 4,
   },
   sportLabel: {
-    fontSize: 16,
+    fontSize: 13,
+    fontWeight: '500',
   },
 });
