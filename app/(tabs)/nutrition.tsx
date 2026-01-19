@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Modal, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
+import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { NUTRITION_CITATIONS } from '@/utils/citations';
 import { useRouter } from 'expo-router';
 import { getProfile, getOnboardingData } from '@/hooks/useStorage';
 
@@ -35,10 +37,18 @@ export default function NutritionScreen() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [showSources, setShowSources] = useState(false);
   
   const cardBg = Colors.shared.primary + '10'; 
   const borderColor = Colors.shared.primaryDeep;
   const router = useRouter();
+
+  const nutritionCitations = [
+    { category: 'Nutrition', ...NUTRITION_CITATIONS.carbohydrates },
+    { category: 'Nutrition', ...NUTRITION_CITATIONS.sodium },
+    { category: 'Nutrition', ...NUTRITION_CITATIONS.protein },
+    { category: 'Nutrition', ...NUTRITION_CITATIONS.hydration },
+  ];
 
 
   useEffect(() => {
@@ -323,9 +333,50 @@ export default function NutritionScreen() {
               <ThemedText style={[styles.note, { color: Colors.shared.primary }]}> 
                 Estas recomendações são baseadas no seu peso ({profile.weight}kg), gênero, duração, intensidade do treino e temperatura ambiente. Ajuste conforme suas necessidades pessoais.
               </ThemedText>
+
+              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+                <TouchableOpacity
+                  style={[styles.sourcesButton, { borderColor: Colors.shared.primary }]}
+                  onPress={() => setShowSources(true)}
+                >
+                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.primary }]}>ℹ️ Fontes</ThemedText>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         </ScrollView>
+        
+        <Modal
+          visible={showSources}
+          animationType="slide"
+          onRequestClose={() => setShowSources(false)}
+        >
+          <ThemedView style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <ThemedText
+                style={[styles.modalTitle, { color: Colors.shared.primary }]}
+                fontFamily="Inter-Bold"
+              >
+                Fontes Científicas
+              </ThemedText>
+              <TouchableOpacity
+                style={[styles.closeButton, { borderColor: Colors.shared.primary }]}
+                onPress={() => setShowSources(false)}
+              >
+                <ThemedText style={[styles.closeButtonText, { color: Colors.shared.primary }]}>
+                  ✕
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              style={styles.modalContent}
+              contentContainerStyle={styles.modalContentContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <SourcesInfo citations={nutritionCitations} />
+            </ScrollView>
+          </ThemedView>
+        </Modal>
       </ThemedView>
     </KeyboardAvoidingView>
   );
@@ -402,5 +453,57 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 24,
     paddingHorizontal: 32,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  sourcesButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 4,
+  },
+  sourcesButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalContentContainer: {
+    paddingVertical: 16,
   },
 });

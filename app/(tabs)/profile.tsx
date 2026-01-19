@@ -158,7 +158,7 @@ export default function ProfileScreen() {
       >
         <Header
           title="Perfil"
-          color={Colors.shared.profile}
+          color={Colors.shared.primary}
         />
         
         <View 
@@ -192,12 +192,12 @@ export default function ProfileScreen() {
               ) : (
                 <UserCircle2 
                   size={64} 
-                  color={Colors.shared.profile} 
+                  color={Colors.shared.primary} 
                   style={styles.photoPlaceholder}
                 />
               )}
               <TouchableOpacity 
-                style={[styles.editButton, { backgroundColor: Colors.shared.profile }]} 
+                style={[styles.editButton, { backgroundColor: Colors.shared.primary }]} 
                 onPress={handlePhotoSelect}
               >
                 <Edit3 size={16} color="white" />

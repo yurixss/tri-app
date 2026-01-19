@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent, Modal, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,10 +8,12 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
+import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculateRunningPaceZones } from '@/utils/zoneCalculations';
+import { TRAINING_ZONES_CITATIONS } from '@/utils/citations';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { getTestResults, saveRunTest } from '@/hooks/useStorage';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
@@ -24,12 +26,17 @@ export default function RunScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showSources, setShowSources] = useState(false);
   const router = useRouter();
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const scrollRef = useRef<ScrollView | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const runningCitations = [
+    { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.running },
+  ];
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
@@ -116,11 +123,13 @@ export default function RunScreen() {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          <Header
-            title="Zonas de Ritmo - Corrida"
-            color={Colors.shared.run}
-            onBackPress={() => router.back()} 
-          />
+          <View style={styles.headerContainer}>
+            <Header
+              title="Zonas de Ritmo - Corrida"
+              color={Colors.shared.run}
+              onBackPress={() => router.back()} 
+            />
+          </View>
           
           <View 
             style={[
@@ -242,6 +251,15 @@ export default function RunScreen() {
                   </View>
                 ))}
               </View>
+
+              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+                <TouchableOpacity
+                  style={[styles.sourcesButton, { borderColor: Colors.shared.run }]}
+                  onPress={() => setShowSources(true)}
+                >
+                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.run }]}>ℹ️ Fontes</ThemedText>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         </ScrollView>
@@ -249,6 +267,38 @@ export default function RunScreen() {
           visible={showScrollTop}
           onPress={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
         />
+        
+        <Modal
+          visible={showSources}
+          animationType="slide"
+          onRequestClose={() => setShowSources(false)}
+        >
+          <ThemedView style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <ThemedText
+                style={[styles.modalTitle, { color: Colors.shared.run }]}
+                fontFamily="Inter-Bold"
+              >
+                Fontes Científicas
+              </ThemedText>
+              <TouchableOpacity
+                style={[styles.closeButton, { borderColor: Colors.shared.run }]}
+                onPress={() => setShowSources(false)}
+              >
+                <ThemedText style={[styles.closeButtonText, { color: Colors.shared.run }]}>
+                  ✕
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              style={styles.modalContent}
+              contentContainerStyle={styles.modalContentContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <SourcesInfo citations={runningCitations} />
+            </ScrollView>
+          </ThemedView>
+        </Modal>
       </ThemedView>
     </KeyboardAvoidingView>
   );
@@ -326,5 +376,58 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
     fontVariant: ['tabular-nums'],
+  },
+  headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  sourcesButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 4,
+  },
+  sourcesButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalContentContainer: {
+    paddingVertical: 16,
   },
 });

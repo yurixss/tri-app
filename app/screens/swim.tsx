@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Modal, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,10 +8,12 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
+import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { calculateSwimPaceZones } from '@/utils/zoneCalculations';
+import { TRAINING_ZONES_CITATIONS } from '@/utils/citations';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { getTestResults, saveSwimTest } from '@/hooks/useStorage';
 
@@ -23,10 +25,15 @@ export default function SwimScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showSources, setShowSources] = useState(false);
   const router = useRouter();
   
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+
+  const swimmingCitations = [
+    { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.swimming },
+  ];
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
@@ -46,9 +53,9 @@ export default function SwimScreen() {
   const loadPreviousTest = async () => {
     const results = await getTestResults();
     if (results.swim) {
-      setTestType(results.swim.testType || '400m');
+      setTestType(results.swim.testType);
       setTestTime(formatTimeFromSeconds(results.swim.testTime));
-      calculateZones(results.swim.testType || '400m', results.swim.testTime);
+      calculateZones(results.swim.testType, results.swim.testTime);
       setHasCalculated(true);
     }
   };
@@ -66,7 +73,7 @@ export default function SwimScreen() {
 
   const handleCalculate = async () => {
     if (!testTime) {
-      setError(`Por favor, insira o tempo de ${testType}`);
+      setError('Por favor, insira o tempo do seu teste');
       return;
     }
     
@@ -122,15 +129,11 @@ export default function SwimScreen() {
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
-              Insira o tempo do seu teste
+              Insira o resultado do seu teste
             </ThemedText>
             
-            <ThemedText style={commonStyles.infoText}>
-              Nade a distância selecionada no ritmo mais rápido que conseguir manter durante toda a prova.
-            </ThemedText>
-
             <RadioSelector
-              label="Distância do Teste"
+              label="Tipo de Teste"
               options={[
                 { label: 'Teste 200m', value: '200m' },
                 { label: 'Teste 400m', value: '400m' },
@@ -139,8 +142,14 @@ export default function SwimScreen() {
               onValueChange={(value) => setTestType(value as '200m' | '400m')}
             />
             
+            <ThemedText style={commonStyles.infoText}>
+              {testType === '200m' 
+                ? 'Nade o mais rápido que puder em 200m. Este será seu tempo de referência.'
+                : 'Nade o mais rápido que conseguir sustentar em 400m. Este será seu tempo de referência.'}
+            </ThemedText>
+            
             <ThemedInput
-              label={`Tempo ${testType} (MM:SS)`}
+              label="Tempo do Teste (MM:SS)"
               value={testTime}
               onChangeText={handleTestTimeChange}
               placeholder="ex. 3:45"
@@ -193,7 +202,7 @@ export default function SwimScreen() {
               )}
 
               <ThemedText style={commonStyles.infoText}>
-                Baseado no tempo {testType}: {testTime}
+                Baseado no teste {testType}: {testTime}
               </ThemedText>
               
               <View style={styles.zonesContainer}>
@@ -231,9 +240,50 @@ export default function SwimScreen() {
                   </View>
                 ))}
               </View>
+
+              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+                <TouchableOpacity
+                  style={[styles.sourcesButton, { borderColor: Colors.shared.swim }]}
+                  onPress={() => setShowSources(true)}
+                >
+                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.swim }]}>ℹ️ Fontes</ThemedText>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         </ScrollView>
+        
+        <Modal
+          visible={showSources}
+          animationType="slide"
+          onRequestClose={() => setShowSources(false)}
+        >
+          <ThemedView style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <ThemedText
+                style={[styles.modalTitle, { color: Colors.shared.swim }]}
+                fontFamily="Inter-Bold"
+              >
+                Fontes Científicas
+              </ThemedText>
+              <TouchableOpacity
+                style={[styles.closeButton, { borderColor: Colors.shared.swim }]}
+                onPress={() => setShowSources(false)}
+              >
+                <ThemedText style={[styles.closeButtonText, { color: Colors.shared.swim }]}>
+                  ✕
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              style={styles.modalContent}
+              contentContainerStyle={styles.modalContentContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              <SourcesInfo citations={swimmingCitations} />
+            </ScrollView>
+          </ThemedView>
+        </Modal>
       </ThemedView>
     </KeyboardAvoidingView>
   );
@@ -279,16 +329,20 @@ const styles = StyleSheet.create({
   },
   copySuccess: {
     textAlign: 'center',
-    marginBottom: 4,
+    marginTop: 4,
+    marginBottom: 8,
     fontSize: 14,
   },
   zonesContainer: {
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   zoneRow: {
     flexDirection: 'row',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
     alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
   },
   zoneNumber: {
     width: 32,
@@ -311,5 +365,58 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
     fontVariant: ['tabular-nums'],
+  },
+  headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  sourcesButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 4,
+  },
+  sourcesButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalContentContainer: {
+    paddingVertical: 16,
   },
 });
