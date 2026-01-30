@@ -125,3 +125,51 @@ function formatRaceTimeForSharing(data: RaceTimeData): string {
 
   return text;
 }
+
+export async function copySwimTimeToClipboard(data: RaceTimeData) {
+  let text = `🏊 Natação (${data.swim.distance})\n`;
+  text += `Tempo: ${data.swim.time}\n`;
+  if (data.swim.pace) {
+    text += `Ritmo: ${data.swim.pace}\n`;
+  }
+  
+  try {
+    await Clipboard.setStringAsync(text);
+    return true;
+  } catch (error) {
+    console.error('Error copying swim time:', error);
+    return false;
+  }
+}
+
+export async function copyBikeTimeToClipboard(data: RaceTimeData) {
+  let text = `🚴 Ciclismo (${data.bike.distance})\n`;
+  text += `Tempo: ${data.bike.time}\n`;
+  if (data.bike.pace) {
+    text += `Ritmo: ${data.bike.pace}\n`;
+  }
+  
+  try {
+    await Clipboard.setStringAsync(text);
+    return true;
+  } catch (error) {
+    console.error('Error copying bike time:', error);
+    return false;
+  }
+}
+
+export async function copyRunTimeToClipboard(data: RaceTimeData) {
+  let text = `🏃 Corrida (${data.run.distance})\n`;
+  text += `Tempo: ${data.run.time}\n`;
+  if (data.run.pace) {
+    text += `Ritmo: ${data.run.pace}\n`;
+  }
+  
+  try {
+    await Clipboard.setStringAsync(text);
+    return true;
+  } catch (error) {
+    console.error('Error copying run time:', error);
+    return false;
+  }
+}

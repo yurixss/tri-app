@@ -69,9 +69,17 @@ export default function PersonalRecords() {
     setRecords(prev => {
       const existing = prev.find(r => r.distance === distance);
       if (existing) {
+        if (time.trim() === '') {
+          // Remove entry if time is empty
+          return prev.filter(r => r.distance !== distance);
+        }
         return prev.map(r => r.distance === distance ? { ...r, time } : r);
       }
-      return [...prev, { distance, time }];
+      if (time.trim() !== '') {
+        // Only add if there's actual content
+        return [...prev, { distance, time }];
+      }
+      return prev;
     });
     
     // Clear error when user starts typing
@@ -84,8 +92,18 @@ export default function PersonalRecords() {
     const newErrors: { [key: string]: string } = {};
     
     records.forEach(record => {
-      if (record.time && !isValidTimeFormat(record.time)) {
-        newErrors[record.distance] = 'Formato de tempo inválido (use MM:SS)';
+      if (record.time && record.time.trim() !== '') {
+        if (record.distance.includes('FTP')) {
+          // Validate FTP as number
+          if (isNaN(Number(record.time)) || Number(record.time) <= 0) {
+            newErrors[record.distance] = 'FTP deve ser um número válido (watts)';
+          }
+        } else {
+          // Validate time format
+          if (!isValidTimeFormat(record.time)) {
+            newErrors[record.distance] = 'Formato de tempo inválido (use MM:SS)';
+          }
+        }
       }
     });
     
@@ -94,13 +112,14 @@ export default function PersonalRecords() {
   };
 
   const handleComplete = async () => {
-    if (validateRecords()) {
-      await saveOnboardingData({
-        records,
-        onboardingComplete: true,
-      });
-      router.replace('/(tabs)');
-    }
+    // Filter out empty records before saving
+    const validRecords = records.filter(record => record.time && record.time.trim() !== '');
+    
+    await saveOnboardingData({
+      records: validRecords,
+      onboardingComplete: true,
+    });
+    router.replace('/(tabs)');
   };
 
   const handleSkip = async () => {
@@ -121,7 +140,7 @@ export default function PersonalRecords() {
           </ThemedText>
           
           <ThemedText style={styles.subtitle}>
-            Adicione seus melhores tempos (opcional)
+            Adicione seus melhores tempos e FTP (opcional)
           </ThemedText>
 
           <View style={styles.recordsContainer}>
@@ -136,17 +155,26 @@ export default function PersonalRecords() {
                   
                   <View style={styles.inputContainer}>
                     <ThemedInput
-                      label="Tempo (MM:SS)"
+                      label={distance.includes('FTP') ? "FTP (watts)" : "Tempo (MM:SS)"}
                       value={record?.time || ''}
                       onChangeText={(time) => handleTimeChange(distance, time)}
-                      placeholder="MM:SS"
+                      placeholder={distance.includes('FTP') ? "250" : "MM:SS"}
+                      keyboardType={distance.includes('FTP') ? "numeric" : "default"}
                       error={errors[distance]}
                     />
                     
-                    {record?.time && isValidTimeFormat(record.time) && !errors[distance] && (
-                      <View style={styles.checkmark}>
-                        <Check size={20} color={Colors.light.success} />
-                      </View>
+                    {record?.time && (
+                      distance.includes('FTP') 
+                        ? !errors[distance] && (
+                            <View style={styles.checkmark}>
+                              <Check size={20} color={Colors.light.success} />
+                            </View>
+                          )
+                        : isValidTimeFormat(record.time) && !errors[distance] && (
+                            <View style={styles.checkmark}>
+                              <Check size={20} color={Colors.light.success} />
+                            </View>
+                          )
                     )}
                   </View>
                 </View>
@@ -157,7 +185,7 @@ export default function PersonalRecords() {
       </ScrollView>
 
       <ThemedButton
-        title="Complete Setup"
+        title="Continuar"
         color={Colors.shared.primary}
         onPress={handleComplete}
       />

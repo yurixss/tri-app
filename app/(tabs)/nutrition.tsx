@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Modal, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -13,10 +13,10 @@ import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { NUTRITION_CITATIONS } from '@/utils/citations';
 import { useRouter } from 'expo-router';
-import { getProfile, getOnboardingData } from '@/hooks/useStorage';
+import { useFocusEffect } from '@react-navigation/native';
+import { getProfile, getOnboardingData, Profile } from '@/hooks/useStorage';
 
-
-interface Profile {
+interface NutritionProfile {
   weight: string;
   height: string;
   gender: 'male' | 'female';
@@ -27,7 +27,7 @@ export default function NutritionScreen() {
   const [trainingTime, setTrainingTime] = useState('');
   const [temperature, setTemperature] = useState('');
   const [intensity, setIntensity] = useState<'low' | 'moderate' | 'high'>('moderate');
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<NutritionProfile>({ weight: '', height: '', gender: 'male' });
   const [error, setError] = useState('');
   const [calculatedValues, setCalculatedValues] = useState<{
     carbs: number;
@@ -51,30 +51,40 @@ export default function NutritionScreen() {
   ];
 
 
-  useEffect(() => {
-    loadProfile();
-  }, []);
+  // Reload profile when the tab/screen is focused so changes from the Profile screen
+  // are reflected without requiring a full remount (Tabs keep screens mounted).
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+    }, [])
+  );
 
   const loadProfile = async () => {
+    console.log('Loading profile...');
     const userProfile = await getProfile();
+    console.log('User profile from storage:', userProfile);
     if (userProfile) {
+      console.log('Setting profile from userProfile');
       setProfile({
-        weight: userProfile.weight,
-        height: userProfile.height,
-        gender: userProfile.gender,
+        weight: userProfile.weight || '',
+        height: userProfile.height || '',
+        gender: userProfile.gender || 'male',
       });
     } else {
       // Se não houver perfil completo, tenta carregar dados do onboarding
       const onboardingData = await getOnboardingData();
-      if (onboardingData?.weight && onboardingData?.height && onboardingData?.gender) {
+      console.log('Onboarding data:', onboardingData);
+      if (onboardingData) {
+        console.log('Setting profile from onboarding data');
         setProfile({
-          weight: onboardingData.weight,
-          height: onboardingData.height,
-          gender: onboardingData.gender,
+          weight: onboardingData.weight || '',
+          height: onboardingData.height || '',
+          gender: onboardingData.gender || 'male',
         });
       }
     }
     setIsLoadingProfile(false);
+    console.log('Profile loading complete');
   };
 
   const handleTimeChange = (text: string) => {
@@ -91,7 +101,7 @@ export default function NutritionScreen() {
       setError('Por favor, insira um formato de tempo válido (MM:SS ou H:MM:SS)');
       return;
     }
-    if (!profile) {
+    if (!profile || !profile.weight || !profile.height || !profile.gender) {
       setError('Por favor, complete seu perfil primeiro');
       return;
     }
@@ -162,7 +172,12 @@ export default function NutritionScreen() {
     );
   }
 
-  if (!profile) {
+  if (!profile.weight.trim() || !profile.height.trim() || !profile.gender) {
+    console.log('Profile check failed:', {
+      weight: profile.weight,
+      height: profile.height,
+      gender: profile.gender
+    });
     return (
       <ThemedView style={styles.container}>
         <Header

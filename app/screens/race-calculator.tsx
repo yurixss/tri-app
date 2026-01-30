@@ -12,7 +12,7 @@ import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
 import { Share2, Copy } from 'lucide-react-native';
-import { shareRaceTime, copyRaceTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
+import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
 
@@ -322,6 +322,132 @@ export default function RaceCalculatorScreen() {
     }
   };
 
+  const handleCopySwim = async () => {
+    if (totalTime === null) return;
+
+    const raceData: RaceTimeData = {
+      raceDistance: getRaceDistanceLabel(raceDistance),
+      totalTime: formatTimeFromSeconds(totalTime),
+      swim: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        pace: paces.swim,
+        distance: `${distances.swim}m`,
+      },
+      bike: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        pace: paces.bike,
+        distance: `${distances.bike}km`,
+      },
+      run: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        pace: paces.run,
+        distance: `${distances.run}km`,
+      },
+    };
+
+    if (t1Time) {
+      raceData.t1 = {
+        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+      };
+    }
+
+    if (t2Time) {
+      raceData.t2 = {
+        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+      };
+    }
+
+    const success = await copySwimTimeToClipboard(raceData);
+    if (success) {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    }
+  };
+
+  const handleCopyBike = async () => {
+    if (totalTime === null) return;
+
+    const raceData: RaceTimeData = {
+      raceDistance: getRaceDistanceLabel(raceDistance),
+      totalTime: formatTimeFromSeconds(totalTime),
+      swim: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        pace: paces.swim,
+        distance: `${distances.swim}m`,
+      },
+      bike: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        pace: paces.bike,
+        distance: `${distances.bike}km`,
+      },
+      run: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        pace: paces.run,
+        distance: `${distances.run}km`,
+      },
+    };
+
+    if (t1Time) {
+      raceData.t1 = {
+        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+      };
+    }
+
+    if (t2Time) {
+      raceData.t2 = {
+        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+      };
+    }
+
+    const success = await copyBikeTimeToClipboard(raceData);
+    if (success) {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    }
+  };
+
+  const handleCopyRun = async () => {
+    if (totalTime === null) return;
+
+    const raceData: RaceTimeData = {
+      raceDistance: getRaceDistanceLabel(raceDistance),
+      totalTime: formatTimeFromSeconds(totalTime),
+      swim: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        pace: paces.swim,
+        distance: `${distances.swim}m`,
+      },
+      bike: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        pace: paces.bike,
+        distance: `${distances.bike}km`,
+      },
+      run: {
+        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        pace: paces.run,
+        distance: `${distances.run}km`,
+      },
+    };
+
+    if (t1Time) {
+      raceData.t1 = {
+        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+      };
+    }
+
+    if (t2Time) {
+      raceData.t2 = {
+        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+      };
+    }
+
+    const success = await copyRunTimeToClipboard(raceData);
+    if (success) {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -567,9 +693,20 @@ export default function RaceCalculatorScreen() {
                       </ThemedText>
                     )}
                   </View>
-                  <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime))}
-                  </ThemedText>
+                  <View style={styles.breakdownRight}>
+                    <ThemedText style={styles.breakdownValue}>
+                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime))}
+                    </ThemedText>
+                    <Pressable 
+                      style={({ pressed }) => [
+                        styles.copyButton,
+                        { opacity: pressed ? 0.6 : 1 },
+                      ]}
+                      onPress={handleCopySwim}
+                    >
+                      <Copy size={14} color={Colors.shared.primary} />
+                    </Pressable>
+                  </View>
                 </View>
                 {t1Time && (
                   <View style={styles.breakdownItem}>
@@ -588,9 +725,20 @@ export default function RaceCalculatorScreen() {
                       </ThemedText>
                     )}
                   </View>
-                  <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime))}
-                  </ThemedText>
+                  <View style={styles.breakdownRight}>
+                    <ThemedText style={styles.breakdownValue}>
+                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime))}
+                    </ThemedText>
+                    <Pressable 
+                      style={({ pressed }) => [
+                        styles.copyButton,
+                        { opacity: pressed ? 0.6 : 1 },
+                      ]}
+                      onPress={handleCopyBike}
+                    >
+                      <Copy size={14} color={Colors.shared.primary} />
+                    </Pressable>
+                  </View>
                 </View>
                 {t2Time && (
                   <View style={styles.breakdownItem}>
@@ -609,9 +757,20 @@ export default function RaceCalculatorScreen() {
                       </ThemedText>
                     )}
                   </View>
-                  <ThemedText style={styles.breakdownValue}>
-                    {formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime))}
-                  </ThemedText>
+                  <View style={styles.breakdownRight}>
+                    <ThemedText style={styles.breakdownValue}>
+                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime))}
+                    </ThemedText>
+                    <Pressable 
+                      style={({ pressed }) => [
+                        styles.copyButton,
+                        { opacity: pressed ? 0.6 : 1 },
+                      ]}
+                      onPress={handleCopyRun}
+                    >
+                      <Copy size={14} color={Colors.shared.primary} />
+                    </Pressable>
+                  </View>
                 </View>
               </View>
             </View>
@@ -752,6 +911,11 @@ const styles = StyleSheet.create({
   breakdownLeft: {
     flex: 1,
   },
+  breakdownRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   breakdownLabel: {
     fontSize: 16,
     fontFamily: 'Inter-Medium',
@@ -765,5 +929,8 @@ const styles = StyleSheet.create({
   breakdownValue: {
     fontSize: 16,
     fontFamily: 'Inter-Bold',
+  },
+  copyButton: {
+    padding: 4,
   },
 });
