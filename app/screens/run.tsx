@@ -123,13 +123,11 @@ export default function RunScreen() {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          <View style={styles.headerContainer}>
-            <Header
-              title="Zonas de Ritmo - Corrida"
-              color={Colors.shared.run}
-              onBackPress={() => router.back()} 
-            />
-          </View>
+          <Header
+            title="Zonas de Ritmo - Corrida"
+            color={Colors.shared.run}
+            onBackPress={() => router.back()} 
+          />
           
           <View 
             style={[

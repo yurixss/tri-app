@@ -123,13 +123,11 @@ export default function BikeScreen() {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-            <View style={styles.headerContainer}>
-              <Header
-                title="Zonas de Potência - Ciclismo"
-                color={Colors.shared.bike}
-                onBackPress={() => router.back()} 
-              />
-            </View>
+            <Header
+              title="Zonas de Potência - Ciclismo"
+              color={Colors.shared.bike}
+              onBackPress={() => router.back()} 
+            />
           
           <View 
             style={[
