@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { ThemedButton } from '@/components/ThemedButton';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { getTestResults, TestResults } from '@/hooks/useStorage';
+import { getTestResults, getProfile, TestResults } from '@/hooks/useStorage';
 import { formatTimeFromSeconds } from '@/utils/timeUtils';
 
 export default function TrainingZonesScreen() {
@@ -20,9 +21,27 @@ export default function TrainingZonesScreen() {
     loadTestResults();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadTestResults();
+    }, [])
+  );
+
   const loadTestResults = async () => {
+    // Prefer the explicit stored testResults, but fall back to tests embedded in profile
     const results = await getTestResults();
-    setTestResults(results);
+    if (results && (results.bike || results.run || results.swim || results.heartRate)) {
+      setTestResults(results);
+      return;
+    }
+
+    const profile = await getProfile();
+    if (profile && (profile as any).tests) {
+      setTestResults((profile as any).tests as TestResults);
+      return;
+    }
+
+    setTestResults({});
   };
 
   const navigateToTest = (screen: '/bike' | '/run' | '/swim' | '/heart-rate' | '/bike-race-predictor') => {

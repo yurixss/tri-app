@@ -7,7 +7,7 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { Check, ChevronLeft } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
-import { saveOnboardingData, getOnboardingData } from '@/hooks/useStorage';
+import { saveOnboardingData, getOnboardingData, saveBikeTest, saveRunTest, saveSwimTest } from '@/hooks/useStorage';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 
 interface Record {
@@ -115,10 +115,36 @@ export default function PersonalRecords() {
     // Filter out empty records before saving
     const validRecords = records.filter(record => record.time && record.time.trim() !== '');
     
+    // Save onboarding data
     await saveOnboardingData({
       records: validRecords,
       onboardingComplete: true,
     });
+
+    // Convert records to test results and save via dedicated functions
+    for (const record of validRecords) {
+      try {
+        if (record.distance.includes('FTP')) {
+          // Save FTP test
+          const ftp = Number(record.time);
+          const testType = record.distance.includes('20min') ? '20min' : '60min';
+          await saveBikeTest(testType, ftp);
+        } else if (record.distance === '5km' || record.distance === '3km') {
+          // Save run test
+          const timeInSeconds = parseTimeString(record.time);
+          const testType = record.distance === '5km' ? '5km' : '3km';
+          await saveRunTest(testType, timeInSeconds);
+        } else if (record.distance === '400m' || record.distance === '200m') {
+          // Save swim test
+          const timeInSeconds = parseTimeString(record.time);
+          const testType = record.distance === '400m' ? '400m' : '200m';
+          await saveSwimTest(testType, timeInSeconds);
+        }
+      } catch (e) {
+        console.error(`Error saving test result for ${record.distance}:`, e);
+      }
+    }
+
     router.replace('/(tabs)');
   };
 

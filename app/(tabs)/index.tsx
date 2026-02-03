@@ -48,7 +48,7 @@ export default function HomeScreen() {
           title="Previsão de Tempo de Prova"
           icon={<Calculator size={32} color={Colors.shared.bike} />}
           color={Colors.shared.bike}
-          description="Estime seu tempo de prova de ciclismo com modelo físico"
+          description="Estime seu tempo de prova de ciclismo"
           onPress={() => router.push('/screens/bike-race-predictor')}
           backgroundColor={cardBg}
           borderColor={borderColor}

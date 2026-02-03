@@ -5,6 +5,18 @@ const webStorage = new Map<string, string>();
 
 export async function saveTestResults(results: TestResults): Promise<void> {
   await saveValue('testResults', JSON.stringify(results));
+
+  // Also attach test results to the saved user profile so tests are available
+  // directly from the user's profile object used by the app.
+  const existingProfile = await getProfile();
+  if (existingProfile) {
+    const updatedProfile = { ...existingProfile, tests: results } as Profile & { tests?: TestResults };
+    try {
+      await saveProfile(updatedProfile);
+    } catch (e) {
+      console.error('Failed to attach tests to profile', e);
+    }
+  }
 }
 
 export async function getTestResults(): Promise<TestResults> {
@@ -30,7 +42,7 @@ export async function saveBikeTest(testType: '20min' | '60min', ftp: number): Pr
     }
   };
   
-  await saveValue('testResults', JSON.stringify(updatedData));
+  await saveTestResults(updatedData);
 }
 
 export async function saveRunTest(testType: '3km' | '5km', testTime: number): Promise<void> {
@@ -44,7 +56,7 @@ export async function saveRunTest(testType: '3km' | '5km', testTime: number): Pr
     }
   };
   
-  await saveValue('testResults', JSON.stringify(updatedData));
+  await saveTestResults(updatedData);
 }
 
 export async function saveSwimTest(testType: '200m' | '400m', testTime: number): Promise<void> {
@@ -58,7 +70,7 @@ export async function saveSwimTest(testType: '200m' | '400m', testTime: number):
     }
   };
   
-  await saveValue('testResults', JSON.stringify(updatedData));
+  await saveTestResults(updatedData);
 }
 
 export async function saveHeartRateTest(maxHR: number, restingHR: number): Promise<void> {
@@ -72,7 +84,7 @@ export async function saveHeartRateTest(maxHR: number, restingHR: number): Promi
     }
   };
   
-  await saveValue('testResults', JSON.stringify(updatedData));
+  await saveTestResults(updatedData);
 }
 
 async function saveValue(key: string, value: string): Promise<void> {
@@ -124,6 +136,7 @@ export interface Profile {
   experience: 'beginner' | 'intermediate' | 'advanced';
   trainingGoal: string;
   customGoal?: string;
+  tests?: TestResults;
 }
 
 export async function saveOnboardingData(data: Partial<OnboardingData>): Promise<void> {
