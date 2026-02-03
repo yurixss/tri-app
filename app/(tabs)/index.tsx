@@ -25,10 +25,10 @@ export default function HomeScreen() {
         />
 
         <HomeCard
-          title="Tempo de Prova"
+          title="Tempo Total de Prova"
           icon={<Calculator size={32} color={Colors.shared.secondary} />}
           color={Colors.shared.secondary}
-          description="Calculadora de tempo de prova"
+          description="Calculadora de tempo total de prova"
           onPress={() => router.push('/screens/race-calculator')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -44,6 +44,15 @@ export default function HomeScreen() {
           borderColor={borderColor}
         />
 
+        <HomeCard
+          title="Previsão de Tempo de Prova"
+          icon={<Calculator size={32} color={Colors.shared.bike} />}
+          color={Colors.shared.bike}
+          description="Estime seu tempo de prova de ciclismo com modelo físico"
+          onPress={() => router.push('/screens/bike-race-predictor')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
 
         <HomeCard
           title="Nutrição"

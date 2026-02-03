@@ -25,7 +25,7 @@ export default function TrainingZonesScreen() {
     setTestResults(results);
   };
 
-  const navigateToTest = (screen: string) => {
+  const navigateToTest = (screen: '/bike' | '/run' | '/swim' | '/heart-rate' | '/bike-race-predictor') => {
     router.push(`/screens${screen}`);
   };
 

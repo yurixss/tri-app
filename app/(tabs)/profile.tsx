@@ -15,12 +15,11 @@ import { getProfile, saveProfile, deleteAllData, getOnboardingData } from '@/hoo
 import { useRouter } from 'expo-router';
 
 type TrainingGoal = 
-  | 'Super Sprint (200m, 4km, 1km)'
   | 'Sprint (750m, 20km, 5km)'
   | 'Standard (1500m, 40km, 10km)'
   | 'Ironman 70.3 (1900m, 90km, 21km)'
   | 'Ironman 140.6 (3800m, 180km, 42km)'
-  | 'T100';
+  | 'T100 (2km, 80km, 18km)';
 
 interface Profile {
   name: string;
@@ -31,7 +30,8 @@ interface Profile {
   photo?: string;
   experience: 'beginner' | 'intermediate' | 'advanced';
   trainingGoal: TrainingGoal;
-  customGoal?: string;
+  bikeModel?: string;
+  bikeWeight?: string;
 }
 
 export default function ProfileScreen() {
@@ -43,6 +43,8 @@ export default function ProfileScreen() {
     weight: '',
     experience: 'beginner',
     trainingGoal: 'Sprint (750m, 20km, 5km)',
+    bikeModel: '',
+    bikeWeight: '',
   });
   const [errors, setErrors] = useState<Partial<Profile>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -92,10 +94,10 @@ export default function ProfileScreen() {
   const validateForm = () => {
     const newErrors: Partial<Profile> = {};
     
-    if (!profile.name) newErrors.name = 'Name is required';
-    if (!profile.age || isNaN(Number(profile.age))) newErrors.age = 'Valid age is required';
-    if (!profile.height || isNaN(Number(profile.height))) newErrors.height = 'Valid height is required';
-    if (!profile.weight || isNaN(Number(profile.weight))) newErrors.weight = 'Valid weight is required';
+    if (!profile.name) newErrors.name = 'Nome é obrigatório';
+    if (!profile.age || isNaN(Number(profile.age))) newErrors.age = 'Idade válida é obrigatória';
+    if (!profile.height || isNaN(Number(profile.height))) newErrors.height = 'Altura válida é obrigatória';
+    if (!profile.weight || isNaN(Number(profile.weight))) newErrors.weight = 'Peso válido é obrigatório';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -118,16 +120,16 @@ export default function ProfileScreen() {
 
   const handleDeleteAccount = () => {
     Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete your account? This action will permanently remove all your data including your profile, training records, and test results. This cannot be undone.',
+      'Deletar Conta',
+      'Tem certeza que deseja deletar sua conta? Esta ação irá remover permanentemente todos os seus dados incluindo seu perfil, registros de treino e resultados de testes. Isto não pode ser desfeito.',
       [
         {
-          text: 'Cancel',
+          text: 'Cancelar',
           onPress: () => {},
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: 'Deletar',
           onPress: confirmDeleteAccount,
           style: 'destructive',
         },
@@ -144,7 +146,7 @@ export default function ProfileScreen() {
       router.replace('/onboarding/sport');
     } catch (e) {
       console.error('Error deleting account', e);
-      Alert.alert('Error', 'Failed to delete account. Please try again.');
+      Alert.alert('Erro', 'Falha ao deletar conta. Por favor, tente novamente.');
       setIsDeletingAccount(false);
     }
   };
@@ -177,12 +179,12 @@ export default function ProfileScreen() {
               <Switch
                 value={theme.choice === 'dark'}
                 onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
-                trackColor={{ false: '#767577', true: Colors.shared.primary }}
+                trackColor={{ false: '#767577', true: '#FF9500' }}
                 thumbColor={theme.choice === 'dark' ? '#fff' : '#fff'}
               />
             </View>
 
-          <View style={styles.photoContainer}>
+          {/* <View style={styles.photoContainer}>
             <View style={[styles.photoWrapper, { borderColor }]}>
               {profile.photo ? (
                 <Image 
@@ -192,41 +194,42 @@ export default function ProfileScreen() {
               ) : (
                 <UserCircle2 
                   size={64} 
-                  color={Colors.shared.primary} 
+                  color={'#FF9500'} 
                   style={styles.photoPlaceholder}
                 />
               )}
               <TouchableOpacity 
-                style={[styles.editButton, { backgroundColor: Colors.shared.primary }]} 
+                style={[styles.editButton, { backgroundColor: '#FF9500' }]} 
                 onPress={handlePhotoSelect}
               >
                 <Edit3 size={16} color="white" />
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
 
+          <>
           <ThemedInput
-            label="Name"
+            label="Nome"
             value={profile.name}
             onChangeText={(text) => setProfile(prev => ({ ...prev, name: text }))}
-            placeholder="Your name"
+            placeholder="Seu nome"
             error={errors.name}
           />
 
           <ThemedInput
-            label="Age"
+            label="Idade"
             value={profile.age}
             onChangeText={(text) => setProfile(prev => ({ ...prev, age: text }))}
-            placeholder="Your age"
+            placeholder="Sua idade"
             keyboardType="numeric"
             error={errors.age}
           />
 
           <RadioSelector
-            label="Gender"
+            label="Gênero"
             options={[
-              { label: 'Male', value: 'male' },
-              { label: 'Female', value: 'female' },
+              { label: 'Masculino', value: 'male' },
+              { label: 'Feminino', value: 'female' },
             ]}
             selectedValue={profile.gender}
             onValueChange={(value) => setProfile(prev => ({ ...prev, gender: value as 'male' | 'female' }))}
@@ -235,7 +238,7 @@ export default function ProfileScreen() {
           <View style={styles.row}>
             <View style={styles.halfInput}>
               <ThemedInput
-                label="Height (cm)"
+                label="Altura (cm)"
                 value={profile.height}
                 onChangeText={(text) => setProfile(prev => ({ ...prev, height: text }))}
                 placeholder="175"
@@ -245,7 +248,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.halfInput}>
               <ThemedInput
-                label="Weight (kg)"
+                label="Peso (kg)"
                 value={profile.weight}
                 onChangeText={(text) => setProfile(prev => ({ ...prev, weight: text }))}
                 placeholder="70"
@@ -255,38 +258,57 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          <View style={styles.row}>
+            <View style={styles.halfInput}>
+              <ThemedInput
+                label="Modelo da Bicicleta"
+                value={profile.bikeModel}
+                onChangeText={(text) => setProfile(prev => ({ ...prev, bikeModel: text }))}
+                placeholder="Ex: Trek Speedconcept"
+              />
+            </View>
+            <View style={styles.halfInput}>
+              <ThemedInput
+                label="Peso Bicicleta (kg)"
+                value={profile.bikeWeight}
+                onChangeText={(text) => setProfile(prev => ({ ...prev, bikeWeight: text }))}
+                placeholder="6.8"
+                keyboardType="decimal-pad"
+              />
+            </View>
+          </View>
+
           <RadioSelector
-            label="Experience Level"
+            label="Nível de Experiência"
             options={[
-              { label: 'Beginner', value: 'beginner' },
-              { label: 'Intermediate', value: 'intermediate' },
-              { label: 'Advanced', value: 'advanced' },
+              { label: 'Iniciante', value: 'beginner' },
+              { label: 'Intermediário', value: 'intermediate' },
+              { label: 'Avançado', value: 'advanced' },
             ]}
             selectedValue={profile.experience}
             onValueChange={(value) => setProfile(prev => ({ ...prev, experience: value as 'beginner' | 'intermediate' | 'advanced' }))}
           />
 
           <ThemedText 
-            style={styles.sectionLabel}
+            style={[styles.sectionLabel, { color: '#FF9500' }]}
             fontFamily="Inter-Medium"
           >
-            Training Goal
+            Objetivo
           </ThemedText>
 
           <View style={styles.goalSelector}>
             {[
-              'Super Sprint (200m, 4km, 1km)',
               'Sprint (750m, 20km, 5km)',
               'Standard (1500m, 40km, 10km)',
               'Ironman 70.3 (1900m, 90km, 21km)',
               'Ironman 140.6 (3800m, 180km, 42km)',
-              'T100'
+              'T100 (2km, 80km, 18km)'
             ].map((goal) => (
               <TouchableOpacity
                 key={goal}
                 style={[
                   styles.goalOption,
-                  profile.trainingGoal === goal && styles.selectedGoalOption
+                  profile.trainingGoal === goal && [styles.selectedGoalOption, { backgroundColor: '#FF9500', borderColor: '#FF9500' }]
                 ]}
                 onPress={() => setProfile(prev => ({ ...prev, trainingGoal: goal as TrainingGoal }))}
               >
@@ -307,32 +329,23 @@ export default function ProfileScreen() {
             ))}
           </View>
 
-          <ThemedInput
-            label="Custom Goal (optional)"
-            value={profile.customGoal}
-            onChangeText={(text) => setProfile(prev => ({ ...prev, customGoal: text }))}
-            placeholder="e.g., Improve my swimming technique"
-            multiline
-            numberOfLines={3}
-            style={styles.goalInput}
-          />
-
           <ThemedButton
-            title="Save Profile"
-            color={Colors.shared.profile}
+            title="Salvar Perfil"
+            color="#FF9500"
             onPress={handleSave}
             isLoading={isLoading}
           />
+          </>
 
           <View style={styles.deleteButtonContainer}>
             <TouchableOpacity
-              style={[styles.deleteButton, { borderColor: Colors.shared.delete || '#EF4444' }]}
+              style={[styles.deleteButton, { borderColor: '#EF4444' }]}
               onPress={handleDeleteAccount}
               disabled={isDeletingAccount}
             >
-              <Trash2 size={20} color={Colors.shared.delete || '#EF4444'} />
-              <ThemedText style={[styles.deleteButtonText, { color: Colors.shared.delete || '#EF4444' }]}>
-                {isDeletingAccount ? 'Deleting Account...' : 'Delete Account'}
+              <Trash2 size={20} color="#EF4444" />
+              <ThemedText style={[styles.deleteButtonText, { color: '#EF4444' }]}>
+                {isDeletingAccount ? 'Deletando Conta...' : 'Deletar Conta'}
               </ThemedText>
             </TouchableOpacity>
           </View>
@@ -342,7 +355,7 @@ export default function ProfileScreen() {
       {showToast && (
         <View style={[styles.toast, { backgroundColor: Colors.light.success }]}>
           <CheckCircle2 color="#fff" size={20} />
-          <ThemedText style={styles.toastText}>Profile saved successfully!</ThemedText>
+          <ThemedText style={styles.toastText}>Perfil salvo com sucesso!</ThemedText>
         </View>
       )}
     </ThemedView>

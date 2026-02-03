@@ -177,31 +177,39 @@ export default function BikeScreen() {
           </View>
           
           {hasCalculated && zones.length > 0 && (
-            <View 
-              style={[
-                styles.card,
-                { 
-                  backgroundColor: cardBg,
-                  borderColor: borderColor,
-                  borderWidth: 1,
-                }
-              ]}
-            >
-              <View style={styles.titleContainer}>
-                <ThemedText 
-                  style={[styles.zonesTitle, { color: Colors.shared.bike }]}
-                  fontFamily="Inter-Bold"
-                >
-                  Suas Zonas de Potência
-                </ThemedText>
-                
-                <ZoneActions
-                  title={`Zonas de Potência - Ciclismo (${testType} Teste: ${ftp}w)`}
-                  zones={zones}
-                  color={Colors.shared.bike}
-                  onCopySuccess={handleCopySuccess}
-                />
-              </View>
+            <>
+              {/* Botão do Previsor de Tempo de Prova */}
+              <ThemedButton
+                title="🔮 Previsor de Tempo de Prova"
+                color={Colors.shared.bike}
+                onPress={() => router.push('/screens/bike-race-predictor')}
+              />
+            
+              <View 
+                style={[
+                  styles.card,
+                  { 
+                    backgroundColor: cardBg,
+                    borderColor: borderColor,
+                    borderWidth: 1,
+                  }
+                ]}
+              >
+                <View style={styles.titleContainer}>
+                  <ThemedText 
+                    style={[styles.zonesTitle, { color: Colors.shared.bike }]}
+                    fontFamily="Inter-Bold"
+                  >
+                    Suas Zonas de Potência
+                  </ThemedText>
+                  
+                  <ZoneActions
+                    title={`Zonas de Potência - Ciclismo (${testType} Teste: ${ftp}w)`}
+                    zones={zones}
+                    color={Colors.shared.bike}
+                    onCopySuccess={handleCopySuccess}
+                  />
+                </View>
 
               {copySuccess && (
                 <ThemedText 
@@ -263,6 +271,7 @@ export default function BikeScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+            </>
           )}
         </ScrollView>
         <ScrollToTopButton
