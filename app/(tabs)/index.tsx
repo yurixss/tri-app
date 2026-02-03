@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -87,25 +87,34 @@ function HomeCard({
   backgroundColor,
   borderColor
 }: HomeCardProps) {
+  const [isPressed, setIsPressed] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={1}
       onPress={onPress}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
     >
       <View 
         style={[
           styles.card, 
           { 
-            backgroundColor,
+            backgroundColor: isPressed 
+              ? isDark ? '#2A2A2A' : '#F5F5F5'
+              : backgroundColor,
             borderLeftColor: color,
-            borderLeftWidth: 4,
-            borderColor: borderColor,
+            borderLeftWidth: 5,
+            borderColor: isPressed ? color : borderColor,
             borderWidth: 1,
+            opacity: isPressed ? 0.9 : 1,
           }
         ]}
       >
         <View style={styles.cardHeader}>
-          <View style={styles.iconContainer}>
+          <View style={styles.iconWrapper}>
             {icon}
           </View>
           <View style={styles.cardContent}>
@@ -138,37 +147,41 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   card: {
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 20,
+    padding: 24,
     marginBottom: 16,
+    marginHorizontal: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 5,
+    borderLeftWidth: 5,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  iconContainer: {
+  iconWrapper: {
     marginRight: 16,
-    paddingTop: 4,
+    marginTop: 4,
   },
   cardContent: {
     flex: 1,
   },
   cardTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     marginBottom: 8,
+    lineHeight: 28,
   },
   cardDescription: {
-    fontSize: 15,
-    opacity: 0.8,
-    lineHeight: 22,
+    fontSize: 14,
+    opacity: 0.75,
+    lineHeight: 20,
+    fontWeight: '500',
   },
 });

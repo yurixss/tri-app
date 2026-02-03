@@ -526,7 +526,7 @@ export default function RaceCalculatorScreen() {
             </View>
 
             <ThemedInput
-              label="T1 - Transição 1 (MM:SS) - Opcional"
+              label="T1 - Transição 1 (MM:SS)"
               value={t1Time}
               onChangeText={(text) => {
                 setT1Time(text);
@@ -563,7 +563,7 @@ export default function RaceCalculatorScreen() {
             </View>
 
             <ThemedInput
-              label="T2 - Transição 2 (MM:SS) - Opcional"
+              label="T2 - Transição 2 (MM:SS)"
               value={t2Time}
               onChangeText={(text) => {
                 setT2Time(text);

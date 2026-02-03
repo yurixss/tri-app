@@ -52,15 +52,35 @@ export default function BikeRacePredictorScreen() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(false);
 
+  const handleUpdateFTP = () => {
+    router.push('/screens/training-zones');
+  };
+
+  const getZoneInfo = (percentage: number) => {
+    if (percentage < 55) {
+      return { name: 'Z1 - Recuperação Ativa', color: Colors.shared.swim };
+    } else if (percentage <= 75) {
+      return { name: 'Z2 - Endurance', color: '#10B981' };
+    } else if (percentage <= 90) {
+      return { name: 'Z3 - Tempo', color: '#FF9800' };
+    } else if (percentage <= 105) {
+      return { name: 'Z4 - Limiar', color: '#F97316' };
+    } else if (percentage <= 120) {
+      return { name: 'Z5 - VO₂máx', color: '#EF4444' };
+    } else if (percentage <= 150) {
+      return { name: 'Z6 - Capacidade Anaeróbia', color: '#9333EA' };
+    } else {
+      return { name: 'Z7 - Esforço Máximo', color: '#000000' };
+    }
+  };
+
   // Estado dos inputs
   const [input, setInput] = useState<RaceInput>({
     athleteWeight: '70',
     bikeWeight: '7',
     ftpPercentage: '85',
     segments: [
-      { distance: 10, gradient: 0 },
-      { distance: 5, gradient: 2 },
-      { distance: 8, gradient: -1 },
+      { distance: 20, gradient: 0 },
     ],
   });
 
@@ -209,6 +229,19 @@ export default function BikeRacePredictorScreen() {
                 )}
               </ThemedText>
             )}
+            <TouchableOpacity
+              onPress={handleUpdateFTP}
+              style={styles.updateFTPButton}
+            >
+              <MaterialCommunityIcons
+                name="pencil"
+                size={16}
+                color={Colors.shared.bike}
+              />
+              <ThemedText style={styles.updateFTPButtonText}>
+                Atualizar FTP
+              </ThemedText>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -216,25 +249,31 @@ export default function BikeRacePredictorScreen() {
         <View style={styles.section}>
           <ThemedText style={styles.sectionTitle}>Dados do Atleta</ThemedText>
 
-          <NumericInput
-            label="Peso do Atleta"
-            value={input.athleteWeight}
-            onChangeText={(text) =>
-              setInput({ ...input, athleteWeight: text })
-            }
-            suffix="kg"
-            description="Seu peso corporal"
-          />
+          <View style={styles.inputRow}>
+            <View style={styles.inputHalf}>
+              <NumericInput
+                label="Peso do Atleta"
+                value={input.athleteWeight}
+                onChangeText={(text) =>
+                  setInput({ ...input, athleteWeight: text })
+                }
+                suffix="kg"
+                description="Seu peso corporal"
+              />
+            </View>
 
-          <NumericInput
-            label="Peso da Bicicleta"
-            value={input.bikeWeight}
-            onChangeText={(text) =>
-              setInput({ ...input, bikeWeight: text })
-            }
-            suffix="kg"
-            description="Peso total da bicicleta com acessórios"
-          />
+            <View style={styles.inputHalf}>
+              <NumericInput
+                label="Peso da Bicicleta"
+                value={input.bikeWeight}
+                onChangeText={(text) =>
+                  setInput({ ...input, bikeWeight: text })
+                }
+                suffix="kg"
+                description="Peso total da bicicleta"
+              />
+            </View>
+          </View>
 
           <SliderInput
             label="Percentual do FTP"
@@ -243,11 +282,41 @@ export default function BikeRacePredictorScreen() {
               setInput({ ...input, ftpPercentage: value.toString() })
             }
             min={50}
-            max={100}
+            max={150}
             step={1}
             suffix="%"
             description="Percentual do FTP a ser sustentado na prova"
           />
+
+          {/* Zone Info */}
+          <View style={styles.zoneInfoContainer}>
+            <View
+              style={[
+                styles.zoneBadge,
+                {
+                  backgroundColor:
+                    getZoneInfo(parseFloat(input.ftpPercentage) || 85).color +
+                    '20',
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.zoneIndicator,
+                  {
+                    backgroundColor: getZoneInfo(parseFloat(input.ftpPercentage) || 85)
+                      .color,
+                  },
+                ]}
+              />
+              <ThemedText style={styles.zoneText}>
+                {
+                  getZoneInfo(parseFloat(input.ftpPercentage) || 85)
+                    .name
+                }
+              </ThemedText>
+            </View>
+          </View>
         </View>
 
         {/* Segmentos */}
@@ -564,8 +633,22 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginTop: 4,
   },
-
-  // Sections
+  updateFTPButton: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: Colors.shared.bike + '15',
+  },
+  updateFTPButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.shared.bike,
+    marginLeft: 6,
+  },
   section: {
     marginBottom: 20,
   },
@@ -573,6 +656,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 12,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  inputHalf: {
+    flex: 1,
+  },
+  zoneInfoContainer: {
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  zoneBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  zoneIndicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  zoneText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
 
   // Error Card
