@@ -114,6 +114,27 @@ export const TRAINING_ZONES_CITATIONS = {
     ],
     description: 'Swimming zones are based on Critical Swim Speed (CSS), calculated from short-distance time trials.',
   },
+  heartRate: {
+    title: 'Heart Rate Zones (Karvonen Method)',
+    sources: [
+      {
+        name: 'Martti Karvonen',
+        detail: 'Heart Rate Reserve Method for Training Zone Calculation',
+        url: 'https://www.ncbi.nlm.nih.gov/pubmed',
+      },
+      {
+        name: 'American College of Sports Medicine (ACSM)',
+        detail: 'Guidelines for Exercise Testing and Prescription',
+        url: 'https://www.acsm.org',
+      },
+      {
+        name: 'American Heart Association (AHA)',
+        detail: 'Target Heart Rate Calculator',
+        url: 'https://www.heart.org',
+      },
+    ],
+    description: 'Heart rate zones are calculated using the Karvonen formula (Heart Rate Reserve method), which takes into account both maximum heart rate and resting heart rate for more personalized training zones.',
+  },
 };
 
 /**
@@ -137,6 +158,7 @@ export function getAllCitations() {
     { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.cycling },
     { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.running },
     { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.swimming },
+    { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.heartRate },
   ];
 
   return allSources;

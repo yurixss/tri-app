@@ -180,3 +180,67 @@ function formatSwimPace(secondsPer100m: number): string {
   const seconds = Math.floor(secondsPer100m % 60);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
+
+// Heart rate zones using Karvonen method (Heart Rate Reserve)
+export function calculateHeartRateZones(maxHR: number, restingHR: number) {
+  // Validação
+  if (maxHR <= restingHR) {
+    throw new Error('Frequência cardíaca máxima deve ser maior que a frequência de repouso');
+  }
+
+  // Heart Rate Reserve (HRR)
+  const hrReserve = maxHR - restingHR;
+
+  // Função auxiliar para calcular limites de zona
+  const calculateZoneLimit = (percentage: number): number => {
+    return Math.round(restingHR + (percentage / 100) * hrReserve);
+  };
+
+  return [
+    {
+      zone: 1,
+      name: 'Recovery',
+      description: 'Very easy, active recovery',
+      range: `${calculateZoneLimit(50)} - ${calculateZoneLimit(60)} bpm`,
+      min: calculateZoneLimit(50),
+      max: calculateZoneLimit(60),
+      percentageRange: '50% - 60%',
+    },
+    {
+      zone: 2,
+      name: 'Aerobic Base',
+      description: 'Conversational, endurance building',
+      range: `${calculateZoneLimit(60)} - ${calculateZoneLimit(70)} bpm`,
+      min: calculateZoneLimit(60),
+      max: calculateZoneLimit(70),
+      percentageRange: '60% - 70%',
+    },
+    {
+      zone: 3,
+      name: 'Tempo',
+      description: 'Moderate effort, slightly uncomfortable',
+      range: `${calculateZoneLimit(70)} - ${calculateZoneLimit(80)} bpm`,
+      min: calculateZoneLimit(70),
+      max: calculateZoneLimit(80),
+      percentageRange: '70% - 80%',
+    },
+    {
+      zone: 4,
+      name: 'Threshold',
+      description: 'Hard effort, near lactate threshold',
+      range: `${calculateZoneLimit(80)} - ${calculateZoneLimit(90)} bpm`,
+      min: calculateZoneLimit(80),
+      max: calculateZoneLimit(90),
+      percentageRange: '80% - 90%',
+    },
+    {
+      zone: 5,
+      name: 'Maximum',
+      description: 'Very hard, maximum effort intervals',
+      range: `${calculateZoneLimit(90)} - ${calculateZoneLimit(100)} bpm`,
+      min: calculateZoneLimit(90),
+      max: calculateZoneLimit(100),
+      percentageRange: '90% - 100%',
+    },
+  ];
+}

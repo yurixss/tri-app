@@ -61,6 +61,20 @@ export async function saveSwimTest(testType: '200m' | '400m', testTime: number):
   await saveValue('testResults', JSON.stringify(updatedData));
 }
 
+export async function saveHeartRateTest(maxHR: number, restingHR: number): Promise<void> {
+  const currentData = await getTestResults();
+  const updatedData: TestResults = {
+    ...currentData,
+    heartRate: {
+      maxHR,
+      restingHR,
+      date: new Date().toISOString(),
+    }
+  };
+  
+  await saveValue('testResults', JSON.stringify(updatedData));
+}
+
 async function saveValue(key: string, value: string): Promise<void> {
   if (Platform.OS === 'web') {
     webStorage.set(key, value);
@@ -162,6 +176,11 @@ export interface TestResults {
     testTime: number;
     date: string;
   };
+  heartRate?: {
+    maxHR: number;
+    restingHR: number;
+    date: string;
+  };
 }
 
 export async function deleteAllData(): Promise<void> {
@@ -185,5 +204,6 @@ export default {
   saveBikeTest, 
   saveRunTest,
   saveSwimTest,
+  saveHeartRateTest,
   deleteAllData
 };

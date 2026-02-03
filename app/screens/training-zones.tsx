@@ -71,11 +71,25 @@ export default function TrainingZonesScreen() {
           color={Colors.shared.swim}
           description="Calcular zonas de ritmo com base no teste de 400m"
           testData={testResults.swim 
-            ? `400m: ${formatTimeFromSeconds(testResults.swim.time400m)}` 
+            ? `${testResults.swim.testType}: ${formatTimeFromSeconds(testResults.swim.testTime)}` 
             : undefined
           }
           testDate={testResults.swim?.date}
           onPress={() => navigateToTest('/swim')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
+
+        <SportCard
+          title="Frequência Cardíaca"
+          color="#E74C3C"
+          description="Calcular zonas de frequência cardíaca usando o método de Karvonen"
+          testData={testResults.heartRate 
+            ? `FC máx: ${testResults.heartRate.maxHR} | FC repouso: ${testResults.heartRate.restingHR}`
+            : undefined
+          }
+          testDate={testResults.heartRate?.date}
+          onPress={() => navigateToTest('/heart-rate')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
