@@ -369,9 +369,44 @@ function PredictionResultView({
 }: PredictionResultViewProps) {
   const [expandedSegment, setExpandedSegment] = useState<number | null>(null);
 
+  const getImpactingFactor = () => {
+    // Analisa quais segmentos têm maior gradiente
+    let maxGradient = 0;
+    let maxGradientSegment = 0;
+    result.segments.forEach((seg, idx) => {
+      if (Math.abs(seg.gradient) > Math.abs(maxGradient)) {
+        maxGradient = seg.gradient;
+        maxGradientSegment = idx;
+      }
+    });
+
+    if (Math.abs(maxGradient) > 2) {
+      return maxGradient > 0 
+        ? `Subidas acentuadas (até +${maxGradient.toFixed(1)}%) foram o fator mais impactante`
+        : `Descidas acentuadas (até ${maxGradient.toFixed(1)}%) reduziram significativamente o esforço`;
+    } else if (result.avgPower > 300) {
+      return 'Potência elevada necessária foi o fator mais limitante';
+    } else {
+      return 'Prova com perfil equilibrado e consistente';
+    }
+  };
+
   return (
     <View style={styles.resultContainer}>
       <ThemedText style={styles.resultTitle}>Resultado da Previsão</ThemedText>
+
+      {/* Fator Impactante */}
+      <View style={[styles.impactingFactorCard, { backgroundColor: cardBg, borderColor }]}>
+        <MaterialCommunityIcons
+          name="lightbulb-on"
+          size={18}
+          color={Colors.shared.secondary}
+          style={{ marginRight: 8 }}
+        />
+        <ThemedText style={styles.impactingFactorText}>
+          {getImpactingFactor()}
+        </ThemedText>
+      </View>
 
       {/* Cards de resultados principais */}
       <View style={styles.resultCardsGrid}>
@@ -687,6 +722,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 16,
+  },
+  impactingFactorCard: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  impactingFactorText: {
+    fontSize: 13,
+    fontWeight: '600',
+    flex: 1,
+    lineHeight: 18,
+    color: Colors.shared.secondary,
   },
 
   // Result Cards Grid
