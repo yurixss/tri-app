@@ -286,37 +286,9 @@ export default function BikeRacePredictorScreen() {
             step={1}
             suffix="%"
             description="Percentual do FTP a ser sustentado na prova"
+            color={getZoneInfo(parseFloat(input.ftpPercentage) || 85).color}
+            zoneText={getZoneInfo(parseFloat(input.ftpPercentage) || 85).name}
           />
-
-          {/* Zone Info */}
-          <View style={styles.zoneInfoContainer}>
-            <View
-              style={[
-                styles.zoneBadge,
-                {
-                  backgroundColor:
-                    getZoneInfo(parseFloat(input.ftpPercentage) || 85).color +
-                    '20',
-                },
-              ]}
-            >
-              <View
-                style={[
-                  styles.zoneIndicator,
-                  {
-                    backgroundColor: getZoneInfo(parseFloat(input.ftpPercentage) || 85)
-                      .color,
-                  },
-                ]}
-              />
-              <ThemedText style={styles.zoneText}>
-                {
-                  getZoneInfo(parseFloat(input.ftpPercentage) || 85)
-                    .name
-                }
-              </ThemedText>
-            </View>
-          </View>
         </View>
 
         {/* Segmentos */}
@@ -413,8 +385,8 @@ function PredictionResultView({
 
         <ResultCard
           label="Velocidade Média"
-          value={`${result.avgSpeedMs.toFixed(1)} m/s`}
-          subValue={`${(result.avgSpeedMs * 3.6).toFixed(1)} km/h`}
+          value={`${(result.avgSpeedMs * 3.6).toFixed(1)} km/h`}
+          subValue={`${result.avgSpeedMs.toFixed(1)} m/s`}
           icon="speedometer"
           cardBg={cardBg}
           borderColor={borderColor}

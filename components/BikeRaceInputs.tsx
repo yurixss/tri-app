@@ -78,6 +78,8 @@ interface SliderInputProps {
   step?: number;
   suffix?: string;
   description?: string;
+  color?: string;
+  zoneText?: string;
 }
 
 export function SliderInput({
@@ -89,6 +91,8 @@ export function SliderInput({
   step = 1,
   suffix,
   description,
+  color = Colors.shared.bike,
+  zoneText,
 }: SliderInputProps) {
   const borderColor = useThemeColor({}, 'border');
 
@@ -115,14 +119,18 @@ export function SliderInput({
         <View
           style={[
             styles.sliderFill,
-            { width: `${percentage}%`, backgroundColor: Colors.shared.bike },
+            { width: `${percentage}%`, backgroundColor: color },
           ]}
-        />
+        >
+          {zoneText && (
+            <ThemedText style={styles.zoneTextInSlider}>{zoneText}</ThemedText>
+          )}
+        </View>
       </View>
 
       <View style={styles.sliderControls}>
         <TouchableOpacity onPress={handleDecrease} style={styles.sliderButton}>
-          <MaterialCommunityIcons name="minus" size={20} color={Colors.shared.bike} />
+          <MaterialCommunityIcons name="minus" size={20} color={color} />
         </TouchableOpacity>
 
         <ThemedText style={styles.sliderValue}>
@@ -130,7 +138,7 @@ export function SliderInput({
         </ThemedText>
 
         <TouchableOpacity onPress={handleIncrease} style={styles.sliderButton}>
-          <MaterialCommunityIcons name="plus" size={20} color={Colors.shared.bike} />
+          <MaterialCommunityIcons name="plus" size={20} color={color} />
         </TouchableOpacity>
       </View>
     </View>
@@ -357,12 +365,12 @@ export function AdvancedSettings({
 
           <SliderInput
             label="Vento Médio"
-            value={wind}
-            onChangeValue={handleWindChange}
-            min={-5}
-            max={5}
-            step={0.5}
-            suffix="m/s"
+            value={wind * 3.6}
+            onChangeValue={(value) => handleWindChange(value / 3.6)}
+            min={-18}
+            max={18}
+            step={1.8}
+            suffix="km/h"
             description="Positivo = contra-vento"
           />
 
@@ -425,15 +433,17 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   sliderBar: {
-    height: 6,
+    height: 24,
     backgroundColor: '#e0e0e0',
-    borderRadius: 3,
+    borderRadius: 12,
     overflow: 'hidden',
     marginVertical: 12,
   },
   sliderFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sliderControls: {
     flexDirection: 'row',
@@ -451,6 +461,12 @@ const styles = StyleSheet.create({
   sliderValue: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  zoneTextInSlider: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
 
   // Segment Editor
