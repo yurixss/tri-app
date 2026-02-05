@@ -137,6 +137,85 @@ export const TRAINING_ZONES_CITATIONS = {
   },
 };
 
+export const PROTOCOLS_CITATIONS: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    sources: Array<{
+      name: string;
+      detail: string;
+      url: string;
+    }>;
+  }
+> = {
+  'cold-water-immersion': {
+    title: 'Imersão em Água Fria (CWI) e Recuperação',
+    description:
+      'Recomendações de imersão em água fria para recuperação pós-exercício são discutidas em revisões sistemáticas e diretrizes de medicina esportiva. As evidências variam por objetivo (redução de DOMS vs. adaptações de força), por isso o app recomenda uso pontual após sessões intensas/competições.',
+    sources: [
+      {
+        name: 'PubMed (CWI + DOMS)',
+        detail: 'Busca por revisões sistemáticas sobre cold-water immersion e dor muscular tardia (DOMS).',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/?term=cold%20water%20immersion%20delayed%20onset%20muscle%20soreness%20systematic%20review',
+      },
+    ],
+  },
+  'heat-acclimation': {
+    title: 'Aclimatação ao Calor e Performance',
+    description:
+      'Protocolos de aclimatação ao calor (7–14 dias) são amplamente discutidos na literatura por seus efeitos em termorregulação, percepção de esforço e desempenho em ambientes quentes.',
+    sources: [
+      {
+        name: 'PubMed (heat acclimation)',
+        detail: 'Busca por revisões e guias sobre heat acclimation/acclimatization em endurance.',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/?term=heat%20acclimation%20endurance%20performance%20guidelines%20review',
+      },
+    ],
+  },
+  'pre-race-activation': {
+    title: 'Aquecimento / Ativação Pré-Prova',
+    description:
+      'Estratégias de warm-up (aquecimento) para esportes de endurance normalmente incluem fase aeróbica leve, mobilidade dinâmica e estímulos curtos, visando otimizar temperatura muscular e prontidão neuromuscular.',
+    sources: [
+      {
+        name: 'PubMed (warm-up + endurance)',
+        detail: 'Busca por revisões sobre efeitos do warm-up na performance em endurance.',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/?term=warm-up%20endurance%20performance%20review',
+      },
+    ],
+  },
+  'race-day-visualization': {
+    title: 'Imagery / Visualização e Performance Esportiva',
+    description:
+      'Técnicas de imagery (visualização) são usadas para reduzir ansiedade e melhorar foco/autoeficácia. Evidências e protocolos variam por modalidade e nível do atleta.',
+    sources: [
+      {
+        name: 'PubMed (imagery + sport performance)',
+        detail: 'Busca por revisões sobre imagery/visualization e desempenho esportivo.',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/?term=imagery%20visualization%20sport%20performance%20systematic%20review',
+      },
+    ],
+  },
+};
+
+export function getProtocolCitation(protocolId: string) {
+  return (
+    PROTOCOLS_CITATIONS[protocolId] ?? {
+      title: 'Protocolos de Treino e Recuperação',
+      description:
+        'As recomendações do app se baseiam em literatura de ciência do esporte e diretrizes amplamente aceitas. Quando aplicável, use as fontes para aprofundar e adapte com orientação profissional.',
+      sources: [
+        {
+          name: 'PubMed',
+          detail: 'Portal de busca de literatura biomédica (revisões e diretrizes).',
+          url: 'https://pubmed.ncbi.nlm.nih.gov/',
+        },
+      ],
+    }
+  );
+}
+
 /**
  * Get all citations as a flat list
  */

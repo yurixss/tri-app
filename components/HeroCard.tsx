@@ -127,7 +127,7 @@ export function HeroBlock({
         <ThemedText style={styles.unit}>{unit}</ThemedText>
         
         {/* Badge de intensidade */}
-        <View style={[
+        {/* <View style={[
           styles.intensityBadge,
           {
             backgroundColor: intensityLabel === 'Forte' 
@@ -145,7 +145,7 @@ export function HeroBlock({
           ]}>
             {intensityLabel}
           </ThemedText>
-        </View>
+        </View> */}
       </Animated.View>
     </TouchableOpacity>
   );
@@ -186,8 +186,8 @@ export function HeroCard({
 }: HeroCardProps) {
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const feedbackBg = useThemeColor({ light: '#FFFFFF', dark: '#1A1A1A' }, 'cardBackground');
+  const feedbackBorder = useThemeColor({ light: '#E0E0E0', dark: '#333' }, 'border');
   
   const feedbackOpacity = useRef(new Animated.Value(0)).current;
   const feedbackTranslateY = useRef(new Animated.Value(10)).current;
@@ -273,8 +273,8 @@ export function HeroCard({
             {
               opacity: feedbackOpacity,
               transform: [{ translateY: feedbackTranslateY }],
-              backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
-              borderColor: isDark ? '#333' : '#E0E0E0',
+              backgroundColor: feedbackBg,
+              borderColor: feedbackBorder,
             },
           ]}
         >

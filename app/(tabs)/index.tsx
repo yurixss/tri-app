@@ -268,13 +268,6 @@ export default function HomeScreen() {
           feedbackMessage={feedbackMessage}
         />
 
-        {/* Separador */}
-        <View style={[styles.separator, { backgroundColor: borderColor }]} />
-
-        {/* Sessão - Ações Principais
-        <ThemedText style={styles.sectionTitle} fontFamily="Inter-SemiBold">
-          Ações Principais
-        </ThemedText> */}
 
         <PrimaryActionCard
           title="Simular prova"

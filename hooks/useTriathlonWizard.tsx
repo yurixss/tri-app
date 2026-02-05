@@ -38,7 +38,7 @@ interface WizardContextType {
   /** Atualiza dados de corrida */
   setRunData: (data: RunData) => void;
   /** Executa todos os cálculos */
-  calculate: () => Promise<void>;
+  calculate: (runDataOverride?: RunData) => Promise<void>;
   /** Reseta o wizard */
   reset: () => void;
 }
@@ -88,7 +88,7 @@ export function TriathlonWizardProvider({ children }: WizardProviderProps) {
     setData((prev) => ({ ...prev, run: runData }));
   }, []);
 
-  const calculate = useCallback(async () => {
+  const calculate = useCallback(async (runDataOverride?: RunData) => {
     setIsCalculating(true);
     setError(null);
 
@@ -96,7 +96,12 @@ export function TriathlonWizardProvider({ children }: WizardProviderProps) {
       // Pequeno delay para UX
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const result = calculateTriathlonPrediction(data);
+      // Usar runDataOverride se fornecido, para garantir dados atualizados
+      const dataToUse: TriathlonWizardData = runDataOverride 
+        ? { ...data, run: runDataOverride }
+        : data;
+
+      const result = calculateTriathlonPrediction(dataToUse);
       setPrediction(result);
       setCurrentStep(4);
     } catch (err) {

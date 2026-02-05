@@ -81,18 +81,19 @@ export default function RunStep() {
 
     const timeSeconds = parseTimeString(baseTime);
     
-    setRunData({
+    const runData = {
       baseTimeSeconds: timeSeconds,
       baseDistance: parseFloat(baseDistance),
       raceDistance: raceDistances.run,
       raceType,
-    });
+    };
 
-    // Aguardar um tick para o estado atualizar
-    setTimeout(async () => {
-      await calculate();
-      router.push('/screens/triathlon-wizard/result' as Href);
-    }, 100);
+    // Salvar os dados de corrida no contexto
+    setRunData(runData);
+
+    // Passar os dados diretamente para calculate para garantir que estejam disponíveis
+    await calculate(runData);
+    router.push('/screens/triathlon-wizard/result' as Href);
   };
 
   const handleBack = () => {

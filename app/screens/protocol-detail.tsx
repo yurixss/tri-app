@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme, Alert, Share } from 'react-native';
+import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme, Alert, Share, Modal } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
+import { SourcesInfo } from '@/components/SourcesInfo';
 import { useThemeColor } from '@/constants/Styles';
 import { getProtocolById, PROTOCOL_CATEGORY_CONFIG } from '@/data/protocolsContent';
 import { Share as ShareIcon, Copy, Clock, CheckCircle, AlertTriangle, Target, Calendar, Lightbulb } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
+import { getProtocolCitation } from '@/utils/citations';
 
 /**
  * Tela de detalhes do Protocolo.
@@ -25,6 +27,7 @@ export default function ProtocolDetailScreen() {
   const isDark = colorScheme === 'dark';
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const [showSources, setShowSources] = useState(false);
 
   const protocol = id ? getProtocolById(id) : undefined;
 
@@ -45,6 +48,10 @@ export default function ProtocolDetailScreen() {
   }
 
   const categoryConfig = PROTOCOL_CATEGORY_CONFIG[protocol.category];
+
+  const protocolCitations = [
+    { category: 'Protocolos', ...getProtocolCitation(protocol.id) },
+  ];
 
   const formatProtocolText = () => {
     let text = `📋 ${protocol.title}\n\n`;
@@ -100,36 +107,36 @@ export default function ProtocolDetailScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      {/* Header com ações (fixo, fora do scroll) */}
+      <View style={styles.headerRow}>
+        <View style={styles.headerLeft}>
+          <Header 
+            title={protocol.title}
+            color={categoryConfig.color}
+            onBackPress={() => router.back()}
+          />
+        </View>
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+            onPress={handleShare}
+          >
+            <ShareIcon size={18} color={categoryConfig.color} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+            onPress={handleCopy}
+          >
+            <Copy size={18} color={categoryConfig.color} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header com ações */}
-        <View style={styles.headerRow}>
-          <View style={styles.headerLeft}>
-            <Header 
-              title={protocol.title}
-              color={categoryConfig.color}
-              onBackPress={() => router.back()}
-            />
-          </View>
-          <View style={styles.headerActions}>
-            <TouchableOpacity 
-              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
-              onPress={handleShare}
-            >
-              <ShareIcon size={18} color={categoryConfig.color} />
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
-              onPress={handleCopy}
-            >
-              <Copy size={18} color={categoryConfig.color} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
         {/* Meta info */}
         <View style={styles.metaRow}>
           <View 
@@ -271,7 +278,50 @@ export default function ProtocolDetailScreen() {
             </View>
           ))}
         </View>
+
+        <View style={styles.sourcesButtonContainer}>
+          <TouchableOpacity
+            style={[styles.sourcesButton, { borderColor: categoryConfig.color }]}
+            onPress={() => setShowSources(true)}
+          >
+            <ThemedText style={[styles.sourcesButtonText, { color: categoryConfig.color }]}>
+              ℹ️ Fontes
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
+      <Modal
+        visible={showSources}
+        animationType="slide"
+        onRequestClose={() => setShowSources(false)}
+      >
+        <ThemedView style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <ThemedText
+              style={[styles.modalTitle, { color: categoryConfig.color }]}
+              fontFamily="Inter-Bold"
+            >
+              Fontes Científicas
+            </ThemedText>
+            <TouchableOpacity
+              style={[styles.closeButton, { borderColor: categoryConfig.color }]}
+              onPress={() => setShowSources(false)}
+            >
+              <ThemedText style={[styles.closeButtonText, { color: categoryConfig.color }]}>
+                ✕
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            style={styles.modalContent}
+            contentContainerStyle={styles.modalContentContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <SourcesInfo citations={protocolCitations} />
+          </ScrollView>
+        </ThemedView>
+      </Modal>
     </ThemedView>
   );
 }
@@ -460,5 +510,52 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 20,
     opacity: 0.8,
+  },
+  sourcesButtonContainer: {
+    alignItems: 'center',
+    paddingTop: 16,
+  },
+  sourcesButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  sourcesButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  modalTitle: {
+    fontSize: 20,
+    flex: 1,
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalContentContainer: {
+    paddingBottom: 24,
   },
 });
