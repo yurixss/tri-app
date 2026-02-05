@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Apple, Activity, Zap, Settings, HelpCircle, BarChart3, Heart } from 'lucide-react-native';
+import { Apple, Activity, Zap, Settings, Calculator, BarChart3, Heart } from 'lucide-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
@@ -333,12 +333,10 @@ export default function HomeScreen() {
           />
           
           <SecondaryToolCard
-            title="Ajuda"
-            icon={<HelpCircle size={24} color="#066699" />}
+            title="Calculadora de prova"
+            icon={<Calculator size={24} color="#066699" />}
             color="#066699"
-            onPress={() => {
-              // TODO: Implementar tela de ajuda
-            }}
+            onPress={() => router.push('/screens/race-calculator')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
@@ -380,14 +378,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 12,
+    marginBottom: 6,
     opacity: 0.8,
   },
   // Primary Action Cards (grandes)
   primaryCard: {
     borderRadius: 16,
-    padding: 20,
-    marginBottom: 12,
+    padding: 12,
+    marginBottom: 6,
     borderWidth: 1,
     borderLeftWidth: 4,
     shadowColor: '#000',
@@ -435,7 +433,7 @@ const styles = StyleSheet.create({
   },
   toolCard: {
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

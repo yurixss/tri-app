@@ -231,6 +231,7 @@ export default function ProfileScreen() {
               { label: 'Masculino', value: 'male' },
               { label: 'Feminino', value: 'female' },
             ]}
+            color="#066699"
             selectedValue={profile.gender}
             onValueChange={(value) => setProfile(prev => ({ ...prev, gender: value as 'male' | 'female' }))}
           />
@@ -285,6 +286,7 @@ export default function ProfileScreen() {
               { label: 'Intermediário', value: 'intermediate' },
               { label: 'Avançado', value: 'advanced' },
             ]}
+            color="#066699"
             selectedValue={profile.experience}
             onValueChange={(value) => setProfile(prev => ({ ...prev, experience: value as 'beginner' | 'intermediate' | 'advanced' }))}
           />

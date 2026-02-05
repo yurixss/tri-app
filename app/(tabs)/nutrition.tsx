@@ -39,8 +39,9 @@ export default function NutritionScreen() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [showSources, setShowSources] = useState(false);
   
-  const cardBg = Colors.shared.primary + '10'; 
-  const borderColor = Colors.shared.primaryDeep;
+  const accentColor = '#066699';
+  const cardBg = useThemeColor({}, 'cardBackground');
+  const borderColor = useThemeColor({}, 'border');
   const router = useRouter();
 
   const nutritionCitations = [
@@ -163,7 +164,8 @@ export default function NutritionScreen() {
         <Header
           title="Calculadora de Nutrição"
           subtitle="Carregando seu perfil..."
-          color={Colors.shared.primary}
+          color={accentColor}
+          onBackPress={() => router.back()}
         />
         <ThemedText style={styles.noProfileText}>
           Por favor, aguarde...
@@ -183,14 +185,15 @@ export default function NutritionScreen() {
         <Header
           title="Calculadora de Nutrição"
           subtitle="Por favor, complete seu perfil primeiro"
-          color={Colors.shared.primary}
+          color={accentColor}
+          onBackPress={() => router.back()}
         />
         <ThemedText style={styles.noProfileText}>
           Para obter recomendações de nutrição precisas, preencha seu perfil com peso, altura e gênero.
         </ThemedText>
         <ThemedButton
           title="Ir para Perfil"
-          color={Colors.shared.primary}
+          color={accentColor}
           onPress={() => router.push('/(tabs)/profile')}
         />
       </ThemedView>
@@ -210,7 +213,8 @@ export default function NutritionScreen() {
         >
           <Header
             title="Calculadora de Nutrição"
-            color={Colors.shared.primary}
+            color={accentColor}
+            onBackPress={() => router.back()}
           />
           
           <View 
@@ -230,7 +234,6 @@ export default function NutritionScreen() {
               placeholder="01:30:00"
               keyboardType="default"
               error={error}
-              style={{ borderColor: Colors.shared.primaryDeep }}
             />
 
             <ThemedInput
@@ -239,7 +242,6 @@ export default function NutritionScreen() {
               onChangeText={setTemperature}
               placeholder="25"
               keyboardType="numeric"
-              style={{ borderColor: Colors.shared.primaryDeep }}
             />
 
             <RadioSelector
@@ -249,13 +251,14 @@ export default function NutritionScreen() {
                 { label: 'Moderada', value: 'moderate' },
                 { label: 'Alta', value: 'high' },
               ]}
+              color={accentColor}
               selectedValue={intensity}
               onValueChange={(value) => setIntensity(value as 'low' | 'moderate' | 'high')}
             />
             
             <ThemedButton
               title="Calcular"
-              color={Colors.shared.primary}
+              color={accentColor}
               onPress={calculateNutrition}
               isLoading={isLoading}
             />
@@ -273,25 +276,25 @@ export default function NutritionScreen() {
               ]}
             >
               <ThemedText 
-                style={[styles.resultsTitle, { color: Colors.shared.primary }]}
+                style={[styles.resultsTitle, { color: accentColor }]}
                 fontFamily="Inter-Bold"
               >
                 Ingestão Recomendada
               </ThemedText>
 
-              <ThemedText style={{textAlign: 'center', marginBottom: 8, fontSize: 16, color: Colors.shared.primary}}>
+              <ThemedText style={{textAlign: 'center', marginBottom: 8, fontSize: 16, color: accentColor}}>
                 Temperatura considerada: {temperature ? `${temperature}°C` : 'não informada'}
               </ThemedText>
               
               <View style={styles.resultGrid}>
-                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
+                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
                   <ThemedText 
-                    style={[styles.resultValue, { color: Colors.shared.primary }]}
+                    style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.carbs}g
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
                     Carboidratos
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
@@ -299,14 +302,14 @@ export default function NutritionScreen() {
                   </ThemedText>
                 </View>
                 
-                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
+                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
                   <ThemedText 
-                    style={[styles.resultValue, { color: Colors.shared.primary }]}
+                    style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.sodium}mg
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
                     Sódio
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
@@ -314,14 +317,14 @@ export default function NutritionScreen() {
                   </ThemedText>
                 </View>
 
-                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
+                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
                   <ThemedText 
-                    style={[styles.resultValue, { color: Colors.shared.primary }]}
+                    style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.protein}g
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
                     Proteína
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
@@ -329,14 +332,14 @@ export default function NutritionScreen() {
                   </ThemedText>
                 </View>
 
-                <View style={[styles.resultItem, { borderColor: Colors.shared.primaryDeep, borderWidth: 1 }]}> 
+                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
                   <ThemedText 
-                    style={[styles.resultValue, { color: Colors.shared.primary }]}
+                    style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.hydration}ml
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: Colors.shared.primary }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
                     Hidratação
                   </ThemedText>
                   <ThemedText style={styles.resultDescription}>
@@ -345,16 +348,16 @@ export default function NutritionScreen() {
                 </View>
               </View>
               
-              <ThemedText style={[styles.note, { color: Colors.shared.primary }]}> 
+              <ThemedText style={[styles.note, { color: accentColor }]}> 
                 Estas recomendações são baseadas no seu peso ({profile.weight}kg), gênero, duração, intensidade do treino e temperatura ambiente. Ajuste conforme suas necessidades pessoais.
               </ThemedText>
 
               <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
                 <TouchableOpacity
-                  style={[styles.sourcesButton, { borderColor: Colors.shared.primary }]}
+                  style={[styles.sourcesButton, { borderColor: accentColor }]}
                   onPress={() => setShowSources(true)}
                 >
-                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.primary }]}>ℹ️ Fontes</ThemedText>
+                  <ThemedText style={[styles.sourcesButtonText, { color: accentColor }]}>ℹ️ Fontes</ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -369,16 +372,16 @@ export default function NutritionScreen() {
           <ThemedView style={styles.modalContainer}>
             <View style={styles.modalHeader}>
               <ThemedText
-                style={[styles.modalTitle, { color: Colors.shared.primary }]}
+                style={[styles.modalTitle, { color: accentColor }]}
                 fontFamily="Inter-Bold"
               >
                 Fontes Científicas
               </ThemedText>
               <TouchableOpacity
-                style={[styles.closeButton, { borderColor: Colors.shared.primary }]}
+                style={[styles.closeButton, { borderColor: accentColor }]}
                 onPress={() => setShowSources(false)}
               >
-                <ThemedText style={[styles.closeButtonText, { color: Colors.shared.primary }]}>
+                <ThemedText style={[styles.closeButtonText, { color: accentColor }]}>
                   ✕
                 </ThemedText>
               </TouchableOpacity>

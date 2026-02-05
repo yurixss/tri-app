@@ -5,11 +5,12 @@ import { Home, BookOpen, UserCircle2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
+  const activeTabColor = Colors.shared.accents.blueElectric;
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: activeTabColor,
         tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
         headerShown: false,
         tabBarStyle: {
@@ -29,7 +30,6 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
-          tabBarActiveTintColor: '#066699',
         }}
       />
 
@@ -46,7 +46,6 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, size }) => <UserCircle2 color={color} size={size} />,
-          tabBarActiveTintColor: Colors.shared.profile,
         }}
       />
 

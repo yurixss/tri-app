@@ -28,7 +28,7 @@ export default function RacePredictionScreen() {
           title="Triathlon"
           icon={<Trophy size={32} color={Colors.shared.profile} />}
           color={Colors.shared.profile}
-          description="Wizard para estimar tempo total de prova de triathlon com base nos seus tempos de natação, ciclismo e corrida"
+          description="Estime seu tempo total de prova de triathlon"
           onPress={() => router.push('/screens/triathlon-wizard')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -38,7 +38,7 @@ export default function RacePredictionScreen() {
           title="Ciclismo"
           icon={<Bike size={32} color={Colors.shared.bike} />}
           color={Colors.shared.bike}
-          description="Estime seu tempo de prova de ciclismo com base no FTP, peso, perfil do percurso e condições ambientais"
+          description="Estime seu tempo de prova de ciclismo"
           onPress={() => router.push('/screens/bike-race-predictor')}
           backgroundColor={cardBg}
           borderColor={borderColor}
