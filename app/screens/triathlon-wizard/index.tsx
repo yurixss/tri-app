@@ -12,8 +12,9 @@ import { TimeInput } from '@/components/TimeInput';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
+import { getTestResults } from '@/hooks/useStorage';
 import { WaterType, OpenWaterType, SwellLevel, getRaceDistances, RaceType } from '@/utils/triathlonPredictor';
-import { parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { parseTimeString, isValidTimeFormat, formatTimeFromSeconds } from '@/utils/timeUtils';
 
 const WATER_TYPE_OPTIONS = [
   { value: 'pool', label: 'Piscina' },
@@ -39,8 +40,8 @@ const BASE_DISTANCE_OPTIONS = [
 const RACE_TYPE_OPTIONS = [
   { value: 'sprint', label: 'Sprint (750m)' },
   { value: 'olympic', label: 'Olímpico (1.500m)' },
-  { value: 'half', label: '70.3 (1.900m)' },
-  { value: 'full', label: 'Ironman (3.800m)' },
+  { value: 'half', label: 'Ironman 70.3 / 70.3 (1.900m)' },
+  { value: 'full', label: 'Ironman Full (3.800m)' },
 ];
 
 export default function SwimStep() {
@@ -61,6 +62,18 @@ export default function SwimStep() {
 
   // Carregar dados existentes
   useEffect(() => {
+    loadSavedData();
+  }, []);
+
+  const loadSavedData = async () => {
+    // Carregar dados de teste salvos
+    const testResults = await getTestResults();
+    if (testResults.swim?.testTime && testResults.swim?.testType) {
+      setBaseTime(formatTimeFromSeconds(testResults.swim.testTime));
+      setBaseDistance(testResults.swim.testType === '400m' ? '400' : '200');
+    }
+
+    // Carregar dados existentes do wizard
     if (data.swim) {
       // Converter tempo de volta para string
       const mins = Math.floor(data.swim.baseTimeSeconds / 60);
@@ -72,7 +85,7 @@ export default function SwimStep() {
       if (data.swim.swellLevel) setSwellLevel(data.swim.swellLevel);
       if (data.swim.wetsuit !== undefined) setWetsuit(data.swim.wetsuit);
     }
-  }, []);
+  };
 
   const getRaceDistance = () => {
     return getRaceDistances(raceType).swim;
@@ -125,7 +138,7 @@ export default function SwimStep() {
       >
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.swim }]} fontFamily="Inter-Bold">
+            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
               🏊 Natação
             </ThemedText>
           </View>
@@ -137,8 +150,14 @@ export default function SwimStep() {
             options={RACE_TYPE_OPTIONS}
             selectedValue={raceType}
             onValueChange={(value) => setRaceType(value as RaceType)}
-            color={Colors.shared.swim}
+            color={Colors.shared.primary}
           />
+
+          <View style={[styles.infoBox, { backgroundColor: 'rgba(6, 102, 153, 0.1)' }]}>
+          <ThemedText style={styles.infoText}>
+            Distância da natação: <ThemedText fontFamily="Inter-Bold">{getRaceDistance()}m</ThemedText>
+          </ThemedText>
+        </View>
 
           <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
             Seu Tempo Base
@@ -148,7 +167,7 @@ export default function SwimStep() {
             options={BASE_DISTANCE_OPTIONS}
             selectedValue={baseDistance}
             onValueChange={setBaseDistance}
-            color={Colors.shared.swim}
+            color={Colors.shared.primary}
             horizontal
           />
 
@@ -167,7 +186,7 @@ export default function SwimStep() {
             options={WATER_TYPE_OPTIONS}
             selectedValue={waterType}
             onValueChange={(value) => setWaterType(value as WaterType)}
-            color={Colors.shared.swim}
+            color={Colors.shared.primary}
             horizontal
           />
 
@@ -178,7 +197,7 @@ export default function SwimStep() {
                 options={OPEN_WATER_TYPE_OPTIONS}
                 selectedValue={openWaterType}
                 onValueChange={(value) => setOpenWaterType(value as OpenWaterType)}
-                color={Colors.shared.swim}
+                color={Colors.shared.primary}
                 horizontal
               />
 
@@ -189,7 +208,7 @@ export default function SwimStep() {
                     options={SWELL_OPTIONS}
                     selectedValue={swellLevel}
                     onValueChange={(value) => setSwellLevel(value as SwellLevel)}
-                    color={Colors.shared.swim}
+                    color={Colors.shared.primary}
                     horizontal
                   />
                 </>
@@ -203,24 +222,20 @@ export default function SwimStep() {
                 ]}
                 selectedValue={wetsuit ? 'yes' : 'no'}
                 onValueChange={(value) => setWetsuit(value === 'yes')}
-                color={Colors.shared.swim}
+                color={Colors.shared.primary}
                 horizontal
               />
             </>
           )}
         </View>
 
-        <View style={styles.infoBox}>
-          <ThemedText style={styles.infoText}>
-            📍 Distância da natação: <ThemedText fontFamily="Inter-Bold">{getRaceDistance()}m</ThemedText>
-          </ThemedText>
-        </View>
+   
       </ScrollView>
 
       <View style={styles.footer}>
         <ThemedButton
           title="Próximo Passo →"
-          color={Colors.shared.swim}
+          color={Colors.shared.primary}
           onPress={handleNext}
         />
       </View>
@@ -266,7 +281,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(14, 165, 233, 0.1)',
     padding: 12,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 4,
   },
   infoText: {
     fontSize: 14,

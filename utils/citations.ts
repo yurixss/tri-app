@@ -199,6 +199,73 @@ export const PROTOCOLS_CITATIONS: Record<
   },
 };
 
+export const TRIATHLON_WIZARD_CITATIONS = {
+  swimming: {
+    title: 'Previsão de Tempo de Natação em Triathlon',
+    description: 'Cálculos baseados na extrapolação de tempos de teste (400m ou 1000m) para distâncias de prova, com ajustes para condições de águas abertas, uso de wetsuit e nível de marola.',
+    sources: [
+      {
+        name: 'USA Swimming',
+        detail: 'Swimming Pace Calculation Methods',
+        url: 'https://www.usaswimming.org',
+      },
+      {
+        name: 'SwimSmooth',
+        detail: 'Open Water Swimming Performance Factors',
+        url: 'https://www.swimsmooth.com',
+      },
+    ],
+  },
+  cycling: {
+    title: 'Modelo de Previsão de Tempo no Ciclismo',
+    description: 'Previsões baseadas em FTP (Functional Threshold Power), peso corporal, altimetria e condições ambientais. Utiliza princípios de física aplicada ao ciclismo para estimar velocidade e tempo.',
+    sources: [
+      {
+        name: 'Hunter Allen & Andrew Coggan',
+        detail: 'Training and Racing with a Power Meter - Time Trial Performance Models',
+        url: 'https://trainingpeaks.com',
+      },
+      {
+        name: 'Best Bike Split',
+        detail: 'Cycling Performance Prediction Models',
+        url: 'https://www.bestbikesplit.com',
+      },
+    ],
+  },
+  running: {
+    title: 'Previsão de Tempo de Corrida Pós-Bike',
+    description: 'Utiliza a fórmula de Riegel para extrapolação de distâncias e aplica fatores de fadiga específicos para corrida após ciclismo em triathlon, baseados na distância da prova.',
+    sources: [
+      {
+        name: 'Peter Riegel',
+        detail: 'Athletic Records and Human Endurance - Distance Prediction Formula',
+        url: 'https://www.ncbi.nlm.nih.gov/pubmed',
+      },
+      {
+        name: 'Journal of Sports Sciences',
+        detail: 'Running Performance After Cycling in Triathlon',
+        url: 'https://www.tandfonline.com/toc/rjsp20/current',
+      },
+    ],
+  },
+  transitions: {
+    title: 'Tempos de Transição em Triathlon',
+    description: 'Tempos padrão de transição (T1 e T2) baseados em dados estatísticos de competições e variações por distância de prova.',
+    sources: [
+      {
+        name: 'IRONMAN',
+        detail: 'Transition Time Guidelines and Statistics',
+        url: 'https://www.ironman.com',
+      },
+      {
+        name: 'International Triathlon Union (ITU)',
+        detail: 'World Triathlon Competition Rules and Standards',
+        url: 'https://www.triathlon.org',
+      },
+    ],
+  },
+};
+
 export function getProtocolCitation(protocolId: string) {
   return (
     PROTOCOLS_CITATIONS[protocolId] ?? {

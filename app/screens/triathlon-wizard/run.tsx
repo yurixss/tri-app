@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, View, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
 import { useRouter, Href } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,6 +9,7 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { RadioSelector } from '@/components/RadioSelector';
 import { WizardStepper } from '@/components/WizardStepper';
 import { TimeInput } from '@/components/TimeInput';
+import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
@@ -126,7 +127,7 @@ export default function RunStep() {
       >
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.run }]} fontFamily="Inter-Bold">
+            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
               🏃 Corrida
             </ThemedText>
           </View>
@@ -155,7 +156,7 @@ export default function RunStep() {
             options={BASE_DISTANCE_OPTIONS}
             selectedValue={baseDistance}
             onValueChange={setBaseDistance}
-            color={Colors.shared.run}
+            color={Colors.shared.primary}
             horizontal
           />
 
@@ -197,7 +198,7 @@ export default function RunStep() {
           />
           <ThemedButton
             title={isCalculating ? 'Calculando...' : 'Calcular Previsão →'}
-            color={Colors.shared.run}
+            color={Colors.shared.primary}
             onPress={handleCalculate}
             containerStyle={styles.nextButton}
             disabled={isCalculating}
@@ -206,7 +207,7 @@ export default function RunStep() {
         {isCalculating && (
           <ActivityIndicator 
             size="small" 
-            color={Colors.shared.run} 
+            color={Colors.shared.primary} 
             style={styles.loader} 
           />
         )}
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   paceBox: {
-    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+    backgroundColor: 'rgba(6, 102, 153, 0.1)',
     padding: 10,
     borderRadius: 8,
     marginTop: 8,
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
   },
   paceText: {
     fontSize: 14,
-    color: Colors.shared.run,
+    color: Colors.shared.primary,
   },
   infoBox: {
     backgroundColor: 'rgba(0,0,0,0.03)',

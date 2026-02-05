@@ -160,7 +160,7 @@ export default function BikeStep() {
       >
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.bike }]} fontFamily="Inter-Bold">
+            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
               🚴 Ciclismo
             </ThemedText>
           </View>
@@ -193,8 +193,8 @@ export default function BikeStep() {
           </View>
 
           {parseFloat(ftpPercentage) > 0 && (
-            <View style={[styles.zoneIndicator, { backgroundColor: zoneInfo.color + '20' }]}>
-              <ThemedText style={[styles.zoneText, { color: zoneInfo.color }]} fontFamily="Inter-Medium">
+            <View style={[styles.zoneIndicator, { backgroundColor: Colors.shared.primary + '20' }]}>
+              <ThemedText style={[styles.zoneText, { color: Colors.shared.primary }]} fontFamily="Inter-Medium">
                 {zoneInfo.name} • Potência: {Math.round(parseFloat(ftp || '0') * parseFloat(ftpPercentage) / 100)}W
               </ThemedText>
             </View>
@@ -297,7 +297,7 @@ export default function BikeStep() {
           />
           <ThemedButton
             title="Próximo Passo →"
-            color={Colors.shared.bike}
+            color={Colors.shared.primary}
             onPress={handleNext}
             containerStyle={styles.nextButton}
           />

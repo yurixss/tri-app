@@ -5,7 +5,7 @@ import { Home, BookOpen, UserCircle2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
-  const activeTabColor = Colors.shared.accents.blueElectric;
+  const activeTabColor = Colors.shared.primary;
 
   return (
     <Tabs

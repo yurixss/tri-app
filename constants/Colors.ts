@@ -2,8 +2,8 @@ import { Platform } from 'react-native';
 
 // Palette
 // New Zwift-like palette (primary laranja + accents ciano/azul)
-const primary = '#FF8C36'; // Zwift Orange Base (principal)
-const primaryDeep = '#FF6A00'; // Zwift Orange Deep (darker for highlights)
+const primary = '#066699'; // Blue primary (principal)
+const primaryDeep = '#044d73'; // Blue Deep (darker for highlights)
 
 const blackCarbon = '#0D0D0D';
 const graphiteDark = '#1A1A1A';

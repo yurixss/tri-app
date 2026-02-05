@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, View, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter, Href } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -10,7 +10,8 @@ import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
 import { getRaceTypeName } from '@/utils/triathlonPredictor';
-import { ChevronDown, ChevronUp } from 'lucide-react-native';
+import { shareTriathlonPredictionAsPdf } from '@/utils/shareUtils';
+import { ChevronDown, ChevronUp, Share2 } from 'lucide-react-native';
 
 interface ExpandableSectionProps {
   title: string;
@@ -78,6 +79,7 @@ export default function ResultStep() {
   const { prediction, data, reset } = useTriathlonWizard();
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const [isSharing, setIsSharing] = useState(false);
 
   if (!prediction) {
     return (
@@ -113,6 +115,33 @@ export default function ResultStep() {
   const handleClose = () => {
     reset();
     router.replace('/(tabs)' as Href);
+  };
+
+  const handleShare = async () => {
+    if (!prediction) return;
+    
+    setIsSharing(true);
+    try {
+      await shareTriathlonPredictionAsPdf({
+        prediction,
+        raceType,
+        swimData: data.swim ? {
+          waterType: data.swim.waterType,
+          wetsuit: data.swim.wetsuit,
+        } : undefined,
+        bikeData: data.bike ? {
+          ftp: data.bike.ftp,
+          ftpPercentage: data.bike.ftpPercentage,
+          distance: data.bike.distance,
+          elevation: data.bike.elevation,
+        } : undefined,
+        runData: data.run ? {
+          baseDistance: data.run.baseDistance,
+        } : undefined,
+      });
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   return (
@@ -236,6 +265,24 @@ export default function ResultStep() {
       </ScrollView>
 
       <View style={styles.footer}>
+        {/* Botão de compartilhar */}
+        <Pressable 
+          style={[styles.shareButton, { backgroundColor: cardBg, borderColor }]}
+          onPress={handleShare}
+          disabled={isSharing}
+        >
+          {isSharing ? (
+            <ActivityIndicator size="small" color={Colors.shared.primary} />
+          ) : (
+            <>
+              <Share2 size={20} color={Colors.shared.primary} />
+              <ThemedText style={[styles.shareButtonText, { color: Colors.shared.primary }]} fontFamily="Inter-Medium">
+                Compartilhar PDF
+              </ThemedText>
+            </>
+          )}
+        </Pressable>
+
         <View style={styles.footerButtons}>
           <ThemedButton
             title="Nova Previsão"
@@ -423,6 +470,19 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingTop: 8,
+  },
+  shareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 12,
+  },
+  shareButtonText: {
+    fontSize: 14,
   },
   footerButtons: {
     flexDirection: 'row',

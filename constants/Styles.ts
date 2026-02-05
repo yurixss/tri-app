@@ -110,13 +110,14 @@ export const commonStyles = StyleSheet.create({
     marginTop: 24,
   },
   radioGroup: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginBottom: 16,
   },
   radioButton: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 16,
+    marginBottom: 8,
   },
   radioCircle: {
     height: 20,
