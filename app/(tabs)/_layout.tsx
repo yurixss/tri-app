@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Home, Apple, UserCircle2 } from 'lucide-react-native';
+import { Home, BookOpen, UserCircle2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -25,11 +25,11 @@ export default function TabLayout() {
       }}>
  
       <Tabs.Screen
-        name="nutrition"
+        name="manual"
         options={{
           title: '',
-          tabBarIcon: ({ color, size }) => <Apple color={color} size={size} />,
-          tabBarActiveTintColor: Colors.shared.nutrition,
+          tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
+          tabBarActiveTintColor: '#066699',
         }}
       />
 
@@ -47,6 +47,14 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color, size }) => <UserCircle2 color={color} size={size} />,
           tabBarActiveTintColor: Colors.shared.profile,
+        }}
+      />
+
+      {/* Ocultar nutrition das tabs, mas manter acessível via navegação */}
+      <Tabs.Screen
+        name="nutrition"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

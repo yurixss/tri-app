@@ -160,7 +160,7 @@ export default function ProfileScreen() {
       >
         <Header
           title="Perfil"
-          color={Colors.shared.primary}
+          color="#066699"
         />
         
         <View 
@@ -179,7 +179,7 @@ export default function ProfileScreen() {
               <Switch
                 value={theme.choice === 'dark'}
                 onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
-                trackColor={{ false: '#767577', true: '#FF9500' }}
+                trackColor={{ false: '#767577', true: '#066699' }}
                 thumbColor={theme.choice === 'dark' ? '#fff' : '#fff'}
               />
             </View>
@@ -194,12 +194,12 @@ export default function ProfileScreen() {
               ) : (
                 <UserCircle2 
                   size={64} 
-                  color={'#FF9500'} 
+                  color={'#066699'} 
                   style={styles.photoPlaceholder}
                 />
               )}
               <TouchableOpacity 
-                style={[styles.editButton, { backgroundColor: '#FF9500' }]} 
+                style={[styles.editButton, { backgroundColor: '#066699' }]} 
                 onPress={handlePhotoSelect}
               >
                 <Edit3 size={16} color="white" />
@@ -290,7 +290,7 @@ export default function ProfileScreen() {
           />
 
           <ThemedText 
-            style={[styles.sectionLabel, { color: '#FF9500' }]}
+            style={[styles.sectionLabel, { color: '#066699' }]}
             fontFamily="Inter-Medium"
           >
             Objetivo
@@ -308,7 +308,7 @@ export default function ProfileScreen() {
                 key={goal}
                 style={[
                   styles.goalOption,
-                  profile.trainingGoal === goal && [styles.selectedGoalOption, { backgroundColor: '#FF9500', borderColor: '#FF9500' }]
+                  profile.trainingGoal === goal && styles.selectedGoalOption
                 ]}
                 onPress={() => setProfile(prev => ({ ...prev, trainingGoal: goal as TrainingGoal }))}
               >
@@ -331,7 +331,7 @@ export default function ProfileScreen() {
 
           <ThemedButton
             title="Salvar Perfil"
-            color="#FF9500"
+            color="#066699"
             onPress={handleSave}
             isLoading={isLoading}
           />
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: Colors.shared.profile,
+    backgroundColor: '#066699',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -440,8 +440,8 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   selectedGoalOption: {
-    backgroundColor: Colors.shared.profile,
-    borderColor: Colors.shared.profile,
+    backgroundColor: '#066699',
+    borderColor: '#066699',
   },
   goalContent: {
     flexDirection: 'row',

@@ -177,14 +177,7 @@ export default function BikeScreen() {
           </View>
           
           {hasCalculated && zones.length > 0 && (
-            <>
-              {/* Botão do Previsor de Tempo de Prova */}
-              <ThemedButton
-                title="🔮 Previsor de Tempo de Prova"
-                color={Colors.shared.bike}
-                onPress={() => router.push('/screens/bike-race-predictor')}
-              />
-            
+            <>       
               <View 
                 style={[
                   styles.card,
@@ -262,12 +255,18 @@ export default function BikeScreen() {
                 ))}
               </View>
 
-              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
                 <TouchableOpacity
                   style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
                   onPress={() => setShowSources(true)}
                 >
                   <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>ℹ️ Fontes</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
+                  onPress={() => router.push('/screens/bike-race-predictor')}
+                >
+                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>📊 Previsor</ThemedText>
                 </TouchableOpacity>
               </View>
             </View>

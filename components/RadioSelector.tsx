@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useThemeColor } from '../constants/Styles';
 import { commonStyles } from '../constants/Styles';
@@ -9,21 +9,26 @@ interface RadioOption {
   value: string;
 }
 
-interface RadioSelectorProps {
+export interface RadioSelectorProps {
   options: RadioOption[];
   selectedValue: string;
   onValueChange: (value: string) => void;
   label?: string;
+  color?: string;
+  horizontal?: boolean;
 }
 
 export function RadioSelector({
   options,
   selectedValue,
   onValueChange,
-  label
+  label,
+  color,
+  horizontal = false,
 }: RadioSelectorProps) {
   const borderColor = useThemeColor({}, 'border');
-  const tintColor = useThemeColor({}, 'tint');
+  const defaultTintColor = useThemeColor({}, 'tint');
+  const tintColor = color || defaultTintColor;
 
   return (
     <View style={styles.container}>
@@ -36,11 +41,11 @@ export function RadioSelector({
         </ThemedText>
       )}
       
-      <View style={commonStyles.radioGroup}>
+      <View style={[commonStyles.radioGroup, horizontal && styles.horizontalGroup]}>
         {options.map((option) => (
           <TouchableOpacity
             key={option.value}
-            style={commonStyles.radioButton}
+            style={[commonStyles.radioButton, horizontal && styles.horizontalButton]}
             onPress={() => onValueChange(option.value)}
           >
             <View 
@@ -69,5 +74,13 @@ export function RadioSelector({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+  },
+  horizontalGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  horizontalButton: {
+    marginBottom: 0,
   },
 });

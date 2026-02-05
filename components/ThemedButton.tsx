@@ -1,14 +1,15 @@
-import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, ViewStyle } from 'react-native';
 import { ThemedText } from './ThemedText';
 import Colors from '../constants/Colors';
 import { commonStyles } from '../constants/Styles';
 
-interface ThemedButtonProps {
+export interface ThemedButtonProps {
   onPress: () => void;
   title: string;
   color?: string;
   isLoading?: boolean;
   disabled?: boolean;
+  containerStyle?: ViewStyle;
 }
 
 export function ThemedButton({ 
@@ -16,7 +17,8 @@ export function ThemedButton({
   title, 
   color = Colors.shared.primary,
   isLoading = false,
-  disabled = false
+  disabled = false,
+  containerStyle,
 }: ThemedButtonProps) {
   const styles = StyleSheet.create({
     button: {
@@ -36,7 +38,7 @@ export function ThemedButton({
 
   return (
     <TouchableOpacity 
-      style={styles.button} 
+      style={[styles.button, containerStyle]} 
       onPress={onPress}
       disabled={disabled || isLoading}
     >

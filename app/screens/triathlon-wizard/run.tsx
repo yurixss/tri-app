@@ -1,0 +1,312 @@
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
+import { useRouter, Href } from 'expo-router';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Header } from '@/components/Header';
+import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedInput } from '@/components/ThemedInput';
+import { RadioSelector } from '@/components/RadioSelector';
+import { WizardStepper } from '@/components/WizardStepper';
+import { TimeInput } from '@/components/TimeInput';
+import Colors from '@/constants/Colors';
+import { useThemeColor } from '@/constants/Styles';
+import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
+import { getTestResults } from '@/hooks/useStorage';
+import { RaceType, getRaceDistances, getRaceTypeName } from '@/utils/triathlonPredictor';
+import { parseTimeString, isValidTimeFormat, formatTimeFromSeconds } from '@/utils/timeUtils';
+
+const BASE_DISTANCE_OPTIONS = [
+  { value: '5', label: '5 km' },
+  { value: '10', label: '10 km' },
+];
+
+export default function RunStep() {
+  const router = useRouter();
+  const { data, setRunData, calculate, isCalculating, error: calcError } = useTriathlonWizard();
+  const cardBg = useThemeColor({}, 'cardBackground');
+  const borderColor = useThemeColor({}, 'border');
+
+  // Estado local do formulário
+  const [baseTime, setBaseTime] = useState('');
+  const [baseDistance, setBaseDistance] = useState<string>('5');
+  const [error, setError] = useState<string | null>(null);
+
+  // Determinar tipo de prova a partir da natação
+  const getRaceType = (): RaceType => {
+    if (!data.swim?.raceDistance) return 'olympic';
+    const swimDist = data.swim.raceDistance;
+    if (swimDist <= 750) return 'sprint';
+    if (swimDist <= 1500) return 'olympic';
+    if (swimDist <= 1900) return 'half';
+    return 'full';
+  };
+
+  const raceType = getRaceType();
+  const raceDistances = getRaceDistances(raceType);
+
+  // Carregar dados salvos
+  useEffect(() => {
+    loadSavedData();
+  }, []);
+
+  const loadSavedData = async () => {
+    // Carregar tempo de corrida dos testes salvos
+    const testResults = await getTestResults();
+    if (testResults.run?.testTime) {
+      setBaseTime(formatTimeFromSeconds(testResults.run.testTime));
+      setBaseDistance(testResults.run.testType === '5km' ? '5' : '3');
+    }
+
+    // Carregar dados existentes do wizard
+    if (data.run) {
+      const mins = Math.floor(data.run.baseTimeSeconds / 60);
+      const secs = data.run.baseTimeSeconds % 60;
+      setBaseTime(`${mins}:${secs.toString().padStart(2, '0')}`);
+      setBaseDistance(data.run.baseDistance.toString());
+    }
+  };
+
+  const validate = (): boolean => {
+    if (!baseTime || !isValidTimeFormat(baseTime)) {
+      setError('Informe um tempo válido (MM:SS)');
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  const handleCalculate = async () => {
+    if (!validate()) return;
+
+    const timeSeconds = parseTimeString(baseTime);
+    
+    setRunData({
+      baseTimeSeconds: timeSeconds,
+      baseDistance: parseFloat(baseDistance),
+      raceDistance: raceDistances.run,
+      raceType,
+    });
+
+    // Aguardar um tick para o estado atualizar
+    setTimeout(async () => {
+      await calculate();
+      router.push('/screens/triathlon-wizard/result' as Href);
+    }, 100);
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  // Calcular pace estimado
+  const getPaceEstimate = () => {
+    if (!baseTime || !isValidTimeFormat(baseTime)) return null;
+    const timeSeconds = parseTimeString(baseTime);
+    const paceSeconds = timeSeconds / parseFloat(baseDistance);
+    return formatTimeFromSeconds(paceSeconds);
+  };
+
+  const paceEstimate = getPaceEstimate();
+
+  return (
+    <ThemedView style={styles.container}>
+      <Header 
+        title="Previsão de Triathlon"
+        onBackPress={handleBack}
+      />
+
+      <WizardStepper currentStep={3} />
+
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
+          <View style={styles.cardHeader}>
+            <ThemedText style={[styles.cardTitle, { color: Colors.shared.run }]} fontFamily="Inter-Bold">
+              🏃 Corrida
+            </ThemedText>
+          </View>
+
+          {(error || calcError) && (
+            <View style={styles.errorBox}>
+              <ThemedText style={styles.errorText}>{error || calcError}</ThemedText>
+            </View>
+          )}
+
+          {/* Resumo da prova */}
+          <View style={styles.raceSummary}>
+            <ThemedText style={styles.raceSummaryTitle} fontFamily="Inter-Bold">
+              {getRaceTypeName(raceType)}
+            </ThemedText>
+            <ThemedText style={styles.raceSummaryText}>
+              Natação: {data.swim?.raceDistance}m • Bike: {raceDistances.bike}km • Corrida: {raceDistances.run}km
+            </ThemedText>
+          </View>
+
+          <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
+            Seu Tempo Recente
+          </ThemedText>
+          
+          <RadioSelector
+            options={BASE_DISTANCE_OPTIONS}
+            selectedValue={baseDistance}
+            onValueChange={setBaseDistance}
+            color={Colors.shared.run}
+            horizontal
+          />
+
+          <TimeInput
+            label={`Tempo em ${baseDistance} km`}
+            value={baseTime}
+            onChange={setBaseTime}
+            placeholder="MM:SS"
+          />
+
+          {paceEstimate && (
+            <View style={styles.paceBox}>
+              <ThemedText style={styles.paceText}>
+                Pace médio: <ThemedText fontFamily="Inter-Bold">{paceEstimate}/km</ThemedText>
+              </ThemedText>
+            </View>
+          )}
+
+          <View style={styles.infoBox}>
+            <ThemedText style={styles.infoTitle} fontFamily="Inter-Medium">
+              ℹ️ Sobre o cálculo
+            </ThemedText>
+            <ThemedText style={styles.infoText}>
+              O tempo da corrida será ajustado usando a fórmula de Riegel e incluirá 
+              um fator de fadiga pós-bike de acordo com a distância da prova.
+            </ThemedText>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <View style={styles.footerButtons}>
+          <ThemedButton
+            title="← Voltar"
+            color="#6B7280"
+            onPress={handleBack}
+            containerStyle={styles.backButton}
+            disabled={isCalculating}
+          />
+          <ThemedButton
+            title={isCalculating ? 'Calculando...' : 'Calcular Previsão →'}
+            color={Colors.shared.run}
+            onPress={handleCalculate}
+            containerStyle={styles.nextButton}
+            disabled={isCalculating}
+          />
+        </View>
+        {isCalculating && (
+          <ActivityIndicator 
+            size="small" 
+            color={Colors.shared.run} 
+            style={styles.loader} 
+          />
+        )}
+      </View>
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 24,
+  },
+  card: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  cardHeader: {
+    marginBottom: 16,
+  },
+  cardTitle: {
+    fontSize: 20,
+  },
+  errorBox: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  errorText: {
+    color: '#EF4444',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  raceSummary: {
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  raceSummaryTitle: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  raceSummaryText: {
+    fontSize: 13,
+    opacity: 0.7,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  paceBox: {
+    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  paceText: {
+    fontSize: 14,
+    color: Colors.shared.run,
+  },
+  infoBox: {
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  infoTitle: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  infoText: {
+    fontSize: 13,
+    opacity: 0.7,
+    lineHeight: 18,
+  },
+  footer: {
+    paddingTop: 8,
+  },
+  footerButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  backButton: {
+    flex: 1,
+  },
+  nextButton: {
+    flex: 2,
+  },
+  loader: {
+    marginTop: 12,
+  },
+});
