@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Apple, Activity, Zap, Settings, Calculator, BarChart3, Heart } from 'lucide-react-native';
+import { Apple, Activity, Zap, ClipboardList, Calculator, BarChart3, Heart } from 'lucide-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
@@ -238,18 +238,18 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      {/* Saudação (fixa, fora do scroll) */}
+      <View style={styles.greetingContainer}>
+        <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
+          {getGreeting()}, {userName}
+        </ThemedText>
+      </View>
+
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Saudação */}
-        <View style={styles.greetingContainer}>
-          <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
-            {getGreeting()}, {userName}
-          </ThemedText>
-        </View>
-
         {/* Hero Card - Resumo de Performance com Quick Switch */}
         <HeroCard
           swimValue={heroValues.swimValue}
@@ -313,6 +313,15 @@ export default function HomeScreen() {
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
+
+          <SecondaryToolCard
+            title="Calculadora de prova"
+            icon={<Calculator size={24} color="#066699" />}
+            color="#066699"
+            onPress={() => router.push('/screens/race-calculator')}
+            backgroundColor={cardBg}
+            borderColor={borderColor}
+          />
           
           <SecondaryToolCard
             title="Zonas de FC"
@@ -324,22 +333,15 @@ export default function HomeScreen() {
           />
           
           <SecondaryToolCard
-            title="Perfil"
-            icon={<Settings size={24} color="#0a5483" />}
-            color="#0a5483"
-            onPress={() => router.push('/(tabs)/profile')}
+            title="Protocolos"
+            icon={<ClipboardList size={24} color="#8B5CF6" />}
+            color="#8B5CF6"
+            onPress={() => router.push('/screens/protocols')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
           
-          <SecondaryToolCard
-            title="Calculadora de prova"
-            icon={<Calculator size={24} color="#066699" />}
-            color="#066699"
-            onPress={() => router.push('/screens/race-calculator')}
-            backgroundColor={cardBg}
-            borderColor={borderColor}
-          />
+
         </View>
       </ScrollView>
     </ThemedView>
