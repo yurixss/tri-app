@@ -12,7 +12,7 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { NUTRITION_CITATIONS } from '@/utils/citations';
-import { useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { getProfile, getOnboardingData, Profile } from '@/hooks/useStorage';
 
@@ -43,6 +43,16 @@ export default function NutritionScreen() {
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const router = useRouter();
+  const segments = useSegments() as string[];
+  const isInTabs = segments.includes('(tabs)');
+
+  const handleBack = () => {
+    if (isInTabs) {
+      router.replace('/(tabs)');
+      return;
+    }
+    router.back();
+  };
 
   const nutritionCitations = [
     { category: 'Nutrition', ...NUTRITION_CITATIONS.carbohydrates },
@@ -165,7 +175,7 @@ export default function NutritionScreen() {
           title="Calculadora de Nutrição"
           subtitle="Carregando seu perfil..."
           color={accentColor}
-          onBackPress={() => router.back()}
+          onBackPress={handleBack}
         />
         <ThemedText style={styles.noProfileText}>
           Por favor, aguarde...
@@ -186,7 +196,7 @@ export default function NutritionScreen() {
           title="Calculadora de Nutrição"
           subtitle="Por favor, complete seu perfil primeiro"
           color={accentColor}
-          onBackPress={() => router.back()}
+          onBackPress={handleBack}
         />
         <ThemedText style={styles.noProfileText}>
           Para obter recomendações de nutrição precisas, preencha seu perfil com peso, altura e gênero.
@@ -214,7 +224,7 @@ export default function NutritionScreen() {
           <Header
             title="Calculadora de Nutrição"
             color={accentColor}
-            onBackPress={() => router.back()}
+            onBackPress={handleBack}
           />
           
           <View 

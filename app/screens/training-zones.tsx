@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -13,9 +13,19 @@ import { formatTimeFromSeconds } from '@/utils/timeUtils';
 
 export default function TrainingZonesScreen() {
   const router = useRouter();
+  const segments = useSegments() as string[];
   const [testResults, setTestResults] = useState<TestResults>({});
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const isInTabs = segments.includes('(tabs)');
+
+  const handleBack = () => {
+    if (isInTabs) {
+      router.replace('/(tabs)');
+      return;
+    }
+    router.back();
+  };
 
   useEffect(() => {
     loadTestResults();
@@ -52,7 +62,7 @@ export default function TrainingZonesScreen() {
     <ThemedView style={styles.container}>
       <Header 
         title="Zonas de Treino"
-        onBackPress={() => router.back()}
+        onBackPress={handleBack}
       />
       <ScrollView 
         style={styles.scrollView}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
@@ -10,14 +10,24 @@ import { Trophy, Bike } from 'lucide-react-native';
 
 export default function RacePredictionScreen() {
   const router = useRouter();
+  const segments = useSegments() as string[];
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
+  const isInTabs = segments.includes('(tabs)');
+
+  const handleBack = () => {
+    if (isInTabs) {
+      router.replace('/(tabs)');
+      return;
+    }
+    router.back();
+  };
 
   return (
     <ThemedView style={styles.container}>
       <Header 
         title="Previsão de Prova"
-        onBackPress={() => router.back()}
+        onBackPress={handleBack}
       />
       <ScrollView 
         style={styles.scrollView}

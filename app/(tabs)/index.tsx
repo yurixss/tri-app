@@ -281,7 +281,7 @@ export default function HomeScreen() {
           subtitle="Simule sua prova"
           emoji="🏁"
           color="#066699"
-          onPress={() => router.push('/screens/race-prediction')}
+          onPress={() => router.push('/(tabs)/race-prediction')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
@@ -291,7 +291,7 @@ export default function HomeScreen() {
           subtitle="Zonas de treino baseadas em testes"
           emoji="🎯"
           color="#0a5483"
-          onPress={() => router.push('/screens/training-zones')}
+          onPress={() => router.push('/(tabs)/training-zones')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />

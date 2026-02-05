@@ -53,7 +53,7 @@ export default function BikeRacePredictorScreen() {
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(false);
 
   const handleUpdateFTP = () => {
-    router.push('/screens/training-zones');
+    router.push('/(tabs)/training-zones');
   };
 
   const getZoneInfo = (percentage: number) => {

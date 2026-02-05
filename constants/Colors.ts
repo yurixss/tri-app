@@ -51,6 +51,7 @@ export default {
     run: '#F97316',
     nutrition: '#EC4899',
     profile: '#8B5CF6',
+    secondary: blueElectric,
     delete: '#EF4444',
     // Core palette
     primary,
