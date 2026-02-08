@@ -21,7 +21,7 @@ export default function ProtocolsScreen() {
   const router = useRouter();
 
   const handleProtocolPress = (protocolId: string) => {
-    router.push(`/screens/protocol-detail?id=${protocolId}`);
+    router.push(`/screens/protocol/protocol-detail?id=${protocolId}`);
   };
 
   return (

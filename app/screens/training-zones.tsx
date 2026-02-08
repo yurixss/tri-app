@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { ThemedButton } from '@/components/ThemedButton';
+import PremiumGate from '@/components/PremiumGate';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { getTestResults, getProfile, TestResults } from '@/hooks/useStorage';
@@ -13,6 +14,7 @@ import { formatTimeFromSeconds } from '@/utils/timeUtils';
 
 export default function TrainingZonesScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const segments = useSegments() as string[];
   const [testResults, setTestResults] = useState<TestResults>({});
   const cardBg = useThemeColor({}, 'cardBackground');
@@ -21,11 +23,28 @@ export default function TrainingZonesScreen() {
 
   const handleBack = () => {
     if (isInTabs) {
-      router.replace('/(tabs)');
+      router.navigate('/(tabs)');
       return;
     }
     router.back();
   };
+
+  // Interceptar gesture de voltar quando estamos nas tabs
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isInTabs) {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          // Previne a ação padrão
+          e.preventDefault();
+          
+          // Navega para a home das tabs
+          router.navigate('/(tabs)');
+        });
+
+        return unsubscribe;
+      }
+    }, [navigation, isInTabs, router])
+  );
 
   useEffect(() => {
     loadTestResults();
@@ -64,51 +83,54 @@ export default function TrainingZonesScreen() {
         title="Zonas de Treino"
         onBackPress={handleBack}
       />
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      
+      <PremiumGate feature="calculadoras de zonas de treino" customMessage="Zonas de Treino são Premium">
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
 
-        <SportCard
-          title="Ciclismo"
-          color={Colors.shared.bike}
-          description="Calcular zonas de potência com base no seu FTP"
-          testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
-          testDate={testResults.bike?.date}
-          onPress={() => navigateToTest('/bike')}
-          backgroundColor={cardBg}
-          borderColor={borderColor}
-        />
-        
-        <SportCard
-          title="Corrida"
-          color={Colors.shared.run}
-          description="Calcular zonas de ritmo com base no teste de 3km ou 5km"
-          testData={testResults.run 
-            ? `${testResults.run.testType}: ${formatTimeFromSeconds(testResults.run.testTime)}`
-            : undefined
-          }
-          testDate={testResults.run?.date}
-          onPress={() => navigateToTest('/run')}
-          backgroundColor={cardBg}
-          borderColor={borderColor}
-        />
-        
-        <SportCard
-          title="Natação"
-          color={Colors.shared.swim}
-          description="Calcular zonas de ritmo com base no teste de 400m"
-          testData={testResults.swim 
-            ? `${testResults.swim.testType}: ${formatTimeFromSeconds(testResults.swim.testTime)}` 
-            : undefined
-          }
-          testDate={testResults.swim?.date}
-          onPress={() => navigateToTest('/swim')}
-          backgroundColor={cardBg}
-          borderColor={borderColor}
-        />
-      </ScrollView>
+          <SportCard
+            title="Ciclismo"
+            color={Colors.shared.bike}
+            description="Calcular zonas de potência com base no seu FTP"
+            testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
+            testDate={testResults.bike?.date}
+            onPress={() => navigateToTest('/bike')}
+            backgroundColor={cardBg}
+            borderColor={borderColor}
+          />
+          
+          <SportCard
+            title="Corrida"
+            color={Colors.shared.run}
+            description="Calcular zonas de ritmo com base no teste de 3km ou 5km"
+            testData={testResults.run 
+              ? `${testResults.run.testType}: ${formatTimeFromSeconds(testResults.run.testTime)}`
+              : undefined
+            }
+            testDate={testResults.run?.date}
+            onPress={() => navigateToTest('/run')}
+            backgroundColor={cardBg}
+            borderColor={borderColor}
+          />
+          
+          <SportCard
+            title="Natação"
+            color={Colors.shared.swim}
+            description="Calcular zonas de ritmo com base no teste de 400m"
+            testData={testResults.swim 
+              ? `${testResults.swim.testType}: ${formatTimeFromSeconds(testResults.swim.testTime)}` 
+              : undefined
+            }
+            testDate={testResults.swim?.date}
+            onPress={() => navigateToTest('/swim')}
+            backgroundColor={cardBg}
+            borderColor={borderColor}
+          />
+        </ScrollView>
+      </PremiumGate>
     </ThemedView>
   );
 }

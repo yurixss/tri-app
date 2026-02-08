@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 import storage from '@/hooks/useStorage';
+import Colors from './Colors';
 
 type ThemeChoice = 'light' | 'dark' | 'system';
 
@@ -8,6 +9,12 @@ interface ThemeContextValue {
   choice: ThemeChoice;
   colorScheme: 'light' | 'dark';
   setChoice: (c: ThemeChoice) => void;
+  tint: string;
+  text: string;
+  background: string;
+  cardBackground: string;
+  border: string;
+  destructive: string;
 }
 
 const STORAGE_KEY = 'appThemeChoice';
@@ -53,11 +60,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [choice]);
 
   const colorScheme: 'light' | 'dark' = choice === 'system' ? (system === 'dark' ? 'dark' : 'light') : choice;
+  const colors = Colors[colorScheme];
 
   const value: ThemeContextValue = {
     choice,
     colorScheme,
     setChoice: (c: ThemeChoice) => setChoiceState(c),
+    tint: colors.tint,
+    text: colors.text,
+    background: colors.background,
+    cardBackground: colors.cardBackground,
+    border: colors.border,
+    destructive: colors.destructive,
   };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -71,6 +85,12 @@ export function useTheme() {
       choice: 'light' as ThemeChoice,
       colorScheme: 'light' as 'light' | 'dark',
       setChoice: () => {},
+      tint: Colors.light.tint,
+      text: Colors.light.text,
+      background: Colors.light.background,
+      cardBackground: Colors.light.cardBackground,
+      border: Colors.light.border,
+      destructive: Colors.light.destructive,
     };
   }
   return ctx;

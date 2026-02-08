@@ -97,7 +97,7 @@ export default function ResultStep() {
             color={Colors.shared.primary}
             onPress={() => {
               reset();
-              router.replace('/screens/triathlon-wizard' as Href);
+              router.replace('/screens/triathlon-predict' as Href);
             }}
           />
         </View>
@@ -109,7 +109,7 @@ export default function ResultStep() {
 
   const handleNewCalculation = () => {
     reset();
-    router.replace('/screens/triathlon-wizard' as Href);
+    router.replace('/screens/triathlon-predict' as Href);
   };
 
   const handleClose = () => {

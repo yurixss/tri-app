@@ -31,6 +31,7 @@ export default {
     error: '#E84A4A',
     success: '#3CCF91',
     warning: primaryDeep,
+    destructive: '#E84A4A',
   },
   dark: {
     text: pureWhite,
@@ -44,6 +45,7 @@ export default {
     error: '#E84A4A',
     success: '#3CCF91',
     warning: primaryDeep,
+    destructive: '#FF5757',
   },
   shared: {
     swim: '#0EA5E9',

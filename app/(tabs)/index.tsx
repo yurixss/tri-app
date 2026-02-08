@@ -270,7 +270,7 @@ export default function HomeScreen() {
 
 
         <PrimaryActionCard
-          title="Simular prova"
+          title="Simulador de prova"
           subtitle="Simule sua prova"
           emoji="🏁"
           color="#066699"
@@ -329,7 +329,7 @@ export default function HomeScreen() {
             title="Protocolos"
             icon={<ClipboardList size={24} color="#8B5CF6" />}
             color="#8B5CF6"
-            onPress={() => router.push('/screens/protocols')}
+            onPress={() => router.push('/screens/protocol/protocols')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />

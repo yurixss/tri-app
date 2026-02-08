@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
@@ -10,6 +11,7 @@ import { Trophy, Bike } from 'lucide-react-native';
 
 export default function RacePredictionScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const segments = useSegments() as string[];
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
@@ -17,11 +19,28 @@ export default function RacePredictionScreen() {
 
   const handleBack = () => {
     if (isInTabs) {
-      router.replace('/(tabs)');
+      router.navigate('/(tabs)');
       return;
     }
     router.back();
   };
+
+  // Interceptar gesture de voltar quando estamos nas tabs
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isInTabs) {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          // Previne a ação padrão
+          e.preventDefault();
+          
+          // Navega para a home das tabs
+          router.navigate('/(tabs)');
+        });
+
+        return unsubscribe;
+      }
+    }, [navigation, isInTabs, router])
+  );
 
   return (
     <ThemedView style={styles.container}>
@@ -39,7 +58,7 @@ export default function RacePredictionScreen() {
           icon={<Trophy size={32} color={Colors.shared.profile} />}
           color={Colors.shared.profile}
           description="Estime seu tempo total de prova de triathlon"
-          onPress={() => router.push('/screens/triathlon-wizard')}
+          onPress={() => router.push('/screens/triathlon-predict')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />

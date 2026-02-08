@@ -6,6 +6,7 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
+import SubscriptionStatus from '@/components/SubscriptionStatus';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTheme } from '@/constants/Theme';
@@ -162,6 +163,9 @@ export default function ProfileScreen() {
           title="Perfil"
           color="#066699"
         />
+        
+        {/* Status da assinatura */}
+        <SubscriptionStatus />
         
         <View 
           style={[

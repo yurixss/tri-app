@@ -127,7 +127,7 @@ export default function BikeStep() {
       temperature: showAdvanced ? parseFloat(temperature) : undefined,
     });
 
-    router.push('/screens/triathlon-wizard/run' as Href);
+    router.push('/screens/triathlon-predict/run' as Href);
   };
 
   const handleBack = () => {

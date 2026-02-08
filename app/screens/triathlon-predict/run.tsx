@@ -94,7 +94,7 @@ export default function RunStep() {
 
     // Passar os dados diretamente para calculate para garantir que estejam disponíveis
     await calculate(runData);
-    router.push('/screens/triathlon-wizard/result' as Href);
+    router.push('/screens/triathlon-predict/result' as Href);
   };
 
   const handleBack = () => {

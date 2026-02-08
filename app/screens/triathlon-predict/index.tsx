@@ -9,6 +9,7 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { RadioSelector } from '@/components/RadioSelector';
 import { WizardStepper } from '@/components/WizardStepper';
 import { TimeInput } from '@/components/TimeInput';
+import PremiumGate from '@/components/PremiumGate';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
@@ -115,7 +116,7 @@ export default function SwimStep() {
       wetsuit: waterType === 'openWater' ? wetsuit : undefined,
     });
 
-    router.push('/screens/triathlon-wizard/bike' as Href);
+    router.push('/screens/triathlon-predict/bike' as Href);
   };
 
   const handleBack = () => {
@@ -129,24 +130,25 @@ export default function SwimStep() {
         onBackPress={handleBack}
       />
 
-      <WizardStepper currentStep={1} />
+      <PremiumGate feature="calculadora de triathlon" customMessage="Previsão de Triathlon é Premium">
+        <WizardStepper currentStep={1} />
 
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
-          <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
-              🏊 Natação
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
+            <View style={styles.cardHeader}>
+              <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
+                🏊 Natação
+              </ThemedText>
+            </View>
+
+            <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
+              Tipo de Prova
             </ThemedText>
-          </View>
-
-          <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
-            Tipo de Prova
-          </ThemedText>
-          <RadioSelector
+            <RadioSelector
             options={RACE_TYPE_OPTIONS}
             selectedValue={raceType}
             onValueChange={(value) => setRaceType(value as RaceType)}
@@ -230,15 +232,15 @@ export default function SwimStep() {
         </View>
 
    
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <ThemedButton
-          title="Próximo Passo →"
-          color={Colors.shared.primary}
-          onPress={handleNext}
-        />
-      </View>
+          <View style={styles.footer}>
+            <ThemedButton
+              title="Próximo Passo →"
+              color={Colors.shared.primary}
+              onPress={handleNext}
+            />
+          </View>
+        </ScrollView>
+      </PremiumGate>
     </ThemedView>
   );
 }
