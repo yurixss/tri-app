@@ -6,7 +6,6 @@ import { SplashScreen } from 'expo-router';
 import useCachedResources from '@/hooks/useCachedResources';
 import { getOnboardingData } from '@/hooks/useStorage';
 import ThemeProvider, { useTheme } from '@/constants/Theme';
-import { SubscriptionProvider } from '@/hooks/useSubscription';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,29 +39,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <SubscriptionProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-        {!isOnboardingComplete ? (
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        ) : (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
-            <Stack.Screen name="paywall" options={{ 
-              title: 'Premium',
-              headerShown: true,
-              presentation: 'modal'
-            }} />
-            <Stack.Screen name="subscription-management" options={{ 
-              title: 'Assinatura',
-              headerShown: true,
-              presentation: 'modal'
-            }} />
-          </>
-        )}
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
       </Stack>
-        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-      </SubscriptionProvider>
+      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
     </ThemeProvider>
   );
 }

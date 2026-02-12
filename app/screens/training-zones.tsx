@@ -6,7 +6,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { ThemedButton } from '@/components/ThemedButton';
-import PremiumGate from '@/components/PremiumGate';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { getTestResults, getProfile, TestResults } from '@/hooks/useStorage';
@@ -84,14 +83,12 @@ export default function TrainingZonesScreen() {
         onBackPress={handleBack}
       />
       
-      <PremiumGate feature="calculadoras de zonas de treino" customMessage="Zonas de Treino são Premium">
-        <ScrollView 
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-
-          <SportCard
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <SportCard
             title="Ciclismo"
             color={Colors.shared.bike}
             description="Calcular zonas de potência com base no seu FTP"
@@ -129,8 +126,7 @@ export default function TrainingZonesScreen() {
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
-        </ScrollView>
-      </PremiumGate>
+      </ScrollView>
     </ThemedView>
   );
 }

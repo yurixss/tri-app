@@ -251,7 +251,7 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero Card - Resumo de Performance com Quick Switch */}
-        <HeroCard
+        {/* <HeroCard
           swimValue={heroValues.swimValue}
           swimIntensityLabel={INTENSITY_LABELS.swim[modes.swim]}
           bikeValue={heroValues.bikeValue}
@@ -266,7 +266,7 @@ export default function HomeScreen() {
           onRunLongPress={handleRunLongPress}
           highlightedSport={lastChanged?.sport}
           feedbackMessage={feedbackMessage}
-        />
+        /> */}
 
 
         <PrimaryActionCard

@@ -107,30 +107,12 @@ export default function ProtocolDetailScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header com ações (fixo, fora do scroll) */}
-      <View style={styles.headerRow}>
-        <View style={styles.headerLeft}>
-          <Header 
-            title={protocol.title}
-            color={categoryConfig.color}
-            onBackPress={() => router.back()}
-          />
-        </View>
-        <View style={styles.headerActions}>
-          <TouchableOpacity 
-            style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
-            onPress={handleShare}
-          >
-            <ShareIcon size={18} color={categoryConfig.color} />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
-            onPress={handleCopy}
-          >
-            <Copy size={18} color={categoryConfig.color} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Header com título ocupando 100% */}
+      <Header 
+        title={protocol.title}
+        color={categoryConfig.color}
+        onBackPress={() => router.back()}
+      />
 
       <ScrollView
         style={styles.scrollView}
@@ -161,6 +143,21 @@ export default function ProtocolDetailScreen() {
             <ThemedText style={styles.durationText}>
               {protocol.duration}
             </ThemedText>
+          </View>
+
+          <View style={styles.metaActions}>
+            <TouchableOpacity 
+              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+              onPress={handleShare}
+            >
+              <ShareIcon size={18} color={categoryConfig.color} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+              onPress={handleCopy}
+            >
+              <Copy size={18} color={categoryConfig.color} />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -346,24 +343,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.6,
   },
-  // Header
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 50,
-  },
+  // Action buttons
   actionButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 36,
+    height: 36,
+    borderRadius: 8,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -374,6 +358,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginBottom: 16,
+    flexWrap: 'wrap',
+  },
+  metaActions: {
+    flexDirection: 'row',
+    gap: 8,
+    marginLeft: 'auto',
   },
   categoryBadge: {
     flexDirection: 'row',

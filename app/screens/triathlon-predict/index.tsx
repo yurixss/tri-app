@@ -9,7 +9,6 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { RadioSelector } from '@/components/RadioSelector';
 import { WizardStepper } from '@/components/WizardStepper';
 import { TimeInput } from '@/components/TimeInput';
-import PremiumGate from '@/components/PremiumGate';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
@@ -130,10 +129,9 @@ export default function SwimStep() {
         onBackPress={handleBack}
       />
 
-      <PremiumGate feature="calculadora de triathlon" customMessage="Previsão de Triathlon é Premium">
-        <WizardStepper currentStep={1} />
+      <WizardStepper currentStep={1} />
 
-        <ScrollView 
+      <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -240,7 +238,6 @@ export default function SwimStep() {
             />
           </View>
         </ScrollView>
-      </PremiumGate>
     </ThemedView>
   );
 }
