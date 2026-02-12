@@ -244,7 +244,7 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
       <ThemedButton
         title="+ Adicionar Segmento"
         onPress={addSegment}
-        color={Colors.shared.bike}
+        color={Colors.shared.primary}
       />
     </View>
   );

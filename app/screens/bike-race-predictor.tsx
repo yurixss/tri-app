@@ -203,7 +203,7 @@ export default function BikeRacePredictorScreen() {
   if (isLoading) {
     return (
       <ThemedView style={styles.container}>
-        <ActivityIndicator size="large" color={Colors.shared.bike} />
+        <ActivityIndicator size="large" color={Colors.shared.primary} />
       </ThemedView>
     );
   }
@@ -226,7 +226,7 @@ export default function BikeRacePredictorScreen() {
             <View style={styles.infoHeader}>
               <Lightning
                 size={20}
-                color={Colors.shared.bike}
+                color={Colors.shared.primary}
                 weight="bold"
               />
               <ThemedText style={styles.infoTitle}>Seu FTP</ThemedText>
@@ -247,7 +247,7 @@ export default function BikeRacePredictorScreen() {
             >
               <PencilSimple
                 size={16}
-                color={Colors.shared.bike}
+                color={Colors.shared.primary}
                 weight="regular"
               />
               <ThemedText style={styles.updateFTPButtonText}>
@@ -342,7 +342,7 @@ export default function BikeRacePredictorScreen() {
           title={isCalculating ? 'Calculando...' : 'Calcular Previsão'}
           onPress={handleCalculate}
           disabled={isCalculating}
-          color={Colors.shared.bike}
+          color={Colors.shared.primary}
         />
 
         {/* Resultado */}
@@ -425,7 +425,7 @@ function PredictionResultView({
         <ResultCard
           label="Tempo Total"
           value={timeFormatted}
-          icon={<Timer size={24} color={Colors.shared.bike} weight="bold" />}
+          icon={<Timer size={24} color={Colors.shared.primary} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -434,7 +434,7 @@ function PredictionResultView({
           label="Velocidade Média"
           value={`${(result.avgSpeedMs * 3.6).toFixed(1)} km/h`}
           subValue={`${result.avgSpeedMs.toFixed(1)} m/s`}
-          icon={<Gauge size={24} color={Colors.shared.bike} weight="bold" />}
+          icon={<Gauge size={24} color={Colors.shared.primary} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -442,7 +442,7 @@ function PredictionResultView({
         <ResultCard
           label="Potência Média"
           value={`${Math.round(result.avgPower)} W`}
-          icon={<Lightning size={24} color={Colors.shared.bike} weight="bold" />}
+          icon={<Lightning size={24} color={Colors.shared.primary} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -450,7 +450,7 @@ function PredictionResultView({
         <ResultCard
           label="Total"
           value={`${(result.avgSpeedMs * 3.6 * (result.totalTimeSeconds / 3600)).toFixed(1)} km`}
-          icon={<MapPin size={24} color={Colors.shared.bike} weight="bold" />}
+          icon={<MapPin size={24} color={Colors.shared.primary} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -496,9 +496,9 @@ function PredictionResultView({
             </View>
 
             {expandedSegment === index ? (
-              <CaretUp size={20} color={Colors.shared.bike} weight="bold" />
+              <CaretUp size={20} color={Colors.shared.primary} weight="bold" />
             ) : (
-              <CaretDown size={20} color={Colors.shared.bike} weight="bold" />
+              <CaretDown size={20} color={Colors.shared.primary} weight="bold" />
             )}
           </TouchableOpacity>
         ))}
@@ -642,7 +642,7 @@ const styles = StyleSheet.create({
   ftpValue: {
     fontSize: 28,
     fontWeight: '700',
-    color: Colors.shared.bike,
+    color: Colors.shared.primary,
   },
   infoDate: {
     fontSize: 12,
@@ -657,12 +657,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: Colors.shared.bike + '15',
+    backgroundColor: Colors.shared.primary + '15',
   },
   updateFTPButtonText: {
     fontSize: 13,
     fontWeight: '600',
-    color: Colors.shared.bike,
+    color: Colors.shared.primary,
     marginLeft: 6,
   },
   section: {
@@ -774,7 +774,7 @@ const styles = StyleSheet.create({
   resultCardValue: {
     fontSize: 18,
     fontWeight: '700',
-    color: Colors.shared.bike,
+    color: Colors.shared.primary,
   },
   resultCardSubValue: {
     fontSize: 11,
@@ -814,7 +814,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   statBadge: {
-    backgroundColor: Colors.shared.bike + '20',
+    backgroundColor: Colors.shared.primary + '20',
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
