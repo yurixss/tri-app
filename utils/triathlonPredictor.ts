@@ -61,6 +61,8 @@ export interface RunData {
   raceDistance: number;
   /** Tipo de prova */
   raceType: RaceType;
+  /** Zona de intensidade da corrida (1-5) */
+  runZone?: number;
 }
 
 export interface TriathlonWizardData {
@@ -129,6 +131,15 @@ const RUN_FATIGUE_FACTORS: Record<RaceType, number> = {
   olympic: 1.04,            // +4% Olímpico
   half: 1.06,               // +6% 70.3
   full: 1.10,               // +10% Ironman
+};
+
+/** Multiplicador de pace por zona de corrida (relativo ao threshold/Z4) */
+const RUN_ZONE_PACE_FACTORS: Record<number, { factor: number; name: string }> = {
+  1: { factor: 1.35, name: 'Easy/Recovery' },      // ~35% mais lento que threshold
+  2: { factor: 1.20, name: 'Endurance' },           // ~20% mais lento
+  3: { factor: 1.10, name: 'Marathon Pace' },       // ~10% mais lento
+  4: { factor: 1.00, name: 'Threshold' },           // Pace de threshold
+  5: { factor: 0.94, name: 'VO2 Max' },             // ~6% mais rápido
 };
 
 // ============================================================================
@@ -274,6 +285,20 @@ export function calculateRunTime(data: RunData): ModalityResult {
   const distanceRatio = data.raceDistance / data.baseDistance;
   let estimatedTime = data.baseTimeSeconds * Math.pow(distanceRatio, 1.06);
   
+  // Aplicar ajuste de zona de intensidade
+  const runZone = data.runZone ?? 4; // Padrão: Zona 4 (Threshold)
+  const zoneFactor = RUN_ZONE_PACE_FACTORS[runZone];
+  if (zoneFactor) {
+    estimatedTime *= zoneFactor.factor;
+    if (runZone !== 4) {
+      const pctDiff = Math.round(Math.abs(zoneFactor.factor - 1) * 100);
+      const direction = zoneFactor.factor > 1 ? '+' : '-';
+      factors.push(`Zona ${runZone} (${zoneFactor.name}): ${direction}${pctDiff}% no pace`);
+    } else {
+      factors.push(`Zona ${runZone} (${zoneFactor.name})`);
+    }
+  }
+
   // Aplicar fator de fadiga pós-bike
   const fatigueFactor = RUN_FATIGUE_FACTORS[data.raceType];
   estimatedTime *= fatigueFactor;

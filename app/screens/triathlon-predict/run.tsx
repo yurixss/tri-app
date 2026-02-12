@@ -31,6 +31,7 @@ export default function RunStep() {
   // Estado local do formulário
   const [baseTime, setBaseTime] = useState('');
   const [baseDistance, setBaseDistance] = useState<string>('5');
+  const [runZone, setRunZone] = useState<string>('4');
   const [error, setError] = useState<string | null>(null);
 
   // Determinar tipo de prova a partir da natação
@@ -87,6 +88,7 @@ export default function RunStep() {
       baseDistance: parseFloat(baseDistance),
       raceDistance: raceDistances.run,
       raceType,
+      runZone: parseInt(runZone),
     };
 
     // Salvar os dados de corrida no contexto
@@ -174,6 +176,33 @@ export default function RunStep() {
               </ThemedText>
             </View>
           )}
+
+          <ThemedText style={[styles.sectionTitle, { marginTop: 16 }]} fontFamily="Inter-Medium">
+            Zona de Intensidade
+          </ThemedText>
+
+          <RadioSelector
+            options={[
+              { value: '1', label: 'Z1 - Easy' },
+              { value: '2', label: 'Z2 - Endurance' },
+              { value: '3', label: 'Z3 - Tempo' },
+              { value: '4', label: 'Z4 - Threshold' },
+              { value: '5', label: 'Z5 - VO2 Max' },
+            ]}
+            selectedValue={runZone}
+            onValueChange={setRunZone}
+            color={Colors.shared.primary}
+          />
+
+          <View style={styles.zoneHint}>
+            <ThemedText style={styles.zoneHintText}>
+              {runZone === '1' && '🟢 Recuperação ativa, ritmo bem leve'}
+              {runZone === '2' && '🔵 Ritmo aeróbico, confortável para longas distâncias'}
+              {runZone === '3' && '🟡 Ritmo de maratona, moderadamente desafiador'}
+              {runZone === '4' && '🟠 Limiar, ritmo de prova desafiador'}
+              {runZone === '5' && '🔴 Esforço máximo, sustentável por poucos minutos'}
+            </ThemedText>
+          </View>
 
           <View style={styles.infoBox}>
             <ThemedText style={styles.infoTitle} fontFamily="Inter-Medium">
@@ -279,6 +308,17 @@ const styles = StyleSheet.create({
   paceText: {
     fontSize: 14,
     color: Colors.shared.primary,
+  },
+  zoneHint: {
+    backgroundColor: 'rgba(6, 102, 153, 0.08)',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  zoneHintText: {
+    fontSize: 13,
+    opacity: 0.8,
   },
   infoBox: {
     backgroundColor: 'rgba(0,0,0,0.03)',
