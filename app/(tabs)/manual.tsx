@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -8,281 +8,282 @@ import {
   Linking,
   Alert,
   Dimensions,
-  ImageBackground,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { 
-  PRODUCTS, 
-  PRODUCT_CATEGORY_CONFIG, 
-  ProductCategory,
-  STORE_CONFIG,
-  type Product 
-} from '@/data/productsContent';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { PRODUCTS } from '@/data/store/products';
+import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
+import { getTestResults, getProfile } from '@/hooks/useStorage';
+import type { Product } from '@/types/store';
+import { CATEGORY_CONFIG } from '@/types/store';
+import { generateRecommendations } from '@/data/store/recommendations';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CARD_GAP = 12;
-const CARD_PADDING = 16;
-const CARD_WIDTH = (SCREEN_WIDTH - CARD_PADDING * 2 - CARD_GAP) / 2;
 
-const TRUST_BADGES = [
-  { icon: 'truck-fast-outline' as const, label: 'Envio direto', sublabel: 'pela loja parceira' },
-  { icon: 'shield-check-outline' as const, label: 'Compra segura', sublabel: 'nas lojas oficiais' },
-  { icon: 'star-check-outline' as const, label: 'Seleção curada', sublabel: 'por triatletas' },
-  { icon: 'heart-outline' as const, label: 'Apoie o app', sublabel: 'sem custo extra' },
-];
+// ─── 4 Tool Cards ────────────────────────────────────────────────────
+
+const TOOLS = [
+  {
+    id: 'kit-builder',
+    title: 'Monte seu Kit',
+    subtitle: 'Kit personalizado por distância, clima e orçamento',
+    icon: 'package-variant-closed',
+    color: '#10B981',
+    route: '/screens/store/kit-builder',
+  },
+  {
+    id: 'problem-solver',
+    title: 'Resolver Problema',
+    subtitle: 'Soluções para suas dores de treino e prova',
+    icon: 'wrench-outline',
+    color: '#F59E0B',
+    route: '/screens/store/problem-solver',
+  },
+  {
+    id: 'time-gains',
+    title: 'Onde Ganho Tempo?',
+    subtitle: 'Custo por minuto ganho em cada upgrade',
+    icon: 'timer-outline',
+    color: '#8B5CF6',
+    route: '/screens/store/time-gains',
+  },
+  {
+    id: 'my-setup',
+    title: 'Meu Setup',
+    subtitle: 'Registre e gerencie seus equipamentos',
+    icon: 'toolbox-outline',
+    color: '#066699',
+    route: '/screens/store/my-setup',
+  },
+] as const;
 
 /**
- * Loja do Triatleta - Design inspirado em tridesigns.com.br
+ * Performance Lab — Hub principal da Loja Inteligente
+ *
+ * Ferramenta de otimização de performance, não marketplace.
  */
 export default function ManualScreen() {
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
+  const router = useRouter();
+  const { trackAffiliateLinkOpened } = useStoreAnalytics();
 
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  const textColor = useThemeColor({}, 'text');
-  const bgColor = useThemeColor({}, 'background');
-  const secondaryTextColor = useThemeColor({}, 'tabIconDefault');
+  const secondaryText = useThemeColor({}, 'tabIconDefault');
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+  const [smartPicks, setSmartPicks] = useState<Product[]>([]);
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    loadSmartPicks();
+  }, []);
+
+  const loadSmartPicks = async () => {
+    try {
+      const [tests, profile] = await Promise.all([getTestResults(), getProfile()]);
+
+      if (profile || tests?.bike || tests?.run) {
+        setHasProfile(true);
+        const result = generateRecommendations({
+          ftp: tests?.bike?.ftp,
+          runPace: tests?.run
+            ? tests.run.testTime / (tests.run.testType === '3km' ? 3 : 5) / 60
+            : undefined,
+          distance: '70.3',
+          climate: 'quente',
+          goal: 'performance',
+          budgetLevel: 'medio',
+          level:
+            profile?.experience === 'advanced'
+              ? 'elite'
+              : profile?.experience === 'intermediate'
+              ? 'competitivo'
+              : 'iniciante',
+        });
+        setSmartPicks(result.essential.slice(0, 4));
+      } else {
+        const sorted = [...PRODUCTS]
+          .filter((p) => p.rating)
+          .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        setSmartPicks(sorted.slice(0, 4));
+      }
+    } catch {
+      const sorted = [...PRODUCTS]
+        .filter((p) => p.rating)
+        .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+      setSmartPicks(sorted.slice(0, 4));
+    }
+  };
 
   const handleBuyPress = async (product: Product) => {
+    trackAffiliateLinkOpened(product.id, product.category);
     try {
-      const canOpen = await Linking.canOpenURL(product.affiliateLink);
-      if (canOpen) {
-        await Linking.openURL(product.affiliateLink);
-      } else {
-        Alert.alert('Erro', 'Não foi possível abrir o link');
-      }
-    } catch (error) {
+      await Linking.openURL(product.affiliateLink);
+    } catch {
       Alert.alert('Erro', 'Não foi possível abrir o link');
     }
   };
 
-  const renderStars = (rating?: number) => {
-    if (!rating) return null;
-    return (
-      <View style={styles.starsRow}>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <MaterialCommunityIcons
-            key={star}
-            name={star <= rating ? 'star' : star - 0.5 <= rating ? 'star-half-full' : 'star-outline'}
-            size={12}
-            color="#F59E0B"
-          />
-        ))}
-        <ThemedText style={[styles.ratingText, { color: secondaryTextColor }]}>
-          {rating.toFixed(1)}
-        </ThemedText>
-      </View>
-    );
-  };
-
-  const renderProductCard = (product: Product) => {
-    const categoryConfig = PRODUCT_CATEGORY_CONFIG[product.category];
-    const storeConfig = STORE_CONFIG[product.store];
-
-    return (
-      <TouchableOpacity
-        key={product.id}
-        style={[
-          styles.productCard,
-          { 
-            backgroundColor: cardBg,
-            borderColor: borderColor,
-          }
-        ]}
-        onPress={() => handleBuyPress(product)}
-        activeOpacity={0.7}
-      >
-        {/* Imagem */}
-        <View style={styles.imageContainer}>
-          <Image 
-            source={{ uri: product.image }}
-            style={styles.productImage}
-            resizeMode="cover"
-          />
-          {/* Badge de categoria */}
-          <View style={[styles.categoryTag, { backgroundColor: categoryConfig.color }]}>
-            <ThemedText style={styles.categoryTagText} fontFamily="Inter-SemiBold">
-              {categoryConfig.emoji}
-            </ThemedText>
-          </View>
-        </View>
-
-        {/* Info */}
-        <View style={styles.productInfo}>
-          {/* Vendedor */}
-          <ThemedText style={[styles.vendorText, { color: secondaryTextColor }]}>
-            {storeConfig.name}
-          </ThemedText>
-
-          {/* Nome */}
-          <ThemedText 
-            style={styles.productName} 
-            fontFamily="Inter-SemiBold"
-            numberOfLines={2}
-          >
-            {product.name}
-          </ThemedText>
-
-          {/* Rating */}
-          {renderStars(product.rating)}
-
-          {/* Preço */}
-          {product.price && (
-            <ThemedText style={styles.productPrice} fontFamily="Inter-Bold">
-              {product.price}
-            </ThemedText>
-          )}
-
-          {/* CTA */}
-          <View style={[styles.ctaButton, { backgroundColor: categoryConfig.color }]}>
-            <ThemedText style={styles.ctaText} fontFamily="Inter-SemiBold">
-              Ver produto
-            </ThemedText>
-            <MaterialCommunityIcons name="open-in-new" size={14} color="#FFFFFF" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  // Split products into pairs for 2-column grid
-  const productPairs: Product[][] = [];
-  for (let i = 0; i < filteredProducts.length; i += 2) {
-    productPairs.push(filteredProducts.slice(i, i + 2));
-  }
-
   return (
     <ThemedView style={styles.container}>
       <ScrollView
-        style={styles.scrollView}
+        style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Hero Banner */}
-        <ImageBackground
-          source={{ uri: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800' }}
-          style={styles.heroBanner}
-          resizeMode="cover"
-        >
-          <View style={styles.heroOverlay}>
-            <View style={styles.heroContent}>
-              <ThemedText style={styles.heroTitle} fontFamily="Inter-Bold">
-                LOJA DO{'\n'}TRIATLETA
-              </ThemedText>
-              <ThemedText style={styles.heroSubtitle}>
-                Produtos selecionados para seu treino
-              </ThemedText>
-            </View>
-          </View>
-        </ImageBackground>
+        {/* Header */}
+        <View style={styles.header}>
+          <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
+            Performance Lab
+          </ThemedText>
+          <ThemedText style={[styles.headerSubtitle, { color: secondaryText }]}>
+            Otimize cada minuto da sua prova
+          </ThemedText>
+        </View>
 
-        {/* Trust Badges Bar */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.trustBadgesContainer}
-        >
-          {TRUST_BADGES.map((badge, index) => (
-            <View key={index} style={styles.trustBadge}>
-              <MaterialCommunityIcons 
-                name={badge.icon} 
-                size={22} 
-                color="#066699" 
-              />
-              <View style={styles.trustBadgeTextContainer}>
-                <ThemedText style={styles.trustBadgeLabel} fontFamily="Inter-SemiBold">
-                  {badge.label}
-                </ThemedText>
-                <ThemedText style={[styles.trustBadgeSublabel, { color: secondaryTextColor }]}>
-                  {badge.sublabel}
-                </ThemedText>
+        {/* 4 Tool Cards — 2×2 grid */}
+        <View style={styles.toolsGrid}>
+          {TOOLS.map((tool) => (
+            <TouchableOpacity
+              key={tool.id}
+              style={[styles.toolCard, { backgroundColor: cardBg, borderColor }]}
+              onPress={() => router.push(tool.route as any)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.toolIconBox, { backgroundColor: `${tool.color}15` }]}>
+                <MaterialCommunityIcons name={tool.icon as any} size={26} color={tool.color} />
               </View>
-            </View>
+              <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
+                {tool.title}
+              </ThemedText>
+              <ThemedText
+                style={[styles.toolSubtitle, { color: secondaryText }]}
+                numberOfLines={2}
+              >
+                {tool.subtitle}
+              </ThemedText>
+            </TouchableOpacity>
           ))}
-        </ScrollView>
+        </View>
 
         {/* Divider */}
         <View style={[styles.divider, { backgroundColor: borderColor }]} />
 
-        {/* Filtros por modalidade */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterContainer}
-        >
-          <TouchableOpacity
-            style={[
-              styles.filterChip,
-              selectedCategory === 'all'
-                ? styles.filterChipActive
-                : { backgroundColor: 'transparent', borderColor: borderColor }
-            ]}
-            onPress={() => setSelectedCategory('all')}
-          >
-            <ThemedText 
-              style={[
-                styles.filterText,
-                { color: selectedCategory === 'all' ? '#FFFFFF' : textColor }
-              ]}
-              fontFamily="Inter-SemiBold"
-            >
-              Todos
-            </ThemedText>
-          </TouchableOpacity>
-
-          {Object.entries(PRODUCT_CATEGORY_CONFIG).map(([key, config]) => (
-            <TouchableOpacity
-              key={key}
-              style={[
-                styles.filterChip,
-                selectedCategory === key
-                  ? { ...styles.filterChipActive, backgroundColor: config.color }
-                  : { backgroundColor: 'transparent', borderColor: borderColor }
-              ]}
-              onPress={() => setSelectedCategory(key as ProductCategory)}
-            >
-              <ThemedText 
-                style={[
-                  styles.filterText,
-                  { color: selectedCategory === key ? '#FFFFFF' : textColor }
-                ]}
-                fontFamily="Inter-SemiBold"
-              >
-                {config.emoji} {config.label}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {/* Product count */}
-        <View style={styles.resultsMeta}>
-          <ThemedText style={[styles.resultsCount, { color: secondaryTextColor }]}>
-            {filteredProducts.length} produto{filteredProducts.length !== 1 ? 's' : ''}
+        {/* Smart Picks */}
+        <View style={styles.sectionHeader}>
+          <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
+            {hasProfile ? 'Recomendados pra você' : 'Mais bem avaliados'}
+          </ThemedText>
+          <ThemedText style={[styles.sectionSubtitle, { color: secondaryText }]}>
+            {hasProfile
+              ? 'Baseado no seu perfil e testes'
+              : 'Complete seus testes para recomendações personalizadas'}
           </ThemedText>
         </View>
 
-        {/* Product Grid - 2 columns */}
-        <View style={styles.productsGrid}>
-          {productPairs.map((pair, rowIndex) => (
-            <View key={rowIndex} style={styles.productRow}>
-              {pair.map((product) => renderProductCard(product))}
-              {/* Spacer if odd number of items */}
-              {pair.length === 1 && <View style={styles.productCardSpacer} />}
-            </View>
-          ))}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.picksRow}
+        >
+          {smartPicks.map((product) => {
+            const catConfig = CATEGORY_CONFIG[product.category];
+            return (
+              <TouchableOpacity
+                key={product.id}
+                style={[styles.pickCard, { backgroundColor: cardBg, borderColor }]}
+                onPress={() => handleBuyPress(product)}
+                activeOpacity={0.7}
+              >
+                <Image
+                  source={{ uri: product.image }}
+                  style={styles.pickImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.pickInfo}>
+                  <View style={styles.pickCatRow}>
+                    <View
+                      style={[styles.pickCatDot, { backgroundColor: catConfig?.color ?? '#999' }]}
+                    />
+                    <ThemedText style={[styles.pickCatText, { color: secondaryText }]}>
+                      {catConfig?.label}
+                    </ThemedText>
+                  </View>
+                  <ThemedText
+                    style={styles.pickName}
+                    fontFamily="Inter-SemiBold"
+                    numberOfLines={2}
+                  >
+                    {product.name}
+                  </ThemedText>
+                  {product.performanceGainEstimate && (
+                    <View style={styles.pickGainBadge}>
+                      <MaterialCommunityIcons name="trending-up" size={11} color="#10B981" />
+                      <ThemedText style={styles.pickGainText}>
+                        {product.performanceGainEstimate}
+                      </ThemedText>
+                    </View>
+                  )}
+                  {product.price && (
+                    <ThemedText style={styles.pickPrice} fontFamily="Inter-Bold">
+                      {product.price}
+                    </ThemedText>
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
+        {/* Categories */}
+        <View style={[styles.divider, { backgroundColor: borderColor }]} />
+
+        <View style={styles.sectionHeader}>
+          <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
+            Explorar por categoria
+          </ThemedText>
         </View>
 
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesRow}
+        >
+          {(
+            Object.entries(CATEGORY_CONFIG) as [
+              string,
+              (typeof CATEGORY_CONFIG)[keyof typeof CATEGORY_CONFIG],
+            ][]
+          ).map(([key, config]) => {
+            const count = PRODUCTS.filter((p) => p.category === key).length;
+            if (count === 0) return null;
+            return (
+              <TouchableOpacity
+                key={key}
+                style={[styles.categoryCard, { backgroundColor: cardBg, borderColor }]}
+                onPress={() => router.push('/screens/store/kit-builder' as any)}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.categoryIcon, { backgroundColor: `${config.color}15` }]}>
+                  <ThemedText style={styles.categoryEmoji}>{config.emoji}</ThemedText>
+                </View>
+                <ThemedText style={styles.categoryLabel} fontFamily="Inter-SemiBold">
+                  {config.label}
+                </ThemedText>
+                <ThemedText style={[styles.categoryCount, { color: secondaryText }]}>
+                  {count} {count === 1 ? 'produto' : 'produtos'}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
         {/* Disclaimer */}
-        <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor: borderColor }]}>
-          <MaterialCommunityIcons name="information-outline" size={18} color={secondaryTextColor} />
-          <ThemedText style={[styles.disclaimerText, { color: secondaryTextColor }]}>
+        <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor }]}>
+          <MaterialCommunityIcons name="information-outline" size={16} color={secondaryText} />
+          <ThemedText style={[styles.disclaimerText, { color: secondaryText }]}>
             Links de afiliado. Ao comprar, você ajuda a manter o app sem custo adicional.
           </ThemedText>
         </View>
@@ -292,181 +293,123 @@ export default function ManualScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
+  container: { flex: 1 },
+  scroll: { flex: 1 },
+  scrollContent: { paddingBottom: 40 },
 
-  // Hero Banner
-  heroBanner: {
-    height: 220,
-    width: '100%',
-  },
-  heroOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.50)',
-    justifyContent: 'flex-end',
-    padding: 24,
+  // Header
+  header: {
+    paddingHorizontal: 20,
     paddingTop: 60,
+    paddingBottom: 8,
   },
-  heroContent: {},
-  heroTitle: {
-    fontSize: 32,
-    color: '#FFFFFF',
-    letterSpacing: 2,
-    lineHeight: 38,
-  },
-  heroSubtitle: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: 8,
-    letterSpacing: 0.5,
-  },
+  headerTitle: { fontSize: 28, letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 14, marginTop: 4 },
 
-  // Trust Badges
-  trustBadgesContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    gap: 20,
-  },
-  trustBadge: {
+  // Tools Grid
+  toolsGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    gap: 12,
+  },
+  toolCard: {
+    width: (SCREEN_WIDTH - 44) / 2,
+    padding: 18,
+    borderRadius: 16,
+    borderWidth: 1,
     gap: 10,
-    minWidth: 150,
   },
-  trustBadgeTextContainer: {},
-  trustBadgeLabel: {
-    fontSize: 12,
-    lineHeight: 16,
+  toolIconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  trustBadgeSublabel: {
-    fontSize: 10,
-    lineHeight: 14,
-  },
+  toolTitle: { fontSize: 15 },
+  toolSubtitle: { fontSize: 12, lineHeight: 16 },
 
+  // Divider
   divider: {
     height: 1,
-    marginHorizontal: 16,
+    marginHorizontal: 20,
+    marginVertical: 24,
   },
 
-  // Filters
-  filterContainer: {
+  // Section header
+  sectionHeader: {
+    paddingHorizontal: 20,
+    marginBottom: 14,
+  },
+  sectionTitle: { fontSize: 18 },
+  sectionSubtitle: { fontSize: 12, marginTop: 4 },
+
+  // Smart Picks
+  picksRow: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    gap: 8,
+    gap: 12,
   },
-  filterChip: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 24,
-    borderWidth: 1.5,
-  },
-  filterChipActive: {
-    backgroundColor: '#066699',
-    borderColor: '#066699',
-  },
-  filterText: {
-    fontSize: 13,
-  },
-
-  // Results meta
-  resultsMeta: {
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  resultsCount: {
-    fontSize: 12,
-  },
-
-  // Product Grid
-  productsGrid: {
-    paddingHorizontal: CARD_PADDING,
-    gap: CARD_GAP,
-  },
-  productRow: {
-    flexDirection: 'row',
-    gap: CARD_GAP,
-  },
-  productCard: {
-    width: CARD_WIDTH,
-    borderRadius: 12,
+  pickCard: {
+    width: 170,
+    borderRadius: 14,
     borderWidth: 1,
     overflow: 'hidden',
   },
-  productCardSpacer: {
-    width: CARD_WIDTH,
-  },
-  imageContainer: {
-    height: CARD_WIDTH * 1.05,
-    position: 'relative',
+  pickImage: {
+    width: '100%',
+    height: 130,
     backgroundColor: '#F3F4F6',
   },
-  productImage: {
-    width: '100%',
-    height: '100%',
-  },
-  categoryTag: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  categoryTagText: {
-    fontSize: 14,
-  },
-
-  // Product Info
-  productInfo: {
+  pickInfo: {
     padding: 12,
     gap: 4,
   },
-  vendorText: {
-    fontSize: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  productName: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  starsRow: {
+  pickCatRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 1,
-    marginTop: 2,
+    gap: 5,
   },
-  ratingText: {
-    fontSize: 10,
-    marginLeft: 3,
-  },
-  productPrice: {
-    fontSize: 16,
-    color: '#066699',
-    marginTop: 4,
-  },
-
-  // CTA Button
-  ctaButton: {
+  pickCatDot: { width: 6, height: 6, borderRadius: 3 },
+  pickCatText: { fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
+  pickName: { fontSize: 13, lineHeight: 17 },
+  pickGainBadge: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: 'rgba(16,185,129,0.08)',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+  },
+  pickGainText: { fontSize: 10, color: '#10B981' },
+  pickPrice: { fontSize: 14, color: '#066699', marginTop: 2 },
+
+  // Categories
+  categoriesRow: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  categoryCard: {
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 14,
+    borderWidth: 1,
+    width: 100,
+    gap: 8,
+  },
+  categoryIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 8,
   },
-  ctaText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
+  categoryEmoji: { fontSize: 22 },
+  categoryLabel: { fontSize: 12, textAlign: 'center' },
+  categoryCount: { fontSize: 10 },
 
   // Disclaimer
   disclaimer: {
@@ -476,12 +419,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 10,
     marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 8,
+    marginTop: 24,
   },
-  disclaimerText: {
-    fontSize: 11,
-    lineHeight: 16,
-    flex: 1,
-  },
+  disclaimerText: { fontSize: 11, lineHeight: 16, flex: 1 },
 });
