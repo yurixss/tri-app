@@ -17,7 +17,7 @@ import {
   EnvironmentConditions,
   DEFAULT_CONDITIONS,
 } from '@/utils/bikeRacePredictor';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Minus, Plus, Trash, CaretUp, CaretDown } from 'phosphor-react-native';
 
 // ============================================================================
 // COMPONENTE: ENTRADA NUMÉRICA COM LABEL
@@ -130,7 +130,7 @@ export function SliderInput({
 
       <View style={styles.sliderControls}>
         <TouchableOpacity onPress={handleDecrease} style={styles.sliderButton}>
-          <MaterialCommunityIcons name="minus" size={20} color={color} />
+          <Minus size={20} color={color} weight="bold" />
         </TouchableOpacity>
 
         <ThemedText style={styles.sliderValue}>
@@ -138,7 +138,7 @@ export function SliderInput({
         </ThemedText>
 
         <TouchableOpacity onPress={handleIncrease} style={styles.sliderButton}>
-          <MaterialCommunityIcons name="plus" size={20} color={color} />
+          <Plus size={20} color={color} weight="bold" />
         </TouchableOpacity>
       </View>
     </View>
@@ -199,10 +199,10 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
                   onPress={() => removeSegment(index)}
                   style={styles.deleteButton}
                 >
-                  <MaterialCommunityIcons
-                    name="delete"
+                  <Trash
                     size={20}
                     color={Colors.shared.run}
+                    weight="bold"
                   />
                 </TouchableOpacity>
               )}
@@ -310,11 +310,11 @@ export function AdvancedSettings({
         style={styles.advancedHeader}
       >
         <ThemedText style={styles.advancedTitle}>Modo Avançado</ThemedText>
-        <MaterialCommunityIcons
-          name={isExpanded ? 'chevron-up' : 'chevron-down'}
-          size={24}
-          color={Colors.shared.bike}
-        />
+        {isExpanded ? (
+          <CaretUp size={24} color={Colors.shared.bike} weight="bold" />
+        ) : (
+          <CaretDown size={24} color={Colors.shared.bike} weight="bold" />
+        )}
       </TouchableOpacity>
 
       {isExpanded && (

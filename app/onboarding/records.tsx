@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
-import { Check, ChevronLeft } from 'lucide-react-native';
+import { Check, CaretLeft } from 'phosphor-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData, getOnboardingData, saveBikeTest, saveRunTest, saveSwimTest } from '@/hooks/useStorage';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
@@ -156,7 +156,7 @@ export default function PersonalRecords() {
   return (
     <ThemedView style={styles.container}>
       <Pressable style={styles.backButton} onPress={() => router.back()}>
-        <ChevronLeft size={24} color={Colors.shared.primary} />
+        <CaretLeft size={24} color={Colors.shared.primary} weight="regular" />
       </Pressable>
 
       <ScrollView style={styles.scrollView}>
@@ -193,12 +193,12 @@ export default function PersonalRecords() {
                       distance.includes('FTP') 
                         ? !errors[distance] && (
                             <View style={styles.checkmark}>
-                              <Check size={20} color={Colors.light.success} />
+                              <Check size={20} color={Colors.light.success} weight="regular" />
                             </View>
                           )
                         : isValidTimeFormat(record.time) && !errors[distance] && (
                             <View style={styles.checkmark}>
-                              <Check size={20} color={Colors.light.success} />
+                              <Check size={20} color={Colors.light.success} weight="regular" />
                             </View>
                           )
                     )}

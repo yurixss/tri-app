@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-nativ
 import { ThemedText } from './ThemedText';
 import { useThemeColor } from '../constants/Styles';
 import { commonStyles } from '../constants/Styles';
-import { ChevronDown } from 'lucide-react-native';
+import { CaretDown } from 'phosphor-react-native';
 
 interface DropdownOption {
   label: string;
@@ -67,7 +67,7 @@ export function DropdownSelector({
         >
           {selectedOption ? selectedOption.label : placeholder}
         </ThemedText>
-        <ChevronDown size={20} color={textColor} />
+        <CaretDown size={20} color={textColor} weight="regular" />
       </TouchableOpacity>
 
       <Modal

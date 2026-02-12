@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native'; 
-import { Share2, Copy } from 'lucide-react-native'; 
+import { ShareNetwork, Copy } from 'phosphor-react-native'; 
 import { copyZonesToClipboard, shareZones } from '@/utils/shareUtils';
 
 interface ZoneActionsProps {
@@ -32,7 +32,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
         ]}
         onPress={handleCopy}
       >
-        <Copy size={16} color={color} />
+        <Copy size={16} color={color} weight="regular" />
       </Pressable>
 
       <Pressable 
@@ -43,7 +43,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
         ]}
         onPress={handleShare}
       >
-        <Share2 size={16} color={color} />
+        <ShareNetwork size={16} color={color} weight="regular" />
       </Pressable>
     </View>
   );

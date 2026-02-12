@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { useThemeColor } from '@/constants/Styles';
 import { PROTOCOLS, PROTOCOL_CATEGORY_CONFIG, Protocol } from '@/data/protocolsContent';
-import { Clock } from 'lucide-react-native';
+import { Clock } from 'phosphor-react-native';
 
 /**
  * Tela principal de Protocolos.
@@ -117,7 +117,7 @@ function ProtocolCard({ protocol, onPress }: ProtocolCardProps) {
           </View>
           
           <View style={styles.duration}>
-            <Clock size={12} color={isDark ? '#999' : '#666'} />
+            <Clock size={12} color={isDark ? '#999' : '#666'} weight="regular" />
             <ThemedText style={styles.durationText}>
               {protocol.duration}
             </ThemedText>

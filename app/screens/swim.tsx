@@ -114,7 +114,7 @@ export default function SwimScreen() {
         >
           <Header
             title="Zonas de Ritmo - Natação"
-            color={Colors.shared.swim}
+            color={Colors.shared.primary}
             onBackPress={() => router.back()} 
           />
           

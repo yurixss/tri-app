@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Trophy, Bike, Clock, Calendar } from 'lucide-react-native';
+import { Trophy, Bicycle, Clock, Calendar } from 'phosphor-react-native';
 import { getTriathlonPrediction, SavedTriathlonPrediction, getBikePrediction, SavedBikePrediction } from '@/hooks/useStorage';
 
 export default function RacePredictionScreen() {
@@ -79,7 +79,7 @@ export default function RacePredictionScreen() {
       >
         <PredictionCard
           title="Triathlon"
-          icon={<Trophy size={32} color={Colors.shared.profile} />}
+          icon={<Trophy size={32} color={Colors.shared.profile} weight="regular" />}
           color={Colors.shared.profile}
           description="Estime seu tempo total de prova de triathlon"
           onPress={() => router.push('/screens/triathlon-predict')}
@@ -90,7 +90,7 @@ export default function RacePredictionScreen() {
 
         <PredictionCard
           title="Ciclismo"
-          icon={<Bike size={32} color={Colors.shared.bike} />}
+          icon={<Bicycle size={32} color={Colors.shared.bike} weight="regular" />}
           color={Colors.shared.bike}
           description="Estime seu tempo de prova de ciclismo"
           onPress={() => router.push('/screens/bike-race-predictor')}
@@ -181,14 +181,14 @@ function PredictionCard({
             {lastPrediction && (
               <View style={styles.predictionInfo}>
                 <View style={styles.predictionRow}>
-                  <Calendar size={14} color={color} />
+                  <Calendar size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText}>
                     {formatDate(lastPrediction.date)} • {lastPrediction.raceType}
                   </ThemedText>
                 </View>
                 
                 <View style={styles.predictionRow}>
-                  <Clock size={14} color={color} />
+                  <Clock size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText} fontFamily="Inter-Medium">
                     Total: {lastPrediction.totalTimeFormatted}
                   </ThemedText>
@@ -214,14 +214,14 @@ function PredictionCard({
             {lastBikePrediction && (
               <View style={styles.predictionInfo}>
                 <View style={styles.predictionRow}>
-                  <Calendar size={14} color={color} />
+                  <Calendar size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText}>
                     {formatDate(lastBikePrediction.date)}
                   </ThemedText>
                 </View>
                 
                 <View style={styles.predictionRow}>
-                  <Clock size={14} color={color} />
+                  <Clock size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText} fontFamily="Inter-Medium">
                     Tempo: {lastBikePrediction.totalTimeFormatted}
                   </ThemedText>

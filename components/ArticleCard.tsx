@@ -2,8 +2,9 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
+import Colors from '@/constants/Colors';
 import { Article, CATEGORY_CONFIG } from '@/data/manualContent';
-import { Clock } from 'lucide-react-native';
+import { Clock } from 'phosphor-react-native';
 
 interface ArticleCardProps {
   article: Article;
@@ -35,10 +36,9 @@ export function ArticleCard({ article, onPress }: ArticleCardProps) {
           styles.card,
           {
             backgroundColor: isPressed 
-              ? isDark ? '#2A2A2A' : '#F5F5F5'
+              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
               : cardBg,
-            borderColor: isPressed ? categoryConfig.color : borderColor,
-            borderLeftColor: categoryConfig.color,
+            borderColor: isPressed ? Colors.shared.primary : borderColor,
           }
         ]}
       >
@@ -95,10 +95,9 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderLeftWidth: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.04,
     shadowRadius: 6,
     elevation: 2,
   },

@@ -11,7 +11,7 @@ import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
 import { getRaceTypeName } from '@/utils/triathlonPredictor';
 import { shareTriathlonPredictionAsPdf } from '@/utils/shareUtils';
-import { ChevronDown, ChevronUp, Share2 } from 'lucide-react-native';
+import { CaretDown, CaretUp, ShareNetwork } from 'phosphor-react-native';
 
 interface ExpandableSectionProps {
   title: string;
@@ -43,8 +43,8 @@ function ExpandableSection({ title, time, color, factors, icon }: ExpandableSect
         </View>
         {factors.length > 0 && (
           expanded 
-            ? <ChevronUp size={20} color={textColor} />
-            : <ChevronDown size={20} color={textColor} />
+            ? <CaretUp size={20} color={textColor} weight="regular" />
+            : <CaretDown size={20} color={textColor} weight="regular" />
         )}
       </Pressable>
 
@@ -275,7 +275,7 @@ export default function ResultStep() {
             <ActivityIndicator size="small" color={Colors.shared.primary} />
           ) : (
             <>
-              <Share2 size={20} color={Colors.shared.primary} />
+              <ShareNetwork size={20} color={Colors.shared.primary} weight="regular" />
               <ThemedText style={[styles.shareButtonText, { color: Colors.shared.primary }]} fontFamily="Inter-Medium">
                 Compartilhar PDF
               </ThemedText>

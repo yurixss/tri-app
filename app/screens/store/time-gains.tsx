@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { CaretLeft, Timer, CurrencyDollar, ChartLine, ChartLineUp } from 'phosphor-react-native';
 import {
   getTimeGainSummary,
   formatGainRange,
@@ -20,6 +20,7 @@ import {
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import type { RaceDistance, TimeGainItem, Product } from '@/types/store';
 import { DISTANCE_LABELS, CATEGORY_CONFIG } from '@/types/store';
+import Colors from '@/constants/Colors';
 
 const EVIDENCE_LABEL: Record<TimeGainItem['evidenceLevel'], { label: string; color: string }> = {
   alto: { label: 'Evidência alta', color: '#10B981' },
@@ -54,7 +55,7 @@ export default function TimeGainsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={textColor} />
+          <CaretLeft size={24} color={textColor} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
@@ -152,7 +153,7 @@ export default function TimeGainsScreen() {
               activeOpacity={0.7}
             >
               {/* Rank badge */}
-              <View style={[styles.rankBadge, { backgroundColor: index < 3 ? '#066699' : secondaryText }]}>
+              <View style={[styles.rankBadge, { backgroundColor: index < 3 ? Colors.shared.primary : secondaryText }]}>
                 <ThemedText style={styles.rankNumber} fontFamily="Inter-Bold">
                   #{index + 1}
                 </ThemedText>
@@ -173,7 +174,7 @@ export default function TimeGainsScreen() {
                 {/* Metrics Grid */}
                 <View style={styles.metricsGrid}>
                   <View style={styles.metricItem}>
-                    <MaterialCommunityIcons name="clock-fast" size={16} color="#10B981" />
+                    <Timer size={16} color="#10B981" weight="bold" />
                     <View>
                       <ThemedText style={styles.metricValue} fontFamily="Inter-Bold">
                         {formatGainRange(item.gainMinutes)}
@@ -185,7 +186,7 @@ export default function TimeGainsScreen() {
                   </View>
 
                   <View style={styles.metricItem}>
-                    <MaterialCommunityIcons name="currency-brl" size={16} color="#F59E0B" />
+                    <CurrencyDollar size={16} color="#F59E0B" weight="bold" />
                     <View>
                       <ThemedText style={styles.metricValue} fontFamily="Inter-Bold">
                         {item.product.price ?? '—'}
@@ -197,7 +198,7 @@ export default function TimeGainsScreen() {
                   </View>
 
                   <View style={styles.metricItem}>
-                    <MaterialCommunityIcons name="chart-line" size={16} color="#8B5CF6" />
+                    <ChartLine size={16} color="#8B5CF6" weight="bold" />
                     <View>
                       <ThemedText style={styles.metricValue} fontFamily="Inter-Bold">
                         {formatCostPerMinute(item.costPerMinute)}
@@ -228,7 +229,7 @@ export default function TimeGainsScreen() {
 
         {summary.items.length === 0 && (
           <View style={styles.emptyState}>
-            <MaterialCommunityIcons name="chart-line-variant" size={48} color={secondaryText} />
+            <ChartLineUp size={48} color={secondaryText} weight="bold" />
             <ThemedText style={[styles.emptyText, { color: secondaryText }]}>
               Sem dados de ganho de tempo para essa distância.
             </ThemedText>
@@ -268,8 +269,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   filterChipActive: {
-    backgroundColor: '#066699',
-    borderColor: '#066699',
+    backgroundColor: Colors.shared.primary,
+    borderColor: Colors.shared.primary,
   },
   filterText: { fontSize: 13 },
 
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   summaryItem: { flex: 1, alignItems: 'center' },
   summaryDivider: { width: 1, height: 40, marginHorizontal: 12 },
   summaryLabel: { fontSize: 11, marginBottom: 4, textAlign: 'center' },
-  summaryValue: { fontSize: 20, color: '#066699', textAlign: 'center' },
+  summaryValue: { fontSize: 20, color: Colors.shared.primary, textAlign: 'center' },
   summaryBottom: {
     marginTop: 14,
     paddingTop: 14,

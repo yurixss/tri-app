@@ -20,7 +20,8 @@ import {
   STORE_CONFIG,
   type Product 
 } from '@/data/productsContent';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Star, StarHalf, CheckCircle, ShoppingCart, Info, Storefront } from 'phosphor-react-native';
+import Colors from '@/constants/Colors';
 
 export default function ProductListScreen() {
   const router = useRouter();
@@ -53,12 +54,13 @@ export default function ProductListScreen() {
     return (
       <View style={styles.starsContainer}>
         {[1, 2, 3, 4, 5].map((star) => (
-          <MaterialCommunityIcons
-            key={star}
-            name={star <= rating ? 'star' : star - 0.5 <= rating ? 'star-half-full' : 'star-outline'}
-            size={14}
-            color="#F59E0B"
-          />
+          star <= rating ? (
+            <Star key={star} size={14} color="#F59E0B" weight="fill" />
+          ) : star - 0.5 <= rating ? (
+            <StarHalf key={star} size={14} color="#F59E0B" weight="fill" />
+          ) : (
+            <Star key={star} size={14} color="#F59E0B" weight="regular" />
+          )
         ))}
         <ThemedText style={[styles.ratingText, { color: secondaryTextColor }]}>
           {rating.toFixed(1)}
@@ -84,7 +86,7 @@ export default function ProductListScreen() {
           style={[
             styles.filterChip,
             { 
-              backgroundColor: selectedCategory === 'all' ? '#066699' : cardBg,
+              backgroundColor: selectedCategory === 'all' ? Colors.shared.primary : cardBg,
               borderColor: borderColor,
               borderWidth: 1,
             }
@@ -190,7 +192,7 @@ export default function ProductListScreen() {
                   <View style={styles.featuresContainer}>
                     {product.features.slice(0, 3).map((feature, index) => (
                       <View key={index} style={styles.featureItem}>
-                        <MaterialCommunityIcons name="check-circle" size={14} color="#10B981" />
+                        <CheckCircle size={14} color="#10B981" weight="fill" />
                         <ThemedText 
                           style={[styles.featureText, { color: secondaryTextColor }]}
                           numberOfLines={1}
@@ -211,11 +213,11 @@ export default function ProductListScreen() {
                       </ThemedText>
                     )}
                     <View style={styles.storeTag}>
-                      <MaterialCommunityIcons 
-                        name={storeConfig.icon as any} 
-                        size={14} 
-                        color={storeConfig.color} 
-                      />
+                      {storeConfig.icon === 'cart' ? (
+                        <ShoppingCart size={14} color={storeConfig.color} weight="bold" />
+                      ) : (
+                        <Storefront size={14} color={storeConfig.color} weight="bold" />
+                      )}
                       <ThemedText style={[styles.storeText, { color: secondaryTextColor }]}>
                         {storeConfig.name}
                       </ThemedText>
@@ -226,7 +228,7 @@ export default function ProductListScreen() {
                     style={[styles.buyButton, { backgroundColor: categoryConfig.color }]}
                     onPress={() => handleBuyPress(product)}
                   >
-                    <MaterialCommunityIcons name="cart-outline" size={18} color="#FFFFFF" />
+                    <ShoppingCart size={18} color="#FFFFFF" weight="bold" />
                     <ThemedText style={styles.buyButtonText} fontFamily="Inter-SemiBold">
                       Comprar
                     </ThemedText>
@@ -239,7 +241,7 @@ export default function ProductListScreen() {
 
         {/* Disclaimer */}
         <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor: borderColor }]}>
-          <MaterialCommunityIcons name="information-outline" size={20} color={secondaryTextColor} />
+          <Info size={20} color={secondaryTextColor} weight="regular" />
           <ThemedText style={[styles.disclaimerText, { color: secondaryTextColor }]}>
             Os links acima são links de afiliado. Ao comprar através deles, você ajuda a manter o app sem custo adicional.
           </ThemedText>
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 22,
-    color: '#066699',
+    color: Colors.shared.primary,
     marginBottom: 4,
   },
   storeTag: {

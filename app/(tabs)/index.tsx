@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Apple, Activity, Zap, ClipboardList, Calculator, BarChart3, Heart, ShoppingCart } from 'lucide-react-native';
+import { ForkKnife, Calculator, Heartbeat, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
@@ -29,7 +29,7 @@ function getGreeting(): string {
 interface PrimaryActionCardProps {
   title: string;
   subtitle: string;
-  emoji: string;
+  icon: React.ReactNode;
   color: string;
   onPress: () => void;
   backgroundColor: string;
@@ -39,7 +39,7 @@ interface PrimaryActionCardProps {
 function PrimaryActionCard({ 
   title, 
   subtitle,
-  emoji,
+  icon,
   color, 
   onPress,
   backgroundColor,
@@ -48,6 +48,7 @@ function PrimaryActionCard({
   const [isPressed, setIsPressed] = React.useState(false);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const brandColor = Colors.shared.primary;
 
   return (
     <TouchableOpacity
@@ -61,21 +62,20 @@ function PrimaryActionCard({
           styles.primaryCard, 
           { 
             backgroundColor: isPressed 
-              ? isDark ? '#2A2A2A' : '#F5F5F5'
+              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
               : backgroundColor,
-            borderLeftColor: color,
-            borderColor: isPressed ? color : borderColor,
-            opacity: isPressed ? 0.9 : 1,
+            borderColor: isPressed ? brandColor : borderColor,
+            opacity: isPressed ? 0.95 : 1,
           }
         ]}
       >
         <View style={styles.primaryCardContent}>
-          <View style={[styles.primaryEmojiContainer, { backgroundColor: color + '15' }]}>
-            <ThemedText style={styles.primaryEmoji}>{emoji}</ThemedText>
+          <View style={[styles.primaryIconContainer, { backgroundColor: brandColor + '12' }]}>
+            {icon}
           </View>
           <View style={styles.primaryTextContainer}>
             <ThemedText 
-              style={[styles.primaryTitle, { color }]}
+              style={styles.primaryTitle}
               fontFamily="Inter-Bold"
             >
               {title}
@@ -111,6 +111,7 @@ function SecondaryToolCard({
   const [isPressed, setIsPressed] = React.useState(false);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const brandColor = Colors.shared.primary;
 
   return (
     <TouchableOpacity
@@ -125,18 +126,18 @@ function SecondaryToolCard({
           styles.toolCard, 
           { 
             backgroundColor: isPressed 
-              ? isDark ? '#2A2A2A' : '#F5F5F5'
+              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
               : backgroundColor,
-            borderColor: isPressed ? color : borderColor,
-            opacity: isPressed ? 0.9 : 1,
+            borderColor: isPressed ? brandColor : borderColor,
+            opacity: isPressed ? 0.95 : 1,
           }
         ]}
       >
-        <View style={[styles.toolIconContainer, { backgroundColor: color + '10' }]}>
+        <View style={[styles.toolIconContainer, { backgroundColor: brandColor + '10' }]}>
           {icon}
         </View>
         <ThemedText 
-          style={[styles.toolTitle, { color }]}
+          style={styles.toolTitle}
           fontFamily="Inter-SemiBold"
         >
           {title}
@@ -272,8 +273,8 @@ export default function HomeScreen() {
         <PrimaryActionCard
           title="Simulador de prova"
           subtitle="Simule sua prova"
-          emoji="🏁"
-          color="#066699"
+          icon={<FlagCheckered size={28} color={Colors.shared.primary} weight="bold" />}
+          color={Colors.shared.primary}
           onPress={() => router.push('/(tabs)/race-prediction')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -282,8 +283,8 @@ export default function HomeScreen() {
         <PrimaryActionCard
           title="Zonas de treino"
           subtitle="Zonas de treino baseadas em testes"
-          emoji="🎯"
-          color="#0a5483"
+          icon={<Target size={28} color={Colors.shared.primary} weight="bold" />}
+          color={Colors.shared.primary}
           onPress={() => router.push('/(tabs)/training-zones')}
           backgroundColor={cardBg}
           borderColor={borderColor}
@@ -300,8 +301,8 @@ export default function HomeScreen() {
         <View style={styles.toolsGrid}>
           <SecondaryToolCard
             title="Calculadora Nutrição"
-            icon={<Apple size={24} color="#aedd2b" />}
-            color="#aedd2b"
+            icon={<ForkKnife size={24} color={Colors.shared.primary} weight="bold" />}
+            color={Colors.shared.primary}
             onPress={() => router.push('/(tabs)/nutrition')}
             backgroundColor={cardBg}
             borderColor={borderColor}
@@ -309,8 +310,8 @@ export default function HomeScreen() {
 
           <SecondaryToolCard
             title="Calculadora de prova"
-            icon={<Calculator size={24} color="#066699" />}
-            color="#066699"
+            icon={<Calculator size={24} color={Colors.shared.primary} weight="bold" />}
+            color={Colors.shared.primary}
             onPress={() => router.push('/screens/race-calculator')}
             backgroundColor={cardBg}
             borderColor={borderColor}
@@ -318,8 +319,8 @@ export default function HomeScreen() {
           
           <SecondaryToolCard
             title="Zonas de FC"
-            icon={<Heart size={24} color="#DC2626" />}
-            color="#DC2626"
+            icon={<Heartbeat size={24} color={Colors.shared.primary} weight="bold" />}
+            color={Colors.shared.primary}
             onPress={() => router.push('/screens/heart-rate')}
             backgroundColor={cardBg}
             borderColor={borderColor}
@@ -327,8 +328,8 @@ export default function HomeScreen() {
           
           <SecondaryToolCard
             title="Protocolos"
-            icon={<ClipboardList size={24} color="#8B5CF6" />}
-            color="#8B5CF6"
+            icon={<ClipboardText size={24} color={Colors.shared.primary} weight="bold" />}
+            color={Colors.shared.primary}
             onPress={() => router.push('/screens/protocol/protocols')}
             backgroundColor={cardBg}
             borderColor={borderColor}
@@ -379,30 +380,26 @@ const styles = StyleSheet.create({
   // Primary Action Cards (grandes)
   primaryCard: {
     borderRadius: 16,
-    padding: 12,
-    marginBottom: 6,
+    padding: 14,
+    marginBottom: 8,
     borderWidth: 1,
-    borderLeftWidth: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
   primaryCardContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  primaryEmojiContainer: {
+  primaryIconContainer: {
     width: 56,
     height: 56,
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
-  },
-  primaryEmoji: {
-    fontSize: 28,
   },
   primaryTextContainer: {
     flex: 1,

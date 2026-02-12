@@ -31,7 +31,7 @@ import {
   SegmentEditor,
   AdvancedSettings,
 } from '@/components/BikeRaceInputs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Lightning, PencilSimple, WarningCircle, Lightbulb, Timer, Gauge, MapPin, CaretDown, CaretUp } from 'phosphor-react-native';
 
 interface RaceInput {
   athleteWeight: string;
@@ -224,10 +224,10 @@ export default function BikeRacePredictorScreen() {
         {testResults.bike?.ftp && (
           <View style={[styles.infoCard, { backgroundColor: cardBg, borderColor }]}>
             <View style={styles.infoHeader}>
-              <MaterialCommunityIcons
-                name="lightning-bolt"
+              <Lightning
                 size={20}
                 color={Colors.shared.bike}
+                weight="bold"
               />
               <ThemedText style={styles.infoTitle}>Seu FTP</ThemedText>
             </View>
@@ -245,10 +245,10 @@ export default function BikeRacePredictorScreen() {
               onPress={handleUpdateFTP}
               style={styles.updateFTPButton}
             >
-              <MaterialCommunityIcons
-                name="pencil"
+              <PencilSimple
                 size={16}
                 color={Colors.shared.bike}
+                weight="regular"
               />
               <ThemedText style={styles.updateFTPButtonText}>
                 Atualizar FTP
@@ -328,10 +328,10 @@ export default function BikeRacePredictorScreen() {
         {/* Mensagens de erro */}
         {error && (
           <View style={[styles.errorCard, { borderColor: Colors.shared.run }]}>
-            <MaterialCommunityIcons
-              name="alert-circle"
+            <WarningCircle
               size={20}
               color={Colors.shared.run}
+              weight="regular"
             />
             <ThemedText style={styles.errorText}>{error}</ThemedText>
           </View>
@@ -409,10 +409,10 @@ function PredictionResultView({
 
       {/* Fator Impactante */}
       <View style={[styles.impactingFactorCard, { backgroundColor: cardBg, borderColor }]}>
-        <MaterialCommunityIcons
-          name="lightbulb-on"
+        <Lightbulb
           size={18}
           color={Colors.shared.secondary}
+          weight="bold"
           style={{ marginRight: 8 }}
         />
         <ThemedText style={styles.impactingFactorText}>
@@ -425,7 +425,7 @@ function PredictionResultView({
         <ResultCard
           label="Tempo Total"
           value={timeFormatted}
-          icon="clock-outline"
+          icon={<Timer size={24} color={Colors.shared.bike} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -434,7 +434,7 @@ function PredictionResultView({
           label="Velocidade Média"
           value={`${(result.avgSpeedMs * 3.6).toFixed(1)} km/h`}
           subValue={`${result.avgSpeedMs.toFixed(1)} m/s`}
-          icon="speedometer"
+          icon={<Gauge size={24} color={Colors.shared.bike} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -442,7 +442,7 @@ function PredictionResultView({
         <ResultCard
           label="Potência Média"
           value={`${Math.round(result.avgPower)} W`}
-          icon="lightning-bolt"
+          icon={<Lightning size={24} color={Colors.shared.bike} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -450,7 +450,7 @@ function PredictionResultView({
         <ResultCard
           label="Total"
           value={`${(result.avgSpeedMs * 3.6 * (result.totalTimeSeconds / 3600)).toFixed(1)} km`}
-          icon="map"
+          icon={<MapPin size={24} color={Colors.shared.bike} weight="bold" />}
           cardBg={cardBg}
           borderColor={borderColor}
         />
@@ -495,11 +495,11 @@ function PredictionResultView({
               </View>
             </View>
 
-            <MaterialCommunityIcons
-              name={expandedSegment === index ? 'chevron-up' : 'chevron-down'}
-              size={20}
-              color={Colors.shared.bike}
-            />
+            {expandedSegment === index ? (
+              <CaretUp size={20} color={Colors.shared.bike} weight="bold" />
+            ) : (
+              <CaretDown size={20} color={Colors.shared.bike} weight="bold" />
+            )}
           </TouchableOpacity>
         ))}
 
@@ -519,7 +519,7 @@ interface ResultCardProps {
   label: string;
   value: string;
   subValue?: string;
-  icon: any;
+  icon: React.ReactNode;
   cardBg: string;
   borderColor: string;
 }
@@ -534,12 +534,9 @@ function ResultCard({
 }: ResultCardProps) {
   return (
     <View style={[styles.resultCard, { backgroundColor: cardBg, borderColor }]}>
-      <MaterialCommunityIcons
-        name={icon}
-        size={24}
-        color={Colors.shared.bike}
-        style={styles.resultCardIcon}
-      />
+      <View style={styles.resultCardIcon}>
+        {icon}
+      </View>
       <ThemedText style={styles.resultCardLabel}>{label}</ThemedText>
       <ThemedText style={styles.resultCardValue}>{value}</ThemedText>
       {subValue && (

@@ -125,7 +125,7 @@ export default function RunScreen() {
         >
           <Header
             title="Zonas de Ritmo - Corrida"
-            color={Colors.shared.run}
+            color={Colors.shared.primary}
             onBackPress={() => router.back()} 
           />
           

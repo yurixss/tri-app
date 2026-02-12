@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { CaretLeft, TrendUp, CheckCircle, Star, Rocket, ArrowCounterClockwise } from 'phosphor-react-native';
 import { buildKit } from '@/data/store/kitBuilder';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import type {
@@ -31,6 +31,7 @@ import {
   LEVEL_LABELS,
   CATEGORY_CONFIG,
 } from '@/types/store';
+import Colors from '@/constants/Colors';
 
 type Step = 'distance' | 'climate' | 'budget' | 'level' | 'result';
 
@@ -99,8 +100,8 @@ export default function KitBuilderScreen() {
           style={[
             styles.optionCard,
             {
-              backgroundColor: isSelected ? '#066699' : cardBg,
-              borderColor: isSelected ? '#066699' : borderColor,
+              backgroundColor: isSelected ? Colors.shared.primary : cardBg,
+              borderColor: isSelected ? Colors.shared.primary : borderColor,
             },
           ]}
           onPress={() => {
@@ -153,7 +154,7 @@ export default function KitBuilderScreen() {
               )}
               {product.performanceGainEstimate && (
                 <View style={styles.gainBadge}>
-                  <MaterialCommunityIcons name="trending-up" size={12} color="#10B981" />
+                  <TrendUp size={12} color="#10B981" weight="bold" />
                   <ThemedText style={styles.gainText}>{product.performanceGainEstimate}</ThemedText>
                 </View>
               )}
@@ -171,7 +172,13 @@ export default function KitBuilderScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <View style={[styles.sectionIcon, { backgroundColor: color }]}>
-            <MaterialCommunityIcons name={icon as any} size={18} color="#FFF" />
+            {icon === 'check-circle' ? (
+              <CheckCircle size={18} color="#FFF" weight="fill" />
+            ) : icon === 'star' ? (
+              <Star size={18} color="#FFF" weight="fill" />
+            ) : (
+              <Rocket size={18} color="#FFF" weight="bold" />
+            )}
           </View>
           <View style={{ flex: 1 }}>
             <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
@@ -194,7 +201,7 @@ export default function KitBuilderScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={textColor} />
+          <CaretLeft size={24} color={textColor} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
@@ -322,7 +329,7 @@ export default function KitBuilderScreen() {
                 setStep('distance');
               }}
             >
-              <MaterialCommunityIcons name="refresh" size={18} color="#066699" />
+              <ArrowCounterClockwise size={18} color="#066699" weight="bold" />
               <ThemedText style={styles.resetText} fontFamily="Inter-SemiBold">
                 Montar outro kit
               </ThemedText>
@@ -355,7 +362,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#066699',
+    backgroundColor: Colors.shared.primary,
     borderRadius: 2,
   },
   scroll: { flex: 1 },
@@ -434,7 +441,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 4,
   },
-  productPrice: { fontSize: 14, color: '#066699' },
+  productPrice: { fontSize: 14, color: Colors.shared.primary },
   gainBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -454,5 +461,5 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginTop: 8,
   },
-  resetText: { fontSize: 14, color: '#066699' },
+  resetText: { fontSize: 14, color: Colors.shared.primary },
 });

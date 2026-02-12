@@ -22,17 +22,18 @@ export function ThemedButton({
 }: ThemedButtonProps) {
   const styles = StyleSheet.create({
     button: {
-      backgroundColor: disabled ? '#A1A1AA' : color,
-      borderRadius: 6,
-      height: 36,
+      backgroundColor: disabled ? '#94A3B8' : color,
+      borderRadius: 10,
+      height: 40,
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 16,
+      paddingHorizontal: 20,
     },
     buttonText: {
       color: '#FFF',
       fontSize: 14,
       fontFamily: 'Inter-SemiBold',
+      letterSpacing: 0.2,
     }
   });
 

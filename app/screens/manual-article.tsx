@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { ContentBlockRenderer } from '@/components/ContentBlockRenderer';
 import { getArticleById, CATEGORY_CONFIG } from '@/data/manualContent';
-import { Clock } from 'lucide-react-native';
+import { Clock } from 'phosphor-react-native';
 
 /**
  * Tela de leitura de artigo do Manual do Triatleta.
@@ -75,7 +75,7 @@ export default function ManualArticleScreen() {
           </View>
           
           <View style={styles.readingTime}>
-            <Clock size={14} color={isDark ? '#999' : '#666'} />
+            <Clock size={14} color={isDark ? '#999' : '#666'} weight="regular" />
             <ThemedText style={styles.readingTimeText}>
               {article.readingTime} min de leitura
             </ThemedText>

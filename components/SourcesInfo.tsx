@@ -41,7 +41,7 @@ export function SourcesInfo({ citations }: SourcesInfoProps) {
       {citations.map((citation, index) => (
         <View key={index} style={styles.citationBlock}>
           <ThemedText
-            style={[styles.category, { color: Colors.shared.primaryDeep }]}
+            style={[styles.category, { color: Colors.shared.primaryDark }]}
             fontFamily="Inter-Bold"
           >
             {citation.category}

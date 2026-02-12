@@ -7,7 +7,7 @@ import { Header } from '@/components/Header';
 import { SourcesInfo } from '@/components/SourcesInfo';
 import { useThemeColor } from '@/constants/Styles';
 import { getProtocolById, PROTOCOL_CATEGORY_CONFIG } from '@/data/protocolsContent';
-import { Share as ShareIcon, Copy, Clock, CheckCircle, AlertTriangle, Target, Calendar, Lightbulb } from 'lucide-react-native';
+import { ShareNetwork as ShareIcon, Copy, Clock, CheckCircle, Warning, Target, Calendar, Lightbulb } from 'phosphor-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { getProtocolCitation } from '@/utils/citations';
 
@@ -139,7 +139,7 @@ export default function ProtocolDetailScreen() {
           </View>
           
           <View style={styles.durationBadge}>
-            <Clock size={14} color={isDark ? '#999' : '#666'} />
+            <Clock size={14} color={isDark ? '#999' : '#666'} weight="regular" />
             <ThemedText style={styles.durationText}>
               {protocol.duration}
             </ThemedText>
@@ -150,13 +150,13 @@ export default function ProtocolDetailScreen() {
               style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
               onPress={handleShare}
             >
-              <ShareIcon size={18} color={categoryConfig.color} />
+              <ShareIcon size={18} color={categoryConfig.color} weight="regular" />
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
               onPress={handleCopy}
             >
-              <Copy size={18} color={categoryConfig.color} />
+              <Copy size={18} color={categoryConfig.color} weight="regular" />
             </TouchableOpacity>
           </View>
         </View>
@@ -164,7 +164,7 @@ export default function ProtocolDetailScreen() {
         {/* Quando usar e Objetivo */}
         <View style={[styles.infoCard, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.infoRow}>
-            <Calendar size={18} color={categoryConfig.color} />
+            <Calendar size={18} color={categoryConfig.color} weight="regular" />
             <View style={styles.infoContent}>
               <ThemedText style={styles.infoLabel} fontFamily="Inter-SemiBold">
                 Quando usar
@@ -178,7 +178,7 @@ export default function ProtocolDetailScreen() {
           <View style={[styles.separator, { backgroundColor: borderColor }]} />
           
           <View style={styles.infoRow}>
-            <Target size={18} color={categoryConfig.color} />
+            <Target size={18} color={categoryConfig.color} weight="regular" />
             <View style={styles.infoContent}>
               <ThemedText style={styles.infoLabel} fontFamily="Inter-SemiBold">
                 Objetivo
@@ -225,7 +225,7 @@ export default function ProtocolDetailScreen() {
               
               {step.duration && (
                 <View style={styles.stepMeta}>
-                  <Clock size={12} color={isDark ? '#999' : '#666'} />
+                  <Clock size={12} color={isDark ? '#999' : '#666'} weight="regular" />
                   <ThemedText style={styles.stepMetaText}>
                     {step.duration}
                   </ThemedText>
@@ -234,7 +234,7 @@ export default function ProtocolDetailScreen() {
               
               {step.tip && (
                 <View style={[styles.tipContainer, { backgroundColor: categoryConfig.color + '10' }]}>
-                  <Lightbulb size={14} color={categoryConfig.color} />
+                  <Lightbulb size={14} color={categoryConfig.color} weight="regular" />
                   <ThemedText style={[styles.tipText, { color: categoryConfig.color }]}>
                     {step.tip}
                   </ThemedText>
@@ -252,7 +252,7 @@ export default function ProtocolDetailScreen() {
         <View style={[styles.listCard, { backgroundColor: cardBg, borderColor }]}>
           {protocol.signsItWorks.map((sign, index) => (
             <View key={index} style={styles.listItem}>
-              <CheckCircle size={16} color="#10B981" />
+              <CheckCircle size={16} color="#10B981" weight="regular" />
               <ThemedText style={styles.listItemText}>
                 {sign}
               </ThemedText>
@@ -268,7 +268,7 @@ export default function ProtocolDetailScreen() {
         <View style={[styles.listCard, { backgroundColor: cardBg, borderColor }]}>
           {protocol.commonMistakes.map((mistake, index) => (
             <View key={index} style={styles.listItem}>
-              <AlertTriangle size={16} color="#F59E0B" />
+              <Warning size={16} color="#F59E0B" weight="regular" />
               <ThemedText style={styles.listItemText}>
                 {mistake}
               </ThemedText>

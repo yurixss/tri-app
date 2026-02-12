@@ -11,7 +11,7 @@ import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
-import { Share2, Copy } from 'lucide-react-native';
+import { ShareNetwork, Copy } from 'phosphor-react-native';
 import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
@@ -649,7 +649,7 @@ export default function RaceCalculatorScreen() {
                     ]}
                     onPress={handleCopy}
                   >
-                    <Copy size={16} color={Colors.shared.primary} />
+                    <Copy size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
 
                   <Pressable 
@@ -660,7 +660,7 @@ export default function RaceCalculatorScreen() {
                     ]}
                     onPress={handleShare}
                   >
-                    <Share2 size={16} color={Colors.shared.primary} />
+                    <ShareNetwork size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
                 </View>
               </View>
@@ -704,7 +704,7 @@ export default function RaceCalculatorScreen() {
                       ]}
                       onPress={handleCopySwim}
                     >
-                      <Copy size={14} color={Colors.shared.primary} />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>
@@ -736,7 +736,7 @@ export default function RaceCalculatorScreen() {
                       ]}
                       onPress={handleCopyBike}
                     >
-                      <Copy size={14} color={Colors.shared.primary} />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>
@@ -768,7 +768,7 @@ export default function RaceCalculatorScreen() {
                       ]}
                       onPress={handleCopyRun}
                     >
-                      <Copy size={14} color={Colors.shared.primary} />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>

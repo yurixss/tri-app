@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Home, ShoppingCart, UserCircle2 } from 'lucide-react-native';
+import { House, Storefront, UserCircle } from 'phosphor-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -14,38 +14,47 @@ export default function TabLayout() {
         tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
         headerShown: false,
         tabBarStyle: {
-          height: 60,
-          paddingBottom: 8,
+          height: 64,
+          paddingBottom: 10,
           paddingTop: 8,
           backgroundColor: Colors[colorScheme].background,
+          borderTopColor: Colors[colorScheme].border,
+          borderTopWidth: 0.5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Inter-Medium',
-          fontSize: 12,
+          fontSize: 11,
+          letterSpacing: 0.2,
         },
       }}>
  
       <Tabs.Screen
         name="manual"
         options={{
-          title: '',
-          tabBarIcon: ({ color, size }) => <ShoppingCart color={color} size={size} />,
+          title: 'Lab',
+          tabBarIcon: ({ color, focused }) => (
+            <Storefront size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
         }}
       />
 
       <Tabs.Screen
         name="index"
         options={{
-          title: '',
-          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+          title: 'Início',
+          tabBarIcon: ({ color, focused }) => (
+            <House size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
         }}
       />
       
       <Tabs.Screen
         name="profile"
         options={{
-          title: '',
-          tabBarIcon: ({ color, size }) => <UserCircle2 color={color} size={size} />,
+          title: 'Perfil',
+          tabBarIcon: ({ color, focused }) => (
+            <UserCircle size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
         }}
       />
 

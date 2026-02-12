@@ -12,11 +12,21 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { CaretLeft, Lightbulb, ArrowSquareOut, Sun, BatteryLow, Lightning, Armchair, ArrowsLeftRight, Bandaids } from 'phosphor-react-native';
 import { getAllProblems, getSolutionsForProblem } from '@/data/store/problemSolver';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import type { ProblemTag, ProblemSolution, Product } from '@/types/store';
 import { CATEGORY_CONFIG } from '@/types/store';
+import Colors from '@/constants/Colors';
+
+const PROBLEM_ICON_MAP: Record<string, React.ComponentType<any>> = {
+  'weather-sunny': Sun,
+  'battery-20': BatteryLow,
+  'lightning-bolt': Lightning,
+  'seat-recline-extra': Armchair,
+  'swap-horizontal': ArrowsLeftRight,
+  'bandage': Bandaids,
+};
 
 export default function ProblemSolverScreen() {
   const router = useRouter();
@@ -61,7 +71,7 @@ export default function ProblemSolverScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={textColor} />
+          <CaretLeft size={24} color={textColor} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
@@ -91,11 +101,10 @@ export default function ProblemSolverScreen() {
                 activeOpacity={0.7}
               >
                 <View style={[styles.problemIconContainer, { backgroundColor: `${problem.color}15` }]}>
-                  <MaterialCommunityIcons
-                    name={problem.icon as any}
-                    size={28}
-                    color={problem.color}
-                  />
+                  {(() => {
+                    const IconComp = PROBLEM_ICON_MAP[problem.icon] || Lightning;
+                    return <IconComp size={28} color={problem.color} weight="bold" />;
+                  })()}
                 </View>
                 <ThemedText style={styles.problemTitle} fontFamily="Inter-SemiBold">
                   {problem.title}
@@ -112,7 +121,7 @@ export default function ProblemSolverScreen() {
             {/* Tips Section */}
             <View style={styles.tipsSection}>
               <View style={styles.tipsSectionHeader}>
-                <MaterialCommunityIcons name="lightbulb-on-outline" size={20} color="#F59E0B" />
+                <Lightbulb size={20} color="#F59E0B" weight="bold" />
                 <ThemedText style={styles.tipsSectionTitle} fontFamily="Inter-Bold">
                   Dicas técnicas
                 </ThemedText>
@@ -174,7 +183,7 @@ export default function ProblemSolverScreen() {
                             <ThemedText style={styles.ctaBadgeText} fontFamily="Inter-SemiBold">
                               Ver oferta
                             </ThemedText>
-                            <MaterialCommunityIcons name="open-in-new" size={12} color="#066699" />
+                            <ArrowSquareOut size={12} color="#066699" weight="regular" />
                           </View>
                         </View>
                       </View>
@@ -253,7 +262,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tipNumberText: { fontSize: 13, color: '#066699' },
+  tipNumberText: { fontSize: 13, color: Colors.shared.primary },
   tipText: { flex: 1, fontSize: 14, lineHeight: 20 },
 
   // Products
@@ -290,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 4,
   },
-  productPrice: { fontSize: 14, color: '#066699' },
+  productPrice: { fontSize: 14, color: Colors.shared.primary },
   ctaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -300,5 +309,5 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: 'rgba(6,102,153,0.1)',
   },
-  ctaBadgeText: { fontSize: 11, color: '#066699' },
+  ctaBadgeText: { fontSize: 11, color: Colors.shared.primary },
 });

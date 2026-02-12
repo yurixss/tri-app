@@ -40,7 +40,7 @@ export default function NutritionScreen() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [showSources, setShowSources] = useState(false);
   
-  const accentColor = '#066699';
+  const accentColor = Colors.shared.primary;
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const router = useRouter();

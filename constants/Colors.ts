@@ -1,63 +1,72 @@
-import { Platform } from 'react-native';
+// ─── Modern Unified Palette ─────────────────────────────────────────
+// Primary blue dominates. Sport-specific colors used only where
+// differentiation is essential (zone screens).
 
-// Palette
-// New Zwift-like palette (primary laranja + accents ciano/azul)
-const primary = '#066699'; // Blue primary (principal)
-const primaryDeep = '#044d73'; // Blue Deep (darker for highlights)
+const primary = '#2563EB';       // Vibrant blue (main brand color)
+const primaryDark = '#1D4ED8';   // Darker variant for pressed states
+const primaryLight = '#3B82F6';  // Lighter variant for dark-mode tint
 
-const blackCarbon = '#0D0D0D';
-const graphiteDark = '#1A1A1A';
-const slateGray = '#2B2B2B';
+const blackCarbon = '#0F172A';   // Slate 900 – deep dark background
+const graphiteDark = '#1E293B';  // Slate 800 – dark card surface
+const slateGray = '#334155';     // Slate 700 – dark borders
+
 const pureWhite = '#FFFFFF';
 
-const gray500 = '#7A7A7A';
-const gray300 = '#CFCFCF';
+const gray500 = '#64748B';       // Slate 500 – secondary text
+const gray400 = '#94A3B8';       // Slate 400 – muted/placeholder
+const gray300 = '#CBD5E1';       // Slate 300 – light borders
+const gray100 = '#F1F5F9';       // Slate 100 – subtle background
 
-// Accent/secondary (Zwift style warm/cold contrast)
-const cyanLight = '#4EDFFF';
-const cyanStrong = '#00B7EB';
-const blueElectric = '#2D7FF9';
+// Accent
+const accent = '#06B6D4';        // Cyan 500
+const accentLight = '#22D3EE';   // Cyan 400
 
 export default {
   light: {
-    text: '#000000',
-    background: pureWhite,
+    text: '#0F172A',
+    background: '#F8FAFC',          // Slate 50
     tint: primary,
-    tabIconDefault: gray500,
+    tabIconDefault: gray400,
     tabIconSelected: primary,
     cardBackground: pureWhite,
-    border: gray300,
-    notification: cyanStrong,
-    error: '#E84A4A',
-    success: '#3CCF91',
-    warning: primaryDeep,
-    destructive: '#E84A4A',
+    border: '#E2E8F0',              // Slate 200
+    notification: accent,
+    error: '#EF4444',
+    success: '#10B981',
+    warning: '#F59E0B',
+    destructive: '#EF4444',
   },
   dark: {
-    text: pureWhite,
+    text: '#F1F5F9',
     background: blackCarbon,
-    tint: primary,
-    tabIconDefault: gray300,
-    tabIconSelected: primary,
+    tint: primaryLight,
+    tabIconDefault: gray500,
+    tabIconSelected: primaryLight,
     cardBackground: graphiteDark,
     border: slateGray,
-    notification: cyanLight,
-    error: '#E84A4A',
-    success: '#3CCF91',
-    warning: primaryDeep,
+    notification: accentLight,
+    error: '#EF4444',
+    success: '#10B981',
+    warning: '#F59E0B',
     destructive: '#FF5757',
   },
   shared: {
+    // Sport colors – used ONLY in zone-detail screens for differentiation
     swim: '#0EA5E9',
     bike: '#10B981',
     run: '#F97316',
-    nutrition: '#EC4899',
-    profile: '#8B5CF6',
-    secondary: blueElectric,
+
+    // UI semantics
+    nutrition: primary,
+    profile: primary,
+    secondary: accent,
     delete: '#EF4444',
-    // Core palette
+
+    // Core palette tokens
     primary,
-    primaryDeep,
+    primaryDark,
+    primaryLight,
+
     backgrounds: {
       blackCarbon,
       graphiteDark,
@@ -66,12 +75,13 @@ export default {
     },
     neutrals: {
       gray500,
+      gray400,
       gray300,
+      gray100,
     },
     accents: {
-      cyanLight,
-      cyanStrong,
-      blueElectric,
+      accent,
+      accentLight,
     },
   },
 };

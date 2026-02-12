@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedButton } from '@/components/ThemedButton';
-import { Bike, MountainSnow, Waves, Trophy, User } from 'lucide-react-native';
+import { Bicycle, Mountains, Waves, Trophy, User } from 'phosphor-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData } from '@/hooks/useStorage';
 
@@ -13,7 +13,7 @@ type SportType = 'triathlete' | 'runner' | 'swimmer' | 'cyclist';
 interface SportOption {
   id: SportType;
   label: string;
-  icon: typeof Bike;
+  icon: typeof Bicycle;
   color: string;
 }
 
@@ -39,7 +39,7 @@ const sports: SportOption[] = [
   {
     id: 'cyclist',
     label: 'Ciclista',
-    icon: Bike,
+    icon: Bicycle,
     color: Colors.shared.bike,
   },
 ];
@@ -89,6 +89,7 @@ export default function SportSelection() {
                   <Icon
                     size={32}
                     color={isSelected ? sport.color : '#6B7280'}
+                    weight="regular"
                     style={styles.icon}
                   />
                   <ThemedText

@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
-import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import {
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_500Medium,
+  SpaceGrotesk_600SemiBold,
+  SpaceGrotesk_700Bold,
+} from '@expo-google-fonts/space-grotesk';
 import { SplashScreen } from 'expo-router';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
+  // Map old Inter keys → Space Grotesk so every existing fontFamily reference
+  // across the entire app automatically uses the new typeface.
   const [fontsLoaded, fontError] = useFonts({
-    'Inter-Regular': Inter_400Regular,
-    'Inter-Medium': Inter_500Medium,
-    'Inter-SemiBold': Inter_600SemiBold,
-    'Inter-Bold': Inter_700Bold,
+    'Inter-Regular': SpaceGrotesk_400Regular,
+    'Inter-Medium': SpaceGrotesk_500Medium,
+    'Inter-SemiBold': SpaceGrotesk_600SemiBold,
+    'Inter-Bold': SpaceGrotesk_700Bold,
   });
 
   // Load any resources or data that we need

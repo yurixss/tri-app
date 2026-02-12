@@ -134,7 +134,7 @@ export default function HeartRateScreen() {
         >
           <Header
             title="Zonas de Frequência Cardíaca"
-            color="#E74C3C"
+            color={Colors.shared.primary}
             onBackPress={() => router.back()} 
           />
           

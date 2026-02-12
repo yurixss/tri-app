@@ -125,7 +125,7 @@ export default function BikeScreen() {
         >
             <Header
               title="Zonas de Potência - Ciclismo"
-              color={Colors.shared.bike}
+              color={Colors.shared.primary}
               onBackPress={() => router.back()} 
             />
           

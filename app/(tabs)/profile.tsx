@@ -9,7 +9,7 @@ import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTheme } from '@/constants/Theme';
-import { Camera, Edit3, UserCircle2, CheckCircle2, Trash2 } from 'lucide-react-native';
+import { Camera, PencilSimple, UserCircle, CheckCircle, Trash } from 'phosphor-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getProfile, saveProfile, deleteAllData, getOnboardingData } from '@/hooks/useStorage';
 import { useRouter } from 'expo-router';
@@ -160,7 +160,7 @@ export default function ProfileScreen() {
       >
         <Header
           title="Perfil"
-          color="#066699"
+          color={Colors.shared.primary}
         />
         
         <View 
@@ -179,7 +179,7 @@ export default function ProfileScreen() {
               <Switch
                 value={theme.choice === 'dark'}
                 onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
-                trackColor={{ false: '#767577', true: '#066699' }}
+                trackColor={{ false: '#767577', true: Colors.shared.primary }}
                 thumbColor={theme.choice === 'dark' ? '#fff' : '#fff'}
               />
             </View>
@@ -192,17 +192,18 @@ export default function ProfileScreen() {
                   style={styles.photo}
                 />
               ) : (
-                <UserCircle2 
+                <UserCircle 
                   size={64} 
-                  color={'#066699'} 
+                  color={Colors.shared.primary} 
                   style={styles.photoPlaceholder}
+                  weight="thin"
                 />
               )}
               <TouchableOpacity 
-                style={[styles.editButton, { backgroundColor: '#066699' }]} 
+                style={[styles.editButton, { backgroundColor: Colors.shared.primary }]} 
                 onPress={handlePhotoSelect}
               >
-                <Edit3 size={16} color="white" />
+                <PencilSimple size={16} color="white" weight="bold" />
               </TouchableOpacity>
             </View>
           </View> */}
@@ -231,7 +232,7 @@ export default function ProfileScreen() {
               { label: 'Masculino', value: 'male' },
               { label: 'Feminino', value: 'female' },
             ]}
-            color="#066699"
+            color={Colors.shared.primary}
             selectedValue={profile.gender}
             onValueChange={(value) => setProfile(prev => ({ ...prev, gender: value as 'male' | 'female' }))}
           />
@@ -286,13 +287,13 @@ export default function ProfileScreen() {
               { label: 'Intermediário', value: 'intermediate' },
               { label: 'Avançado', value: 'advanced' },
             ]}
-            color="#066699"
+            color={Colors.shared.primary}
             selectedValue={profile.experience}
             onValueChange={(value) => setProfile(prev => ({ ...prev, experience: value as 'beginner' | 'intermediate' | 'advanced' }))}
           />
 
           <ThemedText 
-            style={[styles.sectionLabel, { color: '#066699' }]}
+            style={[styles.sectionLabel, { color: Colors.shared.primary }]}
             fontFamily="Inter-Medium"
           >
             Objetivo
@@ -324,7 +325,7 @@ export default function ProfileScreen() {
                     {goal}
                   </ThemedText>
                   {profile.trainingGoal === goal && (
-                    <CheckCircle2 size={20} color="#fff" />
+                    <CheckCircle size={20} color="#fff" weight="fill" />
                   )}
                 </View>
               </TouchableOpacity>
@@ -333,7 +334,7 @@ export default function ProfileScreen() {
 
           <ThemedButton
             title="Salvar Perfil"
-            color="#066699"
+            color={Colors.shared.primary}
             onPress={handleSave}
             isLoading={isLoading}
           />
@@ -345,7 +346,7 @@ export default function ProfileScreen() {
               onPress={handleDeleteAccount}
               disabled={isDeletingAccount}
             >
-              <Trash2 size={20} color="#EF4444" />
+              <Trash size={20} color="#EF4444" weight="regular" />
               <ThemedText style={[styles.deleteButtonText, { color: '#EF4444' }]}>
                 {isDeletingAccount ? 'Deletando Conta...' : 'Deletar Conta'}
               </ThemedText>
@@ -356,7 +357,7 @@ export default function ProfileScreen() {
 
       {showToast && (
         <View style={[styles.toast, { backgroundColor: Colors.light.success }]}>
-          <CheckCircle2 color="#fff" size={20} />
+          <CheckCircle color="#fff" size={20} weight="fill" />
           <ThemedText style={styles.toastText}>Perfil salvo com sucesso!</ThemedText>
         </View>
       )}
@@ -415,7 +416,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#066699',
+    backgroundColor: Colors.shared.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -442,8 +443,8 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   selectedGoalOption: {
-    backgroundColor: '#066699',
-    borderColor: '#066699',
+    backgroundColor: Colors.shared.primary,
+    borderColor: Colors.shared.primary,
   },
   goalContent: {
     flexDirection: 'row',

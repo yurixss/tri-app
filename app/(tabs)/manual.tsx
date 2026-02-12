@@ -13,7 +13,8 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
+import { Package, Wrench, Timer, Toolbox, TrendUp, Info } from 'phosphor-react-native';
 import { PRODUCTS } from '@/data/store/products';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import { getTestResults, getProfile } from '@/hooks/useStorage';
@@ -30,35 +31,38 @@ const TOOLS = [
     id: 'kit-builder',
     title: 'Monte seu Kit',
     subtitle: 'Kit personalizado por distância, clima e orçamento',
-    icon: 'package-variant-closed',
-    color: '#10B981',
+    icon: 'package',
     route: '/screens/store/kit-builder',
   },
   {
     id: 'problem-solver',
     title: 'Resolver Problema',
     subtitle: 'Soluções para suas dores de treino e prova',
-    icon: 'wrench-outline',
-    color: '#F59E0B',
+    icon: 'wrench',
     route: '/screens/store/problem-solver',
   },
   {
     id: 'time-gains',
     title: 'Onde Ganho Tempo?',
     subtitle: 'Custo por minuto ganho em cada upgrade',
-    icon: 'timer-outline',
-    color: '#8B5CF6',
+    icon: 'timer',
     route: '/screens/store/time-gains',
   },
   {
     id: 'my-setup',
     title: 'Meu Setup',
     subtitle: 'Registre e gerencie seus equipamentos',
-    icon: 'toolbox-outline',
-    color: '#066699',
+    icon: 'toolbox',
     route: '/screens/store/my-setup',
   },
 ] as const;
+
+const TOOL_ICONS: Record<string, React.ComponentType<any>> = {
+  'package': Package,
+  'wrench': Wrench,
+  'timer': Timer,
+  'toolbox': Toolbox,
+};
 
 /**
  * Performance Lab — Hub principal da Loja Inteligente
@@ -145,27 +149,30 @@ export default function ManualScreen() {
 
         {/* 4 Tool Cards — 2×2 grid */}
         <View style={styles.toolsGrid}>
-          {TOOLS.map((tool) => (
-            <TouchableOpacity
-              key={tool.id}
-              style={[styles.toolCard, { backgroundColor: cardBg, borderColor }]}
-              onPress={() => router.push(tool.route as any)}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.toolIconBox, { backgroundColor: `${tool.color}15` }]}>
-                <MaterialCommunityIcons name={tool.icon as any} size={26} color={tool.color} />
-              </View>
-              <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
-                {tool.title}
-              </ThemedText>
-              <ThemedText
-                style={[styles.toolSubtitle, { color: secondaryText }]}
-                numberOfLines={2}
+          {TOOLS.map((tool) => {
+            const IconComponent = TOOL_ICONS[tool.icon];
+            return (
+              <TouchableOpacity
+                key={tool.id}
+                style={[styles.toolCard, { backgroundColor: cardBg, borderColor }]}
+                onPress={() => router.push(tool.route as any)}
+                activeOpacity={0.7}
               >
-                {tool.subtitle}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
+                <View style={[styles.toolIconBox, { backgroundColor: `${Colors.shared.primary}10` }]}>
+                  {IconComponent && <IconComponent size={26} color={Colors.shared.primary} weight="bold" />}
+                </View>
+                <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
+                  {tool.title}
+                </ThemedText>
+                <ThemedText
+                  style={[styles.toolSubtitle, { color: secondaryText }]}
+                  numberOfLines={2}
+                >
+                  {tool.subtitle}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Divider */}
@@ -220,7 +227,7 @@ export default function ManualScreen() {
                   </ThemedText>
                   {product.performanceGainEstimate && (
                     <View style={styles.pickGainBadge}>
-                      <MaterialCommunityIcons name="trending-up" size={11} color="#10B981" />
+                      <TrendUp size={11} color="#10B981" weight="bold" />
                       <ThemedText style={styles.pickGainText}>
                         {product.performanceGainEstimate}
                       </ThemedText>
@@ -282,7 +289,7 @@ export default function ManualScreen() {
 
         {/* Disclaimer */}
         <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor }]}>
-          <MaterialCommunityIcons name="information-outline" size={16} color={secondaryText} />
+          <Info size={16} color={secondaryText} weight="regular" />
           <ThemedText style={[styles.disclaimerText, { color: secondaryText }]}>
             Links de afiliado. Ao comprar, você ajuda a manter o app sem custo adicional.
           </ThemedText>
@@ -385,7 +392,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   pickGainText: { fontSize: 10, color: '#10B981' },
-  pickPrice: { fontSize: 14, color: '#066699', marginTop: 2 },
+  pickPrice: { fontSize: 14, color: Colors.shared.primary, marginTop: 2 },
 
   // Categories
   categoriesRow: {

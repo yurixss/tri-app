@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { ArrowLeft } from 'lucide-react-native';
+import { CaretLeft } from 'phosphor-react-native';
 import Colors from '../constants/Colors';
 
 interface HeaderProps {
@@ -12,19 +12,19 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle, color, onBackPress }: HeaderProps) {
+  const brandColor = color ?? Colors.shared.primary;
   return (
     <ThemedView style={styles.header}>
       <View style={styles.row}>
         {onBackPress && (
           <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-            <ArrowLeft size={30} color={color ?? Colors.light.text} />
+            <CaretLeft size={28} color={brandColor} weight="bold" />
           </TouchableOpacity>
         )}
         <View style={styles.titleContainer}>
           <ThemedText 
             style={[
               styles.title, 
-              color ? { color } : null, 
               subtitle ? { marginBottom: 8 } : null,  
             ]}
             fontFamily="Inter-Bold"

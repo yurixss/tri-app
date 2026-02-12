@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { CaretLeft, Plus, ChartPieSlice, ChartPie, PencilSimple, Trash, Note } from 'phosphor-react-native';
 
 import type {
   SetupItem,
@@ -40,6 +40,7 @@ import {
   calcPercentage,
   generateId,
 } from '@/data/store/setup/setup.utils';
+import Colors from '@/constants/Colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const MODALITY_CARD_WIDTH = (SCREEN_WIDTH - 48 - 12) / 2;
@@ -195,7 +196,7 @@ export default function MySetupScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={textColor} />
+          <CaretLeft size={24} color={textColor} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
@@ -213,7 +214,7 @@ export default function MySetupScreen() {
             setTimeout(() => scrollRef.current?.scrollTo({ y: 0, animated: true }), 150);
           }}
         >
-          <MaterialCommunityIcons name="plus" size={22} color="#FFF" />
+          <Plus size={22} color="#FFF" weight="bold" />
         </TouchableOpacity>
       </View>
 
@@ -294,7 +295,7 @@ export default function MySetupScreen() {
                         style={[
                           styles.chip,
                           formCategory === key
-                            ? { backgroundColor: '#066699', borderColor: '#066699' }
+                            ? { backgroundColor: Colors.shared.primary, borderColor: Colors.shared.primary }
                             : { borderColor },
                         ]}
                         onPress={() => setFormCategory(key)}
@@ -382,7 +383,7 @@ export default function MySetupScreen() {
           {/* ═══════════════ EMPTY STATE ═══════════════ */}
           {loaded && items.length === 0 && !showForm && (
             <View style={styles.emptyState}>
-              <MaterialCommunityIcons name="chart-donut" size={56} color={secondaryText} />
+              <ChartPieSlice size={56} color={secondaryText} weight="bold" />
               <ThemedText
                 style={[styles.emptyTitle, { color: textColor }]}
                 fontFamily="Inter-SemiBold"
@@ -394,7 +395,7 @@ export default function MySetupScreen() {
                 categoria.
               </ThemedText>
               <TouchableOpacity style={styles.emptyButton} onPress={() => setShowForm(true)}>
-                <MaterialCommunityIcons name="plus" size={18} color="#FFF" />
+                <Plus size={18} color="#FFF" weight="bold" />
                 <ThemedText style={styles.emptyButtonText} fontFamily="Inter-SemiBold">
                   Adicionar primeiro equipamento
                 </ThemedText>
@@ -406,7 +407,7 @@ export default function MySetupScreen() {
           {items.length > 0 && !showForm && (
             <>
               {/* ── Total Geral ── */}
-              <View style={[styles.totalCard, { backgroundColor: '#066699' }]}>
+              <View style={[styles.totalCard, { backgroundColor: Colors.shared.primary }]}>
                 <View style={styles.totalCardInner}>
                   <ThemedText style={styles.totalLabel}>Total investido</ThemedText>
                   <ThemedText style={styles.totalValue} fontFamily="Inter-Bold">
@@ -417,10 +418,10 @@ export default function MySetupScreen() {
                     {summary.itemCount !== 1 ? 's' : ''}
                   </ThemedText>
                 </View>
-                <MaterialCommunityIcons
-                  name="chart-arc"
+                <ChartPie
                   size={48}
                   color="rgba(255,255,255,0.15)"
+                  weight="bold"
                   style={styles.totalIcon}
                 />
               </View>
@@ -510,7 +511,7 @@ export default function MySetupScreen() {
                                 style={[
                                   styles.catBarFill,
                                   {
-                                    backgroundColor: '#066699',
+                                    backgroundColor: Colors.shared.primary,
                                     width: `${Math.max(pct, 2)}%`,
                                   },
                                 ]}
@@ -609,20 +610,20 @@ export default function MySetupScreen() {
                           onPress={() => handleEdit(item)}
                           style={styles.actionBtn}
                         >
-                          <MaterialCommunityIcons
-                            name="pencil-outline"
+                          <PencilSimple
                             size={18}
                             color={secondaryText}
+                            weight="regular"
                           />
                         </TouchableOpacity>
                         <TouchableOpacity
                           onPress={() => handleDelete(item.id)}
                           style={styles.actionBtn}
                         >
-                          <MaterialCommunityIcons
-                            name="trash-can-outline"
+                          <Trash
                             size={18}
                             color="#EF4444"
+                            weight="regular"
                           />
                         </TouchableOpacity>
                       </View>
@@ -652,10 +653,10 @@ export default function MySetupScreen() {
                     {/* Notes */}
                     {item.notes ? (
                       <View style={styles.itemNotes}>
-                        <MaterialCommunityIcons
-                          name="note-text-outline"
+                        <Note
                           size={14}
                           color={secondaryText}
+                          weight="regular"
                         />
                         <ThemedText style={[styles.itemNotesText, { color: secondaryText }]}>
                           {item.notes}
@@ -694,7 +695,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#066699',
+    backgroundColor: Colors.shared.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -885,7 +886,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: '#066699',
+    backgroundColor: Colors.shared.primary,
   },
   saveText: { fontSize: 14, color: '#FFF' },
 
@@ -906,7 +907,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#066699',
+    backgroundColor: Colors.shared.primary,
   },
   emptyButtonText: { fontSize: 14, color: '#FFF' },
 });

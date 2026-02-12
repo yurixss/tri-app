@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { RadioSelector } from '@/components/RadioSelector';
-import { ChevronLeft } from 'lucide-react-native';
+import { CaretLeft } from 'phosphor-react-native';
 import Colors from '@/constants/Colors';
 import { saveOnboardingData } from '@/hooks/useStorage';
 
@@ -55,7 +55,7 @@ export default function PersonalInfo() {
   return (
     <ThemedView style={styles.container}>
       <Pressable style={styles.backButton} onPress={() => router.back()}>
-        <ChevronLeft size={24} color={Colors.shared.primary} />
+        <CaretLeft size={24} color={Colors.shared.primary} weight="regular" />
       </Pressable>
 
       <ScrollView style={styles.scrollView}>
