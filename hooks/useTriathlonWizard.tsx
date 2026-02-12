@@ -6,7 +6,9 @@ import {
   TriathlonWizardData,
   TriathlonPrediction,
   calculateTriathlonPrediction,
+  getRaceTypeName,
 } from '@/utils/triathlonPredictor';
+import { saveTriathlonPrediction } from '@/hooks/useStorage';
 
 // ============================================================================
 // TIPOS
@@ -104,6 +106,25 @@ export function TriathlonWizardProvider({ children }: WizardProviderProps) {
       const result = calculateTriathlonPrediction(dataToUse);
       setPrediction(result);
       setCurrentStep(4);
+
+      // Salvar a previsão no storage
+      const raceType = dataToUse.run?.raceType || 'olympic';
+      await saveTriathlonPrediction({
+        date: new Date().toISOString(),
+        totalTimeSeconds: result.totalTimeSeconds,
+        totalTimeFormatted: result.totalTimeFormatted,
+        swimTimeSeconds: result.swim.timeSeconds,
+        swimTimeFormatted: result.swim.timeFormatted,
+        bikeTimeSeconds: result.bike.timeSeconds,
+        bikeTimeFormatted: result.bike.timeFormatted,
+        runTimeSeconds: result.run.timeSeconds,
+        runTimeFormatted: result.run.timeFormatted,
+        t1Seconds: result.t1Seconds,
+        t1Formatted: result.t1Formatted,
+        t2Seconds: result.t2Seconds,
+        t2Formatted: result.t2Formatted,
+        raceType: getRaceTypeName(raceType),
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao calcular previsão');
     } finally {

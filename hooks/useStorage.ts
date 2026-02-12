@@ -196,12 +196,72 @@ export interface TestResults {
   };
 }
 
+export interface SavedTriathlonPrediction {
+  date: string;
+  totalTimeSeconds: number;
+  totalTimeFormatted: string;
+  swimTimeSeconds: number;
+  swimTimeFormatted: string;
+  bikeTimeSeconds: number;
+  bikeTimeFormatted: string;
+  runTimeSeconds: number;
+  runTimeFormatted: string;
+  t1Seconds: number;
+  t1Formatted: string;
+  t2Seconds: number;
+  t2Formatted: string;
+  raceType: string;
+}
+
+export interface SavedBikePrediction {
+  date: string;
+  totalTimeSeconds: number;
+  totalTimeFormatted: string;
+  totalDistance: number;
+  totalElevation: number;
+  avgSpeedKmh: number;
+  avgPower: number;
+  ftpPercentage: number;
+}
+
 export async function deleteAllData(): Promise<void> {
   await deleteValue('userProfile');
   await deleteValue('onboardingData');
   await deleteValue('testResults');
   // Reset onboarding to show it again on next launch
   await saveOnboardingData({ onboardingComplete: false });
+}
+
+export async function saveTriathlonPrediction(prediction: SavedTriathlonPrediction): Promise<void> {
+  await saveValue('lastTriathlonPrediction', JSON.stringify(prediction));
+}
+
+export async function getTriathlonPrediction(): Promise<SavedTriathlonPrediction | null> {
+  const data = await getValue('lastTriathlonPrediction');
+  if (!data) return null;
+  
+  try {
+    return JSON.parse(data) as SavedTriathlonPrediction;
+  } catch (e) {
+    console.error('Error parsing stored triathlon prediction', e);
+    return null;
+  }
+}
+
+export async function saveBikePrediction(prediction: SavedBikePrediction): Promise<void> {
+  await saveValue('lastBikePrediction', JSON.stringify(prediction));
+}
+
+export async function getBikePrediction(): Promise<SavedBikePrediction | null> {
+  const data = await getValue('lastBikePrediction');
+  if (!data) return null;
+  
+  try {
+    return JSON.parse(data) as SavedBikePrediction;
+  } catch (e) {
+    console.error('Error parsing stored bike prediction', e);
+    return null;
+  }
 }
 
 export default {
@@ -218,5 +278,9 @@ export default {
   saveRunTest,
   saveSwimTest,
   saveHeartRateTest,
+  saveTriathlonPrediction,
+  getTriathlonPrediction,
+  saveBikePrediction,
+  getBikePrediction,
   deleteAllData
 };

@@ -13,7 +13,7 @@ import { Header } from '@/components/Header';
 import { ThemedButton } from '@/components/ThemedButton';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { getTestResults, TestResults } from '@/hooks/useStorage';
+import { getTestResults, TestResults, saveBikePrediction } from '@/hooks/useStorage';
 import { formatTimeFromSeconds } from '@/utils/timeUtils';
 import {
   predictRaceTime,
@@ -175,6 +175,18 @@ export default function BikeRacePredictorScreen() {
       setResult({
         prediction,
         displayTimeFormatted: formatRaceTime(prediction.totalTimeSeconds),
+      });
+
+      // Salvar a previsão no storage
+      await saveBikePrediction({
+        date: new Date().toISOString(),
+        totalTimeSeconds: prediction.totalTimeSeconds,
+        totalTimeFormatted: formatRaceTime(prediction.totalTimeSeconds),
+        totalDistance,
+        totalElevation,
+        avgSpeedKmh: prediction.avgSpeedMs * 3.6,
+        avgPower: prediction.avgPower,
+        ftpPercentage,
       });
     } catch (err) {
       setError(
