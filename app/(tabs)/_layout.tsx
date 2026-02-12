@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Home, BookOpen, UserCircle2 } from 'lucide-react-native';
+import { Home, ShoppingCart, UserCircle2 } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -29,7 +29,7 @@ export default function TabLayout() {
         name="manual"
         options={{
           title: '',
-          tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <ShoppingCart color={color} size={size} />,
         }}
       />
 

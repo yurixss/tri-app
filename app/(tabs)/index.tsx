@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { Apple, Activity, Zap, ClipboardList, Calculator, BarChart3, Heart } from 'lucide-react-native';
+import { Apple, Activity, Zap, ClipboardList, Calculator, BarChart3, Heart, ShoppingCart } from 'lucide-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
