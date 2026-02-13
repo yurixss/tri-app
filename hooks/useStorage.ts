@@ -136,6 +136,10 @@ export interface Profile {
   experience: 'beginner' | 'intermediate' | 'advanced';
   trainingGoal: string;
   customGoal?: string;
+  bikeModel?: string;
+  bikeWeight?: string;
+  raceDate?: string;
+  isPremium?: boolean;
   tests?: TestResults;
 }
 

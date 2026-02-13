@@ -58,6 +58,13 @@ export default function TabLayout() {
         }}
       />
 
+      <Tabs.Screen
+        name="nutrition"
+        options={{
+          href: null,
+        }}
+      />
+
     </Tabs>
   );
 }
