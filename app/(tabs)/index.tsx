@@ -324,7 +324,7 @@ export default function HomeScreen() {
           />
           
           <SecondaryToolCard
-            title="Gear"
+            title="Equipamentos"
             icon={<Backpack size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/store/my-setup')}

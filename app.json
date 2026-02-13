@@ -1,23 +1,23 @@
 {
   "expo": {
     "name": "Koa Endurance",
-    "slug": "koa-endurance",
-    "version": "1.1.0",
+    "slug": "tricalc-pro",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/tri-icon2.png",
     "scheme": "koaendurance",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "com.yurixss.koaendurance",
-      "buildNumber": "2",
+      "bundleIdentifier": "com.yurixss.tricalcpro",
+      "buildNumber": "3",
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.yurixss.koaendurance"
+      "package": "com.yurixss.tricalcpro"
     },
     "web": {
       "bundler": "metro",

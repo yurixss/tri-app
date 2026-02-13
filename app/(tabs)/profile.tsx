@@ -464,22 +464,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* ─── THEME TOGGLE ─── */}
-        <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
-          <View style={styles.themeRow}>
-            <ThemedText style={{ fontSize: 15 }} fontFamily="Inter-Medium">
-              Tema do app
-            </ThemedText>
-            <Switch
-              value={theme.choice === 'dark'}
-              onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
-              trackColor={{ false: '#767577', true: Colors.shared.primary }}
-              thumbColor="#fff"
-            />
-          </View>
-        </View>
-
-        {/* ─── PERFORMANCE CARD ─── */}
+                {/* ─── PERFORMANCE CARD ─── */}
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
             <Lightning size={20} color={Colors.shared.primary} weight="fill" />
@@ -531,6 +516,23 @@ export default function ProfileScreen() {
             </View>
           )}
         </View>
+
+
+        {/* ─── THEME TOGGLE ─── */}
+        <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
+          <View style={styles.themeRow}>
+            <ThemedText style={{ fontSize: 15 }} fontFamily="Inter-Medium">
+              Tema do app
+            </ThemedText>
+            <Switch
+              value={theme.choice === 'dark'}
+              onValueChange={(v) => theme.setChoice(v ? 'dark' : 'light')}
+              trackColor={{ false: '#767577', true: Colors.shared.primary }}
+              thumbColor="#fff"
+            />
+          </View>
+        </View>
+
 
         {/* ─── TARGET RACE CARD ─── */}
         <View

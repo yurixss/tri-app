@@ -247,7 +247,7 @@ export default function ManualScreen() {
         {/* Categories */}
         <View style={[styles.divider, { backgroundColor: borderColor }]} />
 
-        <View style={styles.sectionHeader}>
+        {/* <View style={styles.sectionHeader}>
           <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
             Explorar por categoria
           </ThemedText>
@@ -285,7 +285,7 @@ export default function ManualScreen() {
               </TouchableOpacity>
             );
           })}
-        </ScrollView>
+        </ScrollView> */}
 
         {/* Disclaimer */}
         {/* <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor }]}>
