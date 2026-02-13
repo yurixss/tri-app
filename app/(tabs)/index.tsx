@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { ForkKnife, Calculator, Heartbeat, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
+import { ForkKnife, Calculator, Backpack, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
@@ -242,10 +242,10 @@ export default function HomeScreen() {
       {/* Saudação (fixa, fora do scroll) */}
       <View style={styles.greetingContainer}>
         <View style={styles.greetingContent}>
-          <Image 
+          {/* <Image 
             source={require('@/assets/images/tri-icon2.png')} 
             style={styles.greetingIcon}
-          />
+          /> */}
           <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
             {getGreeting()}, {userName}
           </ThemedText>
@@ -324,10 +324,10 @@ export default function HomeScreen() {
           />
           
           <SecondaryToolCard
-            title="Zonas de FC"
-            icon={<Heartbeat size={24} color={Colors.shared.primary} weight="bold" />}
+            title="Gear"
+            icon={<Backpack size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
-            onPress={() => router.push('/screens/heart-rate')}
+            onPress={() => router.push('/screens/store/my-setup')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />

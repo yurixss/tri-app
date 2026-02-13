@@ -78,24 +78,6 @@ export const STORE_CONFIG: Record<AffiliateStore, {
 export const PRODUCTS: Product[] = [
   // NATAÇÃO
   {
-    id: 'oculos-speedo-hydropulse',
-    name: 'Óculos Speedo Hydropulse',
-    category: 'natacao',
-    description: 'Óculos com vedação dupla e lentes anti-embaçante, ideal para treinos longos e provas.',
-    image: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=400',
-    price: 'R$ 89,90',
-    rating: 4.5,
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
-    features: [
-      'Vedação dupla de silicone',
-      'Lentes anti-embaçante',
-      'Proteção UV',
-      'Ajuste de tira simples'
-    ],
-    whenToUse: 'Treinos diários e provas de longa distância'
-  },
-  {
     id: 'touca-arena-3d',
     name: 'Touca Arena 3D Ultra',
     category: 'natacao',
@@ -110,22 +92,6 @@ export const PRODUCTS: Product[] = [
       'Design 3D ergonômico',
       'Reduz pressão na cabeça',
       'Alta durabilidade'
-    ]
-  },
-  {
-    id: 'prancha-natacao-finis',
-    name: 'Prancha de Natação Finis',
-    category: 'natacao',
-    description: 'Prancha ergonômica para treino técnico de pernas e posicionamento corporal.',
-    image: 'https://images.unsplash.com/photo-1576610616656-d3aa5d1f4534?w=400',
-    price: 'R$ 79,90',
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Design ergonômico',
-      'Material EVA resistente',
-      'Ideal para treino técnico',
-      'Furos para diferentes pegadas'
     ]
   },
 
@@ -148,39 +114,6 @@ export const PRODUCTS: Product[] = [
     ],
     whenToUse: 'Treinos longos e provas de triathlon'
   },
-  {
-    id: 'sapatilha-shimano-rc7',
-    name: 'Sapatilha Shimano RC7',
-    category: 'ciclismo',
-    description: 'Sapatilha de carbono com sistema BOA para ajuste preciso e transferência de potência máxima.',
-    image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400',
-    price: 'R$ 899,90',
-    rating: 4.7,
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Solado de carbono',
-      'Sistema BOA de ajuste',
-      'Ventilação eficiente',
-      'Compatível com pedais Look/SPD-SL'
-    ]
-  },
-  {
-    id: 'camara-pneu-continental',
-    name: 'Câmara de Ar Continental Race 28',
-    category: 'ciclismo',
-    description: 'Câmara de ar ultraleve para pneus 700c, ideal para provas de velocidade.',
-    image: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400',
-    price: 'R$ 49,90',
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
-    features: [
-      'Peso de apenas 65g',
-      'Válvula presta 42mm',
-      'Borracha de alta qualidade',
-      'Para pneus 700x20-25c'
-    ]
-  },
 
   // CORRIDA
   {
@@ -200,39 +133,6 @@ export const PRODUCTS: Product[] = [
       'Ultraleve'
     ],
     whenToUse: 'Provas e treinos de qualidade'
-  },
-  {
-    id: 'meia-compressao-cep',
-    name: 'Meia de Compressão CEP Run 3.0',
-    category: 'corrida',
-    description: 'Meia de compressão graduada para melhor circulação e recuperação durante a corrida.',
-    image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400',
-    price: 'R$ 189,90',
-    rating: 4.6,
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
-    features: [
-      'Compressão graduada 20-30mmHg',
-      'Tecido antibacteriano',
-      'Suporte de arco plantar',
-      'Reduz vibração muscular'
-    ]
-  },
-  {
-    id: 'viseira-corrida-nike',
-    name: 'Viseira Nike AeroBill',
-    category: 'corrida',
-    description: 'Viseira leve e respirável com tecnologia Dri-FIT para manter o suor longe dos olhos.',
-    image: 'https://images.unsplash.com/photo-1588117305388-c2631a279f87?w=400',
-    price: 'R$ 89,90',
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Tecnologia Dri-FIT',
-      'Aba de 7cm',
-      'Ajuste elástico',
-      'Ultraleve e respirável'
-    ]
   },
 
   // NUTRIÇÃO
@@ -269,22 +169,6 @@ export const PRODUCTS: Product[] = [
       '5.5g de BCAA',
       'Rápida absorção',
       'Baixo carboidrato'
-    ]
-  },
-  {
-    id: 'repositor-gatorade',
-    name: 'Gatorade Powder 500g',
-    category: 'nutricao',
-    description: 'Repositor hidroeletrolítico em pó para preparar durante treinos longos.',
-    image: 'https://images.unsplash.com/photo-1624947146897-1135be4e6c0e?w=400',
-    price: 'R$ 24,90',
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Rende 12 litros',
-      'Carboidratos e eletrólitos',
-      'Vários sabores',
-      'Rápida absorção'
     ]
   },
 
@@ -324,22 +208,6 @@ export const PRODUCTS: Product[] = [
       'Bateria de 3 horas'
     ]
   },
-  {
-    id: 'bola-massagem-lacrosse',
-    name: 'Bola de Massagem Lacrosse',
-    category: 'recuperacao',
-    description: 'Bola para automassagem e liberação de pontos de tensão muscular.',
-    image: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400',
-    price: 'R$ 29,90',
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Borracha de alta densidade',
-      'Diâmetro 6cm',
-      'Ideal para pontos específicos',
-      'Resistente e durável'
-    ]
-  },
 
   // TECNOLOGIA
   {
@@ -361,41 +229,6 @@ export const PRODUCTS: Product[] = [
     whenToUse: 'Todos os treinos e provas'
   },
   {
-    id: 'cinta-frequencia-garmin',
-    name: 'Cinta Cardíaca Garmin HRM-Pro',
-    category: 'tecnologia',
-    description: 'Cinta de frequência cardíaca com métricas de corrida avançadas.',
-    image: 'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=400',
-    price: 'R$ 599,90',
-    rating: 4.6,
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
-    features: [
-      'Precisão ECG',
-      'Métricas de corrida',
-      'Transmissão ANT+ e Bluetooth',
-      'Bateria de 1 ano'
-    ]
-  },
-  {
-    id: 'bone-conducao-shokz',
-    name: 'Fone Shokz OpenRun Pro',
-    category: 'tecnologia',
-    description: 'Fone de condução óssea para treinar com segurança mantendo os ouvidos livres.',
-    image: 'https://images.unsplash.com/photo-1590658165737-15a047b7a48e?w=400',
-    price: 'R$ 1.299,90',
-    store: 'mercadolivre',
-    affiliateLink: 'https://mercadolivre.com.br',
-    features: [
-      'Condução óssea',
-      'Resistente a água IP67',
-      'Autonomia 10 horas',
-      'Permite ouvir ambiente'
-    ]
-  },
-
-  // GARMIN FORERUNNER 165
-  {
     id: 'garmin-forerunner-165',
     name: 'Garmin Forerunner 165',
     category: 'tecnologia',
@@ -414,7 +247,7 @@ export const PRODUCTS: Product[] = [
     whenToUse: 'Treinos diários e provas — ótimo para iniciantes'
   },
 
-  // CADARÇO ELÁSTICO
+  // TRANSIÇÃO
   {
     id: 'cadarco-elastico-2-pares',
     name: 'Cadarço Elástico (2 Pares)',
@@ -433,8 +266,6 @@ export const PRODUCTS: Product[] = [
     ],
     whenToUse: 'Transição T2 — elimina amarração convencional'
   },
-
-  // PORTA NÚMERO DE CORRIDA
   {
     id: 'porta-numero-corrida',
     name: 'Porta Número de Corrida',
@@ -453,8 +284,6 @@ export const PRODUCTS: Product[] = [
     ],
     whenToUse: 'Provas de triathlon e corrida de rua'
   },
-
-  // TRI SUIT FEMININO
   {
     id: 'tri-suit-feminino',
     name: 'Tri Suit Sem Manga Feminino',
@@ -473,8 +302,6 @@ export const PRODUCTS: Product[] = [
     ],
     whenToUse: 'Provas de triathlon — natação, bike e corrida'
   },
-
-  // TRI SUIT MASCULINO
   {
     id: 'tri-suit-masculino',
     name: 'Tri Suit Sem Manga Masculino',
@@ -493,8 +320,6 @@ export const PRODUCTS: Product[] = [
     ],
     whenToUse: 'Provas de triathlon — natação, bike e corrida'
   },
-
-  // CAFEÍNA EM CÁPSULA DUX
   {
     id: 'cafeina-capsulas-dux',
     name: 'Cafeína em Cápsula DUX',

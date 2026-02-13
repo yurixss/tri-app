@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   Linking,
   Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
@@ -25,7 +25,15 @@ import Colors from '@/constants/Colors';
 
 export default function ProductListScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
+
+  // Set initial category from URL params
+  useEffect(() => {
+    if (params.category && typeof params.category === 'string') {
+      setSelectedCategory(params.category as ProductCategory);
+    }
+  }, [params.category]);
 
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
@@ -240,12 +248,12 @@ export default function ProductListScreen() {
         })}
 
         {/* Disclaimer */}
-        <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor: borderColor }]}>
+        {/* <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor: borderColor }]}>
           <Info size={20} color={secondaryTextColor} weight="regular" />
           <ThemedText style={[styles.disclaimerText, { color: secondaryTextColor }]}>
             Os links acima são links de afiliado. Ao comprar através deles, você ajuda a manter o app sem custo adicional.
           </ThemedText>
-        </View>
+        </View> */}
       </ScrollView>
     </ThemedView>
   );
@@ -282,7 +290,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   imageContainer: {
-    height: 180,
+    height: 120,
     position: 'relative',
   },
   productImage: {
@@ -291,11 +299,11 @@ const styles = StyleSheet.create({
   },
   categoryBadge: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -305,17 +313,17 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   categoryEmoji: {
-    fontSize: 20,
+    fontSize: 16,
   },
   productInfo: {
-    padding: 16,
+    padding: 12,
   },
   productHeader: {
-    marginBottom: 8,
+    marginBottom: 6,
   },
   productName: {
-    fontSize: 18,
-    marginBottom: 4,
+    fontSize: 16,
+    marginBottom: 3,
   },
   starsContainer: {
     flexDirection: 'row',
@@ -323,17 +331,17 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   ratingText: {
-    fontSize: 12,
+    fontSize: 11,
     marginLeft: 4,
   },
   productDescription: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 12,
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 10,
   },
   featuresContainer: {
-    gap: 6,
-    marginBottom: 16,
+    gap: 5,
+    marginBottom: 12,
   },
   featureItem: {
     flexDirection: 'row',
@@ -354,9 +362,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productPrice: {
-    fontSize: 22,
+    fontSize: 20,
     color: Colors.shared.primary,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   storeTag: {
     flexDirection: 'row',
@@ -364,19 +372,19 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   storeText: {
-    fontSize: 12,
+    fontSize: 11,
   },
   buyButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderRadius: 12,
   },
   buyButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 13,
   },
   disclaimer: {
     flexDirection: 'row',

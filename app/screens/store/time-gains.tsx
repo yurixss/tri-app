@@ -16,11 +16,18 @@ import {
   getTimeGainSummary,
   formatGainRange,
   formatCostPerMinute,
+  SportModality,
 } from '@/data/store/timeGains';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
-import type { RaceDistance, TimeGainItem, Product } from '@/types/store';
-import { DISTANCE_LABELS, CATEGORY_CONFIG } from '@/types/store';
+import type { TimeGainItem, Product } from '@/types/store';
+import { CATEGORY_CONFIG } from '@/types/store';
 import Colors from '@/constants/Colors';
+
+const MODALITY_LABELS: Record<SportModality, string> = {
+  natacao: 'Natação',
+  bike: 'Ciclismo',
+  corrida: 'Corrida',
+};
 
 const EVIDENCE_LABEL: Record<TimeGainItem['evidenceLevel'], { label: string; color: string }> = {
   alto: { label: 'Evidência alta', color: '#10B981' },
@@ -37,9 +44,9 @@ export default function TimeGainsScreen() {
   const textColor = useThemeColor({}, 'text');
   const secondaryText = useThemeColor({}, 'tabIconDefault');
 
-  const [selectedDistance, setSelectedDistance] = useState<RaceDistance>('70.3');
+  const [selectedModality, setSelectedModality] = useState<SportModality>('bike');
 
-  const summary = useMemo(() => getTimeGainSummary(selectedDistance), [selectedDistance]);
+  const summary = useMemo(() => getTimeGainSummary(selectedModality), [selectedModality]);
 
   const handleBuyPress = async (product: Product) => {
     trackAffiliateLinkOpened(product.id, product.category);
@@ -72,27 +79,27 @@ export default function TimeGainsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Distance Filter */}
+        {/* Modality Filter */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filterRow}
         >
-          {(Object.entries(DISTANCE_LABELS) as [RaceDistance, string][]).map(([key, label]) => (
+          {(Object.entries(MODALITY_LABELS) as [SportModality, string][]).map(([key, label]) => (
             <TouchableOpacity
               key={key}
               style={[
                 styles.filterChip,
-                selectedDistance === key
+                selectedModality === key
                   ? styles.filterChipActive
                   : { borderColor },
               ]}
-              onPress={() => setSelectedDistance(key)}
+              onPress={() => setSelectedModality(key)}
             >
               <ThemedText
                 style={[
                   styles.filterText,
-                  { color: selectedDistance === key ? '#FFF' : textColor },
+                  { color: selectedModality === key ? '#FFF' : textColor },
                 ]}
                 fontFamily="Inter-SemiBold"
               >
@@ -231,7 +238,7 @@ export default function TimeGainsScreen() {
           <View style={styles.emptyState}>
             <ChartLineUp size={48} color={secondaryText} weight="bold" />
             <ThemedText style={[styles.emptyText, { color: secondaryText }]}>
-              Sem dados de ganho de tempo para essa distância.
+              Sem dados de ganho de tempo para essa modalidade.
             </ThemedText>
           </View>
         )}

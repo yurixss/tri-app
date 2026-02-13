@@ -106,12 +106,14 @@ export default function ProblemSolverScreen() {
                     return <IconComp size={28} color={problem.color} weight="bold" />;
                   })()}
                 </View>
-                <ThemedText style={styles.problemTitle} fontFamily="Inter-SemiBold">
-                  {problem.title}
-                </ThemedText>
-                <ThemedText style={[styles.problemDescription, { color: secondaryText }]} numberOfLines={2}>
-                  {problem.description}
-                </ThemedText>
+                <View style={styles.problemTextContainer}>
+                  <ThemedText style={styles.problemTitle} fontFamily="Inter-SemiBold">
+                    {problem.title}
+                  </ThemedText>
+                  <ThemedText style={[styles.problemDescription, { color: secondaryText }]} numberOfLines={2}>
+                    {problem.description}
+                  </ThemedText>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
@@ -221,10 +223,12 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   problemCard: {
-    padding: 20,
+    flexDirection: 'row',
+    padding: 16,
     borderRadius: 14,
     borderWidth: 1,
-    gap: 10,
+    gap: 14,
+    alignItems: 'center',
   },
   problemIconContainer: {
     width: 48,
@@ -232,6 +236,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  problemTextContainer: {
+    flex: 1,
+    gap: 4,
   },
   problemTitle: { fontSize: 16 },
   problemDescription: { fontSize: 13, lineHeight: 18 },

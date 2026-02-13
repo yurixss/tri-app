@@ -270,7 +270,7 @@ export default function ManualScreen() {
               <TouchableOpacity
                 key={key}
                 style={[styles.categoryCard, { backgroundColor: cardBg, borderColor }]}
-                onPress={() => router.push('/screens/store/kit-builder' as any)}
+                onPress={() => router.push(`/screens/products/product-list?category=${key}` as any)}
                 activeOpacity={0.7}
               >
                 <View style={[styles.categoryIcon, { backgroundColor: `${config.color}15` }]}>

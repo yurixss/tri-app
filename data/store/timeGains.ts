@@ -5,21 +5,34 @@
  * Dados baseados em estudos e estimativas conservadoras.
  */
 
-import type { TimeGainItem, RaceDistance, Product } from '@/types/store';
+import type { TimeGainItem, Product } from '@/types/store';
 import { PRODUCTS } from './products';
+
+export type SportModality = 'natacao' | 'bike' | 'corrida';
+
+// Map category to sport modality
+function getModalityFromCategory(category: string): SportModality | null {
+  if (category === 'natacao') return 'natacao';
+  if (category === 'ciclismo' || category === 'aerodinamica') return 'bike';
+  if (category === 'corrida') return 'corrida';
+  return null;
+}
 
 // ─── Get products with measurable time gains ─────────────────────────
 
 export function getTimeGainItems(
-  distance?: RaceDistance
+  modality?: SportModality
 ): TimeGainItem[] {
   const items: TimeGainItem[] = [];
 
   for (const product of PRODUCTS) {
     if (!product.timeGainMinutes) continue;
 
-    // Filter by distance relevance if provided
-    if (distance && !product.distanceRelevance.includes(distance)) continue;
+    // Filter by modality if provided
+    if (modality) {
+      const productModality = getModalityFromCategory(product.category);
+      if (productModality !== modality) continue;
+    }
 
     const { min, max, context } = product.timeGainMinutes;
     const cost = product.averageCost ?? 0;
@@ -61,13 +74,14 @@ export function getTimeGainItems(
     return roiA - roiB;
   });
 
-  return items;
+  // Limit to top 3 products per distance
+  return items.slice(0, 3);
 }
 
 // ─── Summary stats ───────────────────────────────────────────────────
 
-export function getTimeGainSummary(distance?: RaceDistance) {
-  const items = getTimeGainItems(distance);
+export function getTimeGainSummary(modality?: SportModality) {
+  const items = getTimeGainItems(modality);
 
   const totalMin = items.reduce((sum, i) => sum + i.gainMinutes.min, 0);
   const totalMax = items.reduce((sum, i) => sum + i.gainMinutes.max, 0);

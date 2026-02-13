@@ -102,6 +102,20 @@ export default function TrainingZonesScreen() {
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
+
+          <SportCard
+            title="Frequência Cardíaca"
+            color="#EF4444"
+            description="Calcular zonas de frequência cardíaca (Karvonen)"
+            testData={testResults.heartRate 
+              ? `FC Máx: ${testResults.heartRate.maxHR} bpm | Repouso: ${testResults.heartRate.restingHR} bpm`
+              : undefined
+            }
+            testDate={testResults.heartRate?.date}
+            onPress={() => navigateToTest('/heart-rate')}
+            backgroundColor={cardBg}
+            borderColor={borderColor}
+          />
       </ScrollView>
     </ThemedView>
   );
