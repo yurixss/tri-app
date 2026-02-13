@@ -288,12 +288,12 @@ export default function ManualScreen() {
         </ScrollView>
 
         {/* Disclaimer */}
-        <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor }]}>
+        {/* <View style={[styles.disclaimer, { backgroundColor: cardBg, borderColor }]}>
           <Info size={16} color={secondaryText} weight="regular" />
           <ThemedText style={[styles.disclaimerText, { color: secondaryText }]}>
             Links de afiliado. Ao comprar, você ajuda a manter o app sem custo adicional.
           </ThemedText>
-        </View>
+        </View> */}
       </ScrollView>
     </ThemedView>
   );

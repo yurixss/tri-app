@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme } from 'react-native';
+import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
@@ -241,9 +241,15 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       {/* Saudação (fixa, fora do scroll) */}
       <View style={styles.greetingContainer}>
-        <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
-          {getGreeting()}, {userName}
-        </ThemedText>
+        <View style={styles.greetingContent}>
+          <Image 
+            source={require('@/assets/images/tri-icon2.png')} 
+            style={styles.greetingIcon}
+          />
+          <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
+            {getGreeting()}, {userName}
+          </ThemedText>
+        </View>
       </View>
 
       <ScrollView 
@@ -356,6 +362,15 @@ const styles = StyleSheet.create({
   greetingContainer: {
     marginBottom: 20,
     marginTop: 50,
+  },
+  greetingContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  greetingIcon: {
+    width: 32,
+    height: 32,
+    marginRight: 12,
   },
   greeting: {
     fontSize: 28,

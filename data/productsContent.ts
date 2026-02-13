@@ -132,14 +132,14 @@ export const PRODUCTS: Product[] = [
   // CICLISMO
   {
     id: 'capacete-giro-aether',
-    name: 'Capacete Giro Aether MIPS',
+    name: 'Capacete Super Aero Giro',
     category: 'ciclismo',
-    description: 'Capacete aerodinâmico com tecnologia MIPS de proteção contra impacto rotacional.',
-    image: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=400',
+    description: 'Capacete super aerodinâmico Giro com tecnologia MIPS de proteção contra impacto rotacional.',
+    image: 'https://m.media-amazon.com/images/I/71r1GYsnxQL._AC_SL1500_.jpg',
     price: 'R$ 1.299,90',
     rating: 4.9,
     store: 'amazon',
-    affiliateLink: 'https://amazon.com.br',
+    affiliateLink: 'https://amzn.to/4rQ34z7',
     features: [
       'Sistema MIPS de segurança',
       'Ventilação otimizada',
@@ -184,20 +184,20 @@ export const PRODUCTS: Product[] = [
 
   // CORRIDA
   {
-    id: 'tenis-nike-vaporfly',
-    name: 'Nike Vaporfly Next% 3',
+    id: 'adidas-adios-pro-4',
+    name: 'Adidas Adios Pro 4 com Placa de Carbono',
     category: 'corrida',
-    description: 'Tênis de alta performance com placa de carbono e espuma ZoomX para máximo retorno de energia.',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
+    description: 'Tênis de alta performance com placa de carbono EnergyRods 2.0 para máximo retorno de energia.',
+    image: 'https://m.media-amazon.com/images/I/71bQ-GZRXUL._AC_SL1500_.jpg',
     price: 'R$ 1.499,90',
     rating: 4.8,
     store: 'amazon',
-    affiliateLink: 'https://amazon.com.br',
+    affiliateLink: 'https://amzn.to/46FFOvt',
     features: [
-      'Placa de fibra de carbono',
-      'Espuma ZoomX responsiva',
-      'Drop 8mm',
-      'Peso de 184g (tamanho 42)'
+      'Placa de carbono EnergyRods 2.0',
+      'Espuma Lightstrike Pro',
+      'Drop 6.5mm',
+      'Ultraleve'
     ],
     whenToUse: 'Provas e treinos de qualidade'
   },
@@ -238,14 +238,14 @@ export const PRODUCTS: Product[] = [
   // NUTRIÇÃO
   {
     id: 'gel-226ers-high-energy',
-    name: 'Gel 226ERS High Energy',
+    name: 'Gel 10 Sachês 226ERS',
     category: 'nutricao',
-    description: 'Gel energético com 50g de carboidratos de múltiplas fontes e eletrólitos.',
-    image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=400',
-    price: 'R$ 8,90',
+    description: 'Gel energético com 50g de carboidratos de múltiplas fontes e eletrólitos. Pack com 10 sachês.',
+    image: 'https://m.media-amazon.com/images/I/61bK-u3MHQL._AC_SL1200_.jpg',
+    price: 'R$ 89,90',
     rating: 4.7,
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4bN34uZ',
     features: [
       '50g de carboidratos',
       'Ciclodextrina + frutose',
@@ -291,14 +291,14 @@ export const PRODUCTS: Product[] = [
   // RECUPERAÇÃO
   {
     id: 'rolo-massagem-foam-roller',
-    name: 'Foam Roller Premium',
+    name: 'Rolo de Liberação Miofascial',
     category: 'recuperacao',
     description: 'Rolo de massagem texturizado para liberação miofascial e recuperação muscular.',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
+    image: 'https://m.media-amazon.com/images/I/71zR1gQ+BOL._AC_SL1500_.jpg',
     price: 'R$ 89,90',
     rating: 4.5,
-    store: 'shopee',
-    affiliateLink: 'https://shopee.com.br',
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4aLf1jM',
     features: [
       'Material EVA de alta densidade',
       'Superfície texturizada',
@@ -312,11 +312,11 @@ export const PRODUCTS: Product[] = [
     name: 'Pistola de Massagem Hypervolt',
     category: 'recuperacao',
     description: 'Pistola de massagem percussiva profissional com motor silencioso.',
-    image: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400',
+    image: 'https://m.media-amazon.com/images/I/61Kg4QJnVOL._AC_SL1500_.jpg',
     price: 'R$ 1.199,90',
     rating: 4.9,
     store: 'amazon',
-    affiliateLink: 'https://amazon.com.br',
+    affiliateLink: 'https://amzn.to/408aAJK',
     features: [
       '3 velocidades ajustáveis',
       'Motor QuietGlide',
@@ -347,11 +347,11 @@ export const PRODUCTS: Product[] = [
     name: 'Garmin Forerunner 965',
     category: 'tecnologia',
     description: 'Relógio GPS premium com tela AMOLED e métricas avançadas de treino.',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400',
+    image: 'https://m.media-amazon.com/images/I/71V0FO-ticL._AC_SL1500_.jpg',
     price: 'R$ 4.999,90',
     rating: 4.9,
     store: 'amazon',
-    affiliateLink: 'https://amazon.com.br',
+    affiliateLink: 'https://amzn.to/3ZC14OV',
     features: [
       'Tela AMOLED 1.4"',
       'GPS multibanda',
@@ -392,6 +392,126 @@ export const PRODUCTS: Product[] = [
       'Autonomia 10 horas',
       'Permite ouvir ambiente'
     ]
+  },
+
+  // GARMIN FORERUNNER 165
+  {
+    id: 'garmin-forerunner-165',
+    name: 'Garmin Forerunner 165',
+    category: 'tecnologia',
+    description: 'Relógio GPS com tela AMOLED, excelente custo-benefício para triatletas.',
+    image: 'https://m.media-amazon.com/images/I/61acbmHIbjL._AC_SL1500_.jpg',
+    price: 'R$ 1.999,90',
+    rating: 4.6,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4qykeAc',
+    features: [
+      'Tela AMOLED colorida',
+      'GPS de alta precisão',
+      'Métricas de treino essenciais',
+      'Autonomia de 11 dias'
+    ],
+    whenToUse: 'Treinos diários e provas — ótimo para iniciantes'
+  },
+
+  // CADARÇO ELÁSTICO
+  {
+    id: 'cadarco-elastico-2-pares',
+    name: 'Cadarço Elástico (2 Pares)',
+    category: 'corrida',
+    description: 'Cadarço elástico com trava para transição rápida. Kit com 2 pares.',
+    image: 'https://m.media-amazon.com/images/I/71z8kCJge9L._AC_SL1500_.jpg',
+    price: 'R$ 29,90',
+    rating: 4.6,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4aOhoCn',
+    features: [
+      'Calçamento instantâneo',
+      'Trava segura',
+      'Tensão uniforme',
+      'Kit com 2 pares'
+    ],
+    whenToUse: 'Transição T2 — elimina amarração convencional'
+  },
+
+  // PORTA NÚMERO DE CORRIDA
+  {
+    id: 'porta-numero-corrida',
+    name: 'Porta Número de Corrida',
+    category: 'corrida',
+    description: 'Cinto porta número elástico com presilhas para fixação rápida.',
+    image: 'https://m.media-amazon.com/images/I/61bQ3VN5URL._AC_SL1000_.jpg',
+    price: 'R$ 34,90',
+    rating: 4.4,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4kzE4d2',
+    features: [
+      'Elástico ajustável',
+      'Presilhas rápidas',
+      'Giro 360°',
+      'Elimina uso de alfinetes'
+    ],
+    whenToUse: 'Provas de triathlon e corrida de rua'
+  },
+
+  // TRI SUIT FEMININO
+  {
+    id: 'tri-suit-feminino',
+    name: 'Tri Suit Sem Manga Feminino',
+    category: 'corrida',
+    description: 'Macaquinho de triathlon feminino sem manga com pad integrado para as 3 modalidades.',
+    image: 'https://m.media-amazon.com/images/I/61zQrKvVURL._AC_SL1200_.jpg',
+    price: 'R$ 899,90',
+    rating: 4.7,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4tAzKyd',
+    features: [
+      'Pad integrado',
+      'Modelo sem manga',
+      'Bolsos traseiros',
+      'Zíper frontal'
+    ],
+    whenToUse: 'Provas de triathlon — natação, bike e corrida'
+  },
+
+  // TRI SUIT MASCULINO
+  {
+    id: 'tri-suit-masculino',
+    name: 'Tri Suit Sem Manga Masculino',
+    category: 'corrida',
+    description: 'Macaquinho de triathlon masculino sem manga com pad integrado para as 3 modalidades.',
+    image: 'https://m.media-amazon.com/images/I/61uR8FVBGPL._AC_SL1200_.jpg',
+    price: 'R$ 899,90',
+    rating: 4.7,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/4bTysIf',
+    features: [
+      'Pad integrado',
+      'Modelo sem manga',
+      'Bolsos traseiros',
+      'Zíper frontal'
+    ],
+    whenToUse: 'Provas de triathlon — natação, bike e corrida'
+  },
+
+  // CAFEÍNA EM CÁPSULA DUX
+  {
+    id: 'cafeina-capsulas-dux',
+    name: 'Cafeína em Cápsula DUX',
+    category: 'nutricao',
+    description: 'Suplemento de cafeína DUX Nutrition para boost de performance em provas.',
+    image: 'https://m.media-amazon.com/images/I/51uL5fGDURL._AC_SL1000_.jpg',
+    price: 'R$ 39,90',
+    rating: 4.4,
+    store: 'amazon',
+    affiliateLink: 'https://amzn.to/3OFxcPd',
+    features: [
+      '200mg por cápsula',
+      'Liberação rápida',
+      '60 cápsulas',
+      'DUX Nutrition'
+    ],
+    whenToUse: '45-60min antes da prova para boost ergogênico'
   },
 ];
 

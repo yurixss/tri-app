@@ -1,1 +1,1 @@
-TriCalc Pro
+Koa Endurance
