@@ -12,9 +12,8 @@ import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 import { NUTRITION_CITATIONS } from '@/utils/citations';
-import { useRouter, useSegments } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
 import { getProfile, getOnboardingData, Profile } from '@/hooks/useStorage';
 
 interface NutritionProfile {
@@ -44,34 +43,10 @@ export default function NutritionScreen() {
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const router = useRouter();
-  const navigation = useNavigation();
-  const segments = useSegments() as string[];
-  const isInTabs = segments.includes('(tabs)');
 
   const handleBack = () => {
-    if (isInTabs) {
-      router.navigate('/(tabs)');
-      return;
-    }
     router.back();
   };
-
-  // Interceptar gesture de voltar quando estamos nas tabs
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isInTabs) {
-        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-          // Previne a ação padrão
-          e.preventDefault();
-          
-          // Navega para a home das tabs
-          router.navigate('/(tabs)');
-        });
-
-        return unsubscribe;
-      }
-    }, [navigation, isInTabs, router])
-  );
 
   const nutritionCitations = [
     { category: 'Nutrition', ...NUTRITION_CITATIONS.carbohydrates },

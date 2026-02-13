@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useRouter, useSegments } from 'expo-router';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
@@ -13,37 +13,13 @@ import { formatTimeFromSeconds } from '@/utils/timeUtils';
 
 export default function TrainingZonesScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
-  const segments = useSegments() as string[];
   const [testResults, setTestResults] = useState<TestResults>({});
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  const isInTabs = segments.includes('(tabs)');
 
   const handleBack = () => {
-    if (isInTabs) {
-      router.navigate('/(tabs)');
-      return;
-    }
     router.back();
   };
-
-  // Interceptar gesture de voltar quando estamos nas tabs
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isInTabs) {
-        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-          // Previne a ação padrão
-          e.preventDefault();
-          
-          // Navega para a home das tabs
-          router.navigate('/(tabs)');
-        });
-
-        return unsubscribe;
-      }
-    }, [navigation, isInTabs, router])
-  );
 
   useEffect(() => {
     loadTestResults();

@@ -281,7 +281,7 @@ export default function HomeScreen() {
           subtitle="Simule sua prova"
           icon={<FlagCheckered size={28} color={Colors.shared.primary} weight="bold" />}
           color={Colors.shared.primary}
-          onPress={() => router.push('/(tabs)/race-prediction')}
+          onPress={() => router.push('/screens/race-prediction')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
@@ -291,7 +291,7 @@ export default function HomeScreen() {
           subtitle="Zonas de treino baseadas em testes"
           icon={<Target size={28} color={Colors.shared.primary} weight="bold" />}
           color={Colors.shared.primary}
-          onPress={() => router.push('/(tabs)/training-zones')}
+          onPress={() => router.push('/screens/training-zones')}
           backgroundColor={cardBg}
           borderColor={borderColor}
         />
@@ -309,7 +309,7 @@ export default function HomeScreen() {
             title="Calculadora Nutrição"
             icon={<ForkKnife size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
-            onPress={() => router.push('/(tabs)/nutrition')}
+            onPress={() => router.push('/screens/nutrition')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />

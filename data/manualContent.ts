@@ -137,7 +137,7 @@ export const ARTICLES: Article[] = [
       {
         type: 'action',
         actionLabel: 'Calcular minha nutrição de prova',
-        actionRoute: '/(tabs)/nutrition',
+        actionRoute: '/screens/nutrition',
       },
     ],
   },

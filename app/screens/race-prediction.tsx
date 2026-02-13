@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme } from 'react-native';
-import { useRouter, useSegments } from 'expo-router';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
@@ -12,11 +12,8 @@ import { getTriathlonPrediction, SavedTriathlonPrediction, getBikePrediction, Sa
 
 export default function RacePredictionScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
-  const segments = useSegments() as string[];
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  const isInTabs = segments.includes('(tabs)');
   const [lastPrediction, setLastPrediction] = React.useState<SavedTriathlonPrediction | null>(null);
   const [lastBikePrediction, setLastBikePrediction] = React.useState<SavedBikePrediction | null>(null);
 
@@ -39,31 +36,13 @@ export default function RacePredictionScreen() {
   };
 
   const handleBack = () => {
-    if (isInTabs) {
-      router.navigate('/(tabs)');
-      return;
-    }
     router.back();
   };
 
-  // Interceptar gesture de voltar quando estamos nas tabs
   useFocusEffect(
     React.useCallback(() => {
-      // Recarregar previsões quando a tela receber foco
       loadLastPredictions();
-
-      if (isInTabs) {
-        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-          // Previne a ação padrão
-          e.preventDefault();
-          
-          // Navega para a home das tabs
-          router.navigate('/(tabs)');
-        });
-
-        return unsubscribe;
-      }
-    }, [navigation, isInTabs, router])
+    }, [])
   );
 
   return (

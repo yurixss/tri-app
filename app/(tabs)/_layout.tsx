@@ -58,28 +58,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Ocultar nutrition das tabs, mas manter acessível via navegação */}
-      <Tabs.Screen
-        name="nutrition"
-        options={{
-          href: null,
-        }}
-      />
-
-      {/* Telas internas com bottom tabs visível (sem ícone próprio) */}
-      <Tabs.Screen
-        name="race-prediction"
-        options={{
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="training-zones"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }
