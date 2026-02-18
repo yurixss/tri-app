@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "Koa Endurance",
+    "tagline": "Pacing, FTP, and race strategy for triathletes"
+  },
+  "errors": {
+    "oops": "Oops!"
+  },
+  "screenTitles": {
+    "notFound": "Page not found"
+  },
+  "metrics": {
+    "pace": "Pace",
+    "power": "Power",
+    "powerZones": "Power zones",
+    "heartRateZones": "Heart rate zones"
+  },
+  "training": {
+    "ftp": "FTP",
+    "raceStrategy": "Race strategy",
+    "recoveryProtocol": "Recovery protocol",
+    "powerZonesGuide": "Power zones guide"
+  },
+  "dashboard": {
+    "pacingSummary": "Target pace: {{pace}} {{unit}}",
+    "weeklySessions_one": "{{count}} session this week",
+    "weeklySessions_other": "{{count}} sessions this week"
+  },
+  "settings": {
+    "title": "Settings",
+    "appTheme": "App theme",
+    "appLanguage": "App language",
+    "portuguese": "PT-BR",
+    "english": "EN",
+    "spanish": "ES"
+  }
+}

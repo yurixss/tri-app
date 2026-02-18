@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "Koa Endurance",
+    "tagline": "Pacing, FTP e estratégia de prova para triatletas"
+  },
+  "errors": {
+    "oops": "Ops!"
+  },
+  "screenTitles": {
+    "notFound": "Página não encontrada"
+  },
+  "metrics": {
+    "pace": "Pace",
+    "power": "Potência",
+    "powerZones": "Zonas de potência",
+    "heartRateZones": "Zonas de frequência cardíaca"
+  },
+  "training": {
+    "ftp": "FTP",
+    "raceStrategy": "Estratégia de prova",
+    "recoveryProtocol": "Protocolo de recuperação",
+    "powerZonesGuide": "Guia de zonas de potência"
+  },
+  "dashboard": {
+    "pacingSummary": "Pace alvo: {{pace}} {{unit}}",
+    "weeklySessions_one": "{{count}} sessão esta semana",
+    "weeklySessions_other": "{{count}} sessões esta semana"
+  },
+  "settings": {
+    "title": "Configurações",
+    "appTheme": "Tema do app",
+    "appLanguage": "Idioma do app",
+    "portuguese": "PT-BR",
+    "english": "EN",
+    "spanish": "ES"
+  }
+}

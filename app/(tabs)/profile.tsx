@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -16,6 +17,7 @@ import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTheme } from '@/constants/Theme';
+import { useAppLanguage } from '@/hooks/useAppLanguage';
 import {
   UserCircle,
   PencilSimple,
@@ -141,6 +143,8 @@ export default function ProfileScreen() {
     'text'
   );
   const theme = useTheme();
+  const { t } = useTranslation();
+  const { language, changeLanguage } = useAppLanguage();
   const router = useRouter();
 
   const loadData = useCallback(async () => {
@@ -518,11 +522,15 @@ export default function ProfileScreen() {
         </View>
 
 
-        {/* ─── THEME TOGGLE ─── */}
+        {/* ─── SETTINGS CARD ─── */}
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
+          <ThemedText style={styles.settingsTitle} fontFamily="Inter-SemiBold">
+            {t('settings.title')}
+          </ThemedText>
+          
           <View style={styles.themeRow}>
             <ThemedText style={{ fontSize: 15 }} fontFamily="Inter-Medium">
-              Tema do app
+              {t('settings.appTheme')}
             </ThemedText>
             <Switch
               value={theme.choice === 'dark'}
@@ -530,6 +538,75 @@ export default function ProfileScreen() {
               trackColor={{ false: '#767577', true: Colors.shared.primary }}
               thumbColor="#fff"
             />
+          </View>
+
+          <View style={styles.settingsDivider} />
+
+          <View>
+            <ThemedText style={{ fontSize: 15, marginBottom: 12 }} fontFamily="Inter-Medium">
+              {t('settings.appLanguage')}
+            </ThemedText>
+            <View style={styles.languageOptions}>
+              <TouchableOpacity
+                style={[
+                  styles.languageButton,
+                  { borderColor },
+                  language === 'pt-BR' && {
+                    backgroundColor: Colors.shared.primary,
+                    borderColor: Colors.shared.primary,
+                  },
+                ]}
+                onPress={() => changeLanguage('pt-BR')}
+                activeOpacity={0.7}
+              >
+                <ThemedText
+                  style={[
+                    styles.languageButtonText,
+                    language === 'pt-BR' && { color: '#fff' },
+                  ]}
+                  fontFamily="Inter-Medium"
+                >
+                  {t('settings.portuguese')}
+                </ThemedText>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.languageButton,
+                  { borderColor },
+                  language === 'en' && {
+                    backgroundColor: Colors.shared.primary,
+                    borderColor: Colors.shared.primary,
+                  },
+                ]}
+                onPress={() => changeLanguage('en')}
+                activeOpacity={0.7}
+              >
+                <ThemedText
+                  style={[
+                    styles.languageButtonText,
+                    language === 'en' && { color: '#fff' },
+                  ]}
+                  fontFamily="Inter-Medium"
+                >
+                  {t('settings.english')}
+                </ThemedText>
+              </TouchableOpacity>
+
+              <View
+                style={[
+                  styles.languageButton,
+                  { borderColor, opacity: 0.5 },
+                ]}
+              >
+                <ThemedText
+                  style={styles.languageButtonText}
+                  fontFamily="Inter-Medium"
+                >
+                  {t('settings.spanish')}
+                </ThemedText>
+              </View>
+            </View>
           </View>
         </View>
 
@@ -766,11 +843,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  /* Theme toggle */
+  /* Settings */
+  settingsTitle: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  settingsDivider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginVertical: 16,
+  },
   themeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+
+  /* Language selector */
+  languageOptions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  languageButton: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  languageButtonText: {
+    fontSize: 13,
   },
 
   /* Performance stats */
