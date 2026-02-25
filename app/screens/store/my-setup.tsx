@@ -202,9 +202,9 @@ export default function MySetupScreen() {
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
             Meu Setup
           </ThemedText>
-          <ThemedText style={[styles.headerSubtitle, { color: secondaryText }]}>
+          {/* <ThemedText style={[styles.headerSubtitle, { color: secondaryText }]}>
             Painel de investimento em equipamentos
-          </ThemedText>
+          </ThemedText> */}
         </View>
         <TouchableOpacity
           style={styles.addButton}
@@ -477,25 +477,30 @@ export default function MySetupScreen() {
               {(() => {
                 const activeCats = categoryEntries
                   .filter(([key]) => summary.byCategory[key] > 0)
-                  .sort((a, b) => summary.byCategory[b[0]] - summary.byCategory[a[0]]);
+                  .sort((a, b) => summary.byCategory[b[0]] - summary.byCategory[a[0]])
+                  .slice(0, 5);
 
                 if (activeCats.length === 0) return null;
 
                 return (
                   <View style={[styles.sectionCard, { backgroundColor: cardBg, borderColor }]}>
                     <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
-                      Investimento por Categoria
+                      Top 5 Investimentos por Categoria
                     </ThemedText>
-                    {activeCats.map(([key, config]) => {
+                    {activeCats.map(([key, config], index) => {
                       const val = summary.byCategory[key];
                       const pct = calcPercentage(val, summary.total);
                       return (
                         <View key={key} style={styles.catRow}>
-                          <ThemedText style={styles.catEmoji}>{config.emoji}</ThemedText>
+                          <View style={styles.catRanking}>
+                            <ThemedText style={styles.catRankingText} fontFamily="Inter-Bold">
+                              {index + 1}
+                            </ThemedText>
+                          </View>
                           <View style={{ flex: 1 }}>
                             <View style={styles.catRowTop}>
                               <ThemedText style={styles.catLabel} fontFamily="Inter-SemiBold">
-                                {config.label}
+                                {config.emoji} {config.label}
                               </ThemedText>
                               <ThemedText style={styles.catValue} fontFamily="Inter-SemiBold">
                                 {formatCurrency(val)}
@@ -566,19 +571,25 @@ export default function MySetupScreen() {
                 <ThemedText style={styles.listTitle} fontFamily="Inter-Bold">
                   Equipamentos
                 </ThemedText>
-                <ThemedText style={[styles.listCount, { color: secondaryText }]}>
+                <ThemedText style={[styles.listCount, { color: secondaryText }]}> 
                   {items.length} {items.length === 1 ? 'item' : 'itens'}
                 </ThemedText>
               </View>
 
-              {sortedItems.map((item) => {
-                const modConfig = MODALITY_CONFIG[item.modality];
-                const catConfig = CATEGORY_SETUP_CONFIG[item.category];
-                return (
-                  <View
-                    key={item.id}
-                    style={[styles.itemCard, { backgroundColor: cardBg, borderColor }]}
-                  >
+              <ScrollView
+                style={[styles.itemListContainer, { borderColor }]}
+                contentContainerStyle={{ paddingBottom: 8 }}
+                nestedScrollEnabled
+                showsVerticalScrollIndicator={true}
+              >
+                {sortedItems.map((item) => {
+                  const modConfig = MODALITY_CONFIG[item.modality];
+                  const catConfig = CATEGORY_SETUP_CONFIG[item.category];
+                  return (
+                    <View
+                      key={item.id}
+                      style={[styles.itemCard, { backgroundColor: cardBg, borderColor }]}
+                    >
                     {/* Item Header */}
                     <View style={styles.itemHeader}>
                       <View
@@ -666,6 +677,7 @@ export default function MySetupScreen() {
                   </View>
                 );
               })}
+              </ScrollView>
             </>
           )}
         </ScrollView>
@@ -759,7 +771,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  catEmoji: { fontSize: 18, width: 28, textAlign: 'center' },
+  catRanking: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.shared.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  catRankingText: {
+    fontSize: 13,
+    color: '#FFF',
+  },
   catRowTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -803,6 +826,8 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     gap: 12,
+    height: 132,
+    overflow: 'hidden',
   },
   itemHeader: {
     flexDirection: 'row',
@@ -910,4 +935,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.shared.primary,
   },
   emptyButtonText: { fontSize: 14, color: '#FFF' },
+  // Scrollable list container to show 3 items at a time
+  itemListContainer: {
+    maxHeight: 132 * 3 + 12 * 3,
+    marginBottom: 12,
+  },
 });
