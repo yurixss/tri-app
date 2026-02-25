@@ -63,6 +63,10 @@ export interface RunData {
   raceType: RaceType;
   /** Zona de intensidade da corrida (1-5) */
   runZone?: number;
+  /** Tempo customizado de T1 em segundos (opcional) */
+  t1Seconds?: number;
+  /** Tempo customizado de T2 em segundos (opcional) */
+  t2Seconds?: number;
 }
 
 export interface TriathlonWizardData {
@@ -326,9 +330,10 @@ export function calculateTriathlonPrediction(data: TriathlonWizardData): Triathl
   const bike = calculateBikeTime(data.bike);
   const run = calculateRunTime(data.run);
 
+  // Usar tempos de transição customizados se fornecidos, senão usar padrões
   const transitions = TRANSITION_TIMES[data.run.raceType];
-  const t1Seconds = transitions.t1;
-  const t2Seconds = transitions.t2;
+  const t1Seconds = data.run.t1Seconds ?? transitions.t1;
+  const t2Seconds = data.run.t2Seconds ?? transitions.t2;
 
   const totalTimeSeconds = 
     swim.timeSeconds + 

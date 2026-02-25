@@ -11,34 +11,26 @@ import { saveOnboardingData, getOnboardingData, saveBikeTest, saveRunTest, saveS
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 
 interface Record {
-  distance: string;
+  category: 'bike' | 'swim' | 'run';
+  selectedOption: string;
   time: string;
 }
 
-interface SportRecords {
-  triathlete: {
-    bike: string[];
-    swim: string[];
-    run: string[];
-  };
-  cyclist: string[];
-  swimmer: string[];
-  runner: string[];
+interface TestOption {
+  label: string;
+  value: string;
 }
 
-const sportRecords: SportRecords = {
-  triathlete: {
-    bike: ['FTP (20min)', 'FTP (1hr)'],
-    swim: ['400m'],
-    run: ['5km'],
-  },
-  cyclist: ['FTP (20min)', 'FTP (1hr)'],
-  swimmer: ['400m'],
-  runner: ['5km'],
-};
+interface SportCategory {
+  label: string;
+  type: 'bike' | 'swim' | 'run';
+  options: TestOption[];
+  placeholder: string;
+  inputType: 'ftp' | 'time';
+}
 
 export default function PersonalRecords() {
-  const [sport, setSport] = useState<keyof SportRecords>('triathlete');
+  const [sport, setSport] = useState<'triathlete' | 'cyclist' | 'swimmer' | 'runner'>('triathlete');
   const [records, setRecords] = useState<Record[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const router = useRouter();
@@ -50,41 +42,115 @@ export default function PersonalRecords() {
   const loadSportType = async () => {
     const data = await getOnboardingData();
     if (data?.sport) {
-      setSport(data.sport as keyof SportRecords);
+      setSport(data.sport);
     }
   };
 
-  const getAvailableDistances = () => {
+  const getAvailableCategories = (): SportCategory[] => {
+    const categories: SportCategory[] = [];
+    
     if (sport === 'triathlete') {
-      return [
-        ...sportRecords.triathlete.bike,
-        ...sportRecords.triathlete.swim,
-        ...sportRecords.triathlete.run,
-      ];
+      categories.push({
+        label: 'FTP Bike',
+        type: 'bike',
+        options: [
+          { label: '20 minutos', value: '20min' },
+          { label: '60 minutos', value: '60min' },
+        ],
+        placeholder: 'FTP em watts',
+        inputType: 'ftp',
+      });
+      categories.push({
+        label: 'Natação',
+        type: 'swim',
+        options: [
+          { label: '400m', value: '400m' },
+          { label: '1000m', value: '1000m' },
+        ],
+        placeholder: 'MM:SS',
+        inputType: 'time',
+      });
+      categories.push({
+        label: 'Corrida',
+        type: 'run',
+        options: [
+          { label: '5km', value: '5km' },
+          { label: '10km', value: '10km' },
+        ],
+        placeholder: 'MM:SS',
+        inputType: 'time',
+      });
+    } else if (sport === 'cyclist') {
+      categories.push({
+        label: 'FTP Bike',
+        type: 'bike',
+        options: [
+          { label: '20 minutos', value: '20min' },
+          { label: '60 minutos', value: '60min' },
+        ],
+        placeholder: 'FTP em watts',
+        inputType: 'ftp',
+      });
+    } else if (sport === 'swimmer') {
+      categories.push({
+        label: 'Natação',
+        type: 'swim',
+        options: [
+          { label: '400m', value: '400m' },
+          { label: '1000m', value: '1000m' },
+        ],
+        placeholder: 'MM:SS',
+        inputType: 'time',
+      });
+    } else if (sport === 'runner') {
+      categories.push({
+        label: 'Corrida',
+        type: 'run',
+        options: [
+          { label: '5km', value: '5km' },
+          { label: '10km', value: '10km' },
+        ],
+        placeholder: 'MM:SS',
+        inputType: 'time',
+      });
     }
-    return sportRecords[sport];
+    
+    return categories;
   };
 
-  const handleTimeChange = (distance: string, time: string) => {
+  const handleOptionSelect = (category: 'bike' | 'swim' | 'run', option: string) => {
     setRecords(prev => {
-      const existing = prev.find(r => r.distance === distance);
+      const existing = prev.find(r => r.category === category);
+      if (existing) {
+        return prev.map(r => r.category === category ? { ...r, selectedOption: option } : r);
+      }
+      return [...prev, { category, selectedOption: option, time: '' }];
+    });
+    
+    // Clear error when changing option
+    if (errors[category]) {
+      setErrors(prev => ({ ...prev, [category]: '' }));
+    }
+  };
+
+  const handleTimeChange = (category: 'bike' | 'swim' | 'run', time: string) => {
+    setRecords(prev => {
+      const existing = prev.find(r => r.category === category);
       if (existing) {
         if (time.trim() === '') {
-          // Remove entry if time is empty
-          return prev.filter(r => r.distance !== distance);
+          return prev.map(r => r.category === category ? { ...r, time: '' } : r);
         }
-        return prev.map(r => r.distance === distance ? { ...r, time } : r);
+        return prev.map(r => r.category === category ? { ...r, time } : r);
       }
       if (time.trim() !== '') {
-        // Only add if there's actual content
-        return [...prev, { distance, time }];
+        return [...prev, { category, selectedOption: '', time }];
       }
       return prev;
     });
     
     // Clear error when user starts typing
-    if (errors[distance]) {
-      setErrors(prev => ({ ...prev, [distance]: '' }));
+    if (errors[category]) {
+      setErrors(prev => ({ ...prev, [category]: '' }));
     }
   };
 
@@ -93,15 +159,15 @@ export default function PersonalRecords() {
     
     records.forEach(record => {
       if (record.time && record.time.trim() !== '') {
-        if (record.distance.includes('FTP')) {
+        if (record.category === 'bike') {
           // Validate FTP as number
           if (isNaN(Number(record.time)) || Number(record.time) <= 0) {
-            newErrors[record.distance] = 'FTP deve ser um número válido (watts)';
+            newErrors[record.category] = 'FTP deve ser um número válido (watts)';
           }
         } else {
           // Validate time format
           if (!isValidTimeFormat(record.time)) {
-            newErrors[record.distance] = 'Formato de tempo inválido (use MM:SS)';
+            newErrors[record.category] = 'Formato de tempo inválido (use MM:SS)';
           }
         }
       }
@@ -113,7 +179,11 @@ export default function PersonalRecords() {
 
   const handleComplete = async () => {
     // Filter out empty records before saving
-    const validRecords = records.filter(record => record.time && record.time.trim() !== '');
+    const validRecords = records.filter(record => 
+      record.time && 
+      record.time.trim() !== '' && 
+      record.selectedOption
+    );
     
     // Save onboarding data
     await saveOnboardingData({
@@ -124,24 +194,21 @@ export default function PersonalRecords() {
     // Convert records to test results and save via dedicated functions
     for (const record of validRecords) {
       try {
-        if (record.distance.includes('FTP')) {
+        if (record.category === 'bike') {
           // Save FTP test
           const ftp = Number(record.time);
-          const testType = record.distance.includes('20min') ? '20min' : '60min';
-          await saveBikeTest(testType, ftp);
-        } else if (record.distance === '5km' || record.distance === '3km') {
+          await saveBikeTest(record.selectedOption as '20min' | '60min', ftp);
+        } else if (record.category === 'run') {
           // Save run test
           const timeInSeconds = parseTimeString(record.time);
-          const testType = record.distance === '5km' ? '5km' : '3km';
-          await saveRunTest(testType, timeInSeconds);
-        } else if (record.distance === '400m' || record.distance === '200m') {
+          await saveRunTest(record.selectedOption as '5km' | '10km', timeInSeconds);
+        } else if (record.category === 'swim') {
           // Save swim test
           const timeInSeconds = parseTimeString(record.time);
-          const testType = record.distance === '400m' ? '400m' : '200m';
-          await saveSwimTest(testType, timeInSeconds);
+          await saveSwimTest(record.selectedOption as '400m' | '1000m', timeInSeconds);
         }
       } catch (e) {
-        console.error(`Error saving test result for ${record.distance}:`, e);
+        console.error(`Error saving test result for ${record.category}:`, e);
       }
     }
 
@@ -170,39 +237,66 @@ export default function PersonalRecords() {
           </ThemedText>
 
           <View style={styles.recordsContainer}>
-            {getAvailableDistances().map((distance) => {
-              const record = records.find(r => r.distance === distance);
+            {getAvailableCategories().map((category) => {
+              const record = records.find(r => r.category === category.type);
               
               return (
-                <View key={distance} style={styles.recordItem}>
-                  <ThemedText style={styles.distanceLabel} fontFamily="Inter-Medium">
-                    {distance}
+                <View key={category.type} style={styles.recordItem}>
+                  <ThemedText style={styles.categoryLabel} fontFamily="Inter-Bold">
+                    {category.label}
                   </ThemedText>
                   
-                  <View style={styles.inputContainer}>
-                    <ThemedInput
-                      label={distance.includes('FTP') ? "FTP (watts)" : "Tempo (MM:SS)"}
-                      value={record?.time || ''}
-                      onChangeText={(time) => handleTimeChange(distance, time)}
-                      placeholder={distance.includes('FTP') ? "250" : "MM:SS"}
-                      keyboardType={distance.includes('FTP') ? "numeric" : "default"}
-                      error={errors[distance]}
-                    />
-                    
-                    {record?.time && (
-                      distance.includes('FTP') 
-                        ? !errors[distance] && (
-                            <View style={styles.checkmark}>
-                              <Check size={20} color={Colors.light.success} weight="regular" />
-                            </View>
-                          )
-                        : isValidTimeFormat(record.time) && !errors[distance] && (
-                            <View style={styles.checkmark}>
-                              <Check size={20} color={Colors.light.success} weight="regular" />
-                            </View>
-                          )
-                    )}
+                  {/* Option selector */}
+                  <View style={styles.optionsContainer}>
+                    {category.options.map((option) => (
+                      <Pressable
+                        key={option.value}
+                        style={[
+                          styles.optionButton,
+                          record?.selectedOption === option.value && styles.optionButtonSelected
+                        ]}
+                        onPress={() => handleOptionSelect(category.type, option.value)}
+                      >
+                        <ThemedText
+                          style={[
+                            styles.optionText,
+                            record?.selectedOption === option.value && styles.optionTextSelected
+                          ]}
+                          fontFamily={record?.selectedOption === option.value ? "Inter-SemiBold" : "Inter-Medium"}
+                        >
+                          {option.label}
+                        </ThemedText>
+                      </Pressable>
+                    ))}
                   </View>
+                  
+                  {/* Time input - only show if option is selected */}
+                  {record?.selectedOption && (
+                    <View style={styles.inputContainer}>
+                      <ThemedInput
+                        label={category.inputType === 'ftp' ? "FTP (watts)" : "Tempo (MM:SS)"}
+                        value={record?.time || ''}
+                        onChangeText={(time) => handleTimeChange(category.type, time)}
+                        placeholder={category.placeholder}
+                        keyboardType={category.inputType === 'ftp' ? "numeric" : "default"}
+                        error={errors[category.type]}
+                      />
+                      
+                      {record?.time && (
+                        category.inputType === 'ftp'
+                          ? !errors[category.type] && !isNaN(Number(record.time)) && Number(record.time) > 0 && (
+                              <View style={styles.checkmark}>
+                                <Check size={20} color={Colors.light.success} weight="regular" />
+                              </View>
+                            )
+                          : isValidTimeFormat(record.time) && !errors[category.type] && (
+                              <View style={styles.checkmark}>
+                                <Check size={20} color={Colors.light.success} weight="regular" />
+                              </View>
+                            )
+                      )}
+                    </View>
+                  )}
                 </View>
               );
             })}
@@ -210,15 +304,17 @@ export default function PersonalRecords() {
         </View>
       </ScrollView>
 
-      <ThemedButton
-        title="Continuar"
-        color={Colors.shared.primary}
-        onPress={handleComplete}
-      />
+      <View style={styles.buttonsContainer}>
+        <ThemedButton
+          title="Continuar"
+          color={Colors.shared.primary}
+          onPress={handleComplete}
+        />
 
-      <Pressable style={styles.skipButton} onPress={handleSkip}>
-        <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
-      </Pressable>
+        <Pressable style={styles.skipButton} onPress={handleSkip}>
+          <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
+        </Pressable>
+      </View>
     </ThemedView>
   );
 }
@@ -227,6 +323,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  buttonsContainer: {
+    gap: 12,
   },
   backButton: {
     paddingVertical: 8,
@@ -253,13 +352,40 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   recordsContainer: {
-    gap: 24,
+    gap: 28,
   },
   recordItem: {
-    gap: 8,
+    gap: 12,
   },
-  distanceLabel: {
-    fontSize: 16,
+  categoryLabel: {
+    fontSize: 18,
+    marginBottom: 4,
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  optionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    backgroundColor: 'rgba(0,0,0,0.02)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  optionButtonSelected: {
+    borderColor: Colors.shared.primary,
+    backgroundColor: 'rgba(0, 122, 255, 0.08)',
+  },
+  optionText: {
+    fontSize: 15,
+    color: '#6B7280',
+  },
+  optionTextSelected: {
+    color: Colors.shared.primary,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -270,18 +396,18 @@ const styles = StyleSheet.create({
     marginTop: -16,
   },
   skipButton: {
-    marginTop: 12,
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 8,
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: Colors.shared.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
   skipButtonText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: Colors.shared.primary,
   },
 });

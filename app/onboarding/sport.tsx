@@ -108,16 +108,18 @@ export default function SportSelection() {
         </View>
       </View>
 
-      <ThemedButton
-        title="Continuar"
-        color={selectedSport ? Colors.shared.primary : '#A1A1AA'}
-        onPress={handleContinue}
-        disabled={!selectedSport}
-      />
+      <View style={styles.buttonsContainer}>
+        <ThemedButton
+          title="Continuar"
+          color={selectedSport ? Colors.shared.primary : '#A1A1AA'}
+          onPress={handleContinue}
+          disabled={!selectedSport}
+        />
 
-      <Pressable style={styles.skipButton} onPress={handleSkip}>
-        <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
-      </Pressable>
+        <Pressable style={styles.skipButton} onPress={handleSkip}>
+          <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>
+        </Pressable>
+      </View>
     </ThemedView>
   );
 }
@@ -127,24 +129,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  buttonsContainer: {
+    gap: 12,
+  },
   skipButton: {
-    marginTop: 12,
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 8,
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: Colors.shared.primary,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  skipText: {
-    fontSize: 14,
-    opacity: 0.6,
-    fontWeight: '500',
+    backgroundColor: 'transparent',
   },
   skipButtonText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: Colors.shared.primary,
   },
   content: {

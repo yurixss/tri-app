@@ -32,6 +32,8 @@ export default function RunStep() {
   const [baseTime, setBaseTime] = useState('');
   const [baseDistance, setBaseDistance] = useState<string>('5');
   const [runZone, setRunZone] = useState<string>('4');
+  const [t1Time, setT1Time] = useState('');
+  const [t2Time, setT2Time] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   // Determinar tipo de prova a partir da natação
@@ -47,6 +49,22 @@ export default function RunStep() {
   const raceType = getRaceType();
   const raceDistances = getRaceDistances(raceType);
 
+  // Obter tempos padrão de transição
+  const getDefaultTransitions = () => {
+    switch (raceType) {
+      case 'sprint':
+        return { t1: 60, t2: 45 };
+      case 'olympic':
+        return { t1: 90, t2: 60 };
+      case 'half':
+        return { t1: 120, t2: 90 };
+      case 'full':
+        return { t1: 180, t2: 120 };
+    }
+  };
+
+  const defaultTransitions = getDefaultTransitions();
+
   // Carregar dados salvos
   useEffect(() => {
     loadSavedData();
@@ -60,12 +78,23 @@ export default function RunStep() {
       setBaseDistance(testResults.run.testType === '5km' ? '5' : '3');
     }
 
+    // Definir valores padrão de transição
+    setT1Time(formatTimeFromSeconds(defaultTransitions.t1));
+    setT2Time(formatTimeFromSeconds(defaultTransitions.t2));
+
     // Carregar dados existentes do wizard
     if (data.run) {
       const mins = Math.floor(data.run.baseTimeSeconds / 60);
       const secs = data.run.baseTimeSeconds % 60;
       setBaseTime(`${mins}:${secs.toString().padStart(2, '0')}`);
       setBaseDistance(data.run.baseDistance.toString());
+      
+      if (data.run.t1Seconds) {
+        setT1Time(formatTimeFromSeconds(data.run.t1Seconds));
+      }
+      if (data.run.t2Seconds) {
+        setT2Time(formatTimeFromSeconds(data.run.t2Seconds));
+      }
     }
   };
 
@@ -89,6 +118,8 @@ export default function RunStep() {
       raceDistance: raceDistances.run,
       raceType,
       runZone: parseInt(runZone),
+      t1Seconds: t1Time && isValidTimeFormat(t1Time) ? parseTimeString(t1Time) : undefined,
+      t2Seconds: t2Time && isValidTimeFormat(t2Time) ? parseTimeString(t2Time) : undefined,
     };
 
     // Salvar os dados de corrida no contexto
@@ -178,20 +209,21 @@ export default function RunStep() {
           )}
 
           <ThemedText style={[styles.sectionTitle, { marginTop: 16 }]} fontFamily="Inter-Medium">
-            Zona de Intensidade
+            Zona de Intensidade na prova
           </ThemedText>
 
           <RadioSelector
             options={[
-              { value: '1', label: 'Z1 - Easy' },
-              { value: '2', label: 'Z2 - Endurance' },
-              { value: '3', label: 'Z3 - Tempo' },
-              { value: '4', label: 'Z4 - Threshold' },
-              { value: '5', label: 'Z5 - VO2 Max' },
+              { value: '1', label: 'Z1' },
+              { value: '2', label: 'Z2' },
+              { value: '3', label: 'Z3' },
+              { value: '4', label: 'Z4' },
+              { value: '5', label: 'Z5' },
             ]}
             selectedValue={runZone}
             onValueChange={setRunZone}
             color={Colors.shared.primary}
+            horizontal
           />
 
           <View style={styles.zoneHint}>
@@ -202,6 +234,29 @@ export default function RunStep() {
               {runZone === '4' && '🟠 Limiar, ritmo de prova desafiador'}
               {runZone === '5' && '🔴 Esforço máximo, sustentável por poucos minutos'}
             </ThemedText>
+          </View>
+
+          <ThemedText style={[styles.sectionTitle, { marginTop: 16 }]} fontFamily="Inter-Medium">
+            Tempos de Transição
+          </ThemedText>
+
+          <View style={styles.transitionInputs}>
+            <View style={styles.halfInput}>
+              <TimeInput
+                label="T1 (Natação → Bike)"
+                value={t1Time}
+                onChange={setT1Time}
+                placeholder="MM:SS"
+              />
+            </View>
+            <View style={styles.halfInput}>
+              <TimeInput
+                label="T2 (Bike → Corrida)"
+                value={t2Time}
+                onChange={setT2Time}
+                placeholder="MM:SS"
+              />
+            </View>
           </View>
 
           <View style={styles.infoBox}>
@@ -319,6 +374,13 @@ const styles = StyleSheet.create({
   zoneHintText: {
     fontSize: 13,
     opacity: 0.8,
+  },
+  transitionInputs: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  halfInput: {
+    flex: 1,
   },
   infoBox: {
     backgroundColor: 'rgba(0,0,0,0.03)',

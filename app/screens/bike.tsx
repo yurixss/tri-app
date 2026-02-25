@@ -19,6 +19,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 export default function BikeScreen() {
   const [ftp, setFtp] = useState('');
+  const [weight, setWeight] = useState('');
   const [testType, setTestType] = useState<'20min' | '60min'>('60min');
   const [error, setError] = useState('');
   const [zones, setZones] = useState<any[]>([]);
@@ -64,6 +65,9 @@ export default function BikeScreen() {
     if (results.bike) {
       setTestType(results.bike.testType);
       setFtp(results.bike.ftp.toString());
+      if (results.bike.weight) {
+        setWeight(results.bike.weight.toString());
+      }
       calculateZones(results.bike.testType, results.bike.ftp);
       setHasCalculated(true);
     }
@@ -72,6 +76,13 @@ export default function BikeScreen() {
   const handleFtpChange = (text: string) => {
     if (/^[0-9]*$/.test(text)) {
       setFtp(text);
+      setError('');
+    }
+  };
+
+  const handleWeightChange = (text: string) => {
+    if (/^[0-9]*\.?[0-9]*$/.test(text)) {
+      setWeight(text);
       setError('');
     }
   };
@@ -94,8 +105,9 @@ export default function BikeScreen() {
     
     try {
       const ftpValue = Number(ftp);
+      const weightValue = weight ? Number(weight) : undefined;
       calculateZones(testType, ftpValue);
-      await saveBikeTest(testType, ftpValue);
+      await saveBikeTest(testType, ftpValue, weightValue);
       setHasCalculated(true);
     } catch (e) {
       console.error('Error saving bike test', e);
@@ -168,6 +180,14 @@ export default function BikeScreen() {
               error={error}
             />
             
+            <ThemedInput
+              label="Peso corporal (kg) - Opcional"
+              value={weight}
+              onChangeText={handleWeightChange}
+              placeholder="Insira seu peso"
+              keyboardType="decimal-pad"
+            />
+            
             <ThemedButton
               title="Calcular Zonas"
               color={Colors.shared.bike}
@@ -219,40 +239,80 @@ export default function BikeScreen() {
                   : `Baseado no teste de 60min: ${ftp}w`}
               </ThemedText>
               
+              {weight && Number(weight) > 0 && (
+                <ThemedText style={[commonStyles.infoText, { marginTop: 4 }]}>
+                  {testType === '20min'
+                    ? `W/kg: ${(Math.round(Number(ftp) * 0.95) / Number(weight)).toFixed(2)}`
+                    : `W/kg: ${(Number(ftp) / Number(weight)).toFixed(2)}`}
+                </ThemedText>
+              )}
+              
               <View style={styles.zonesContainer}>
-                {zones.map((zone, index) => (
-                  <View 
-                    key={index} 
-                    style={[
-                      styles.zoneRow,
-                      { borderBottomColor: borderColor }
-                    ]}
-                  >
-                    <ThemedText 
-                      style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
-                      fontFamily="Inter-SemiBold"
+                {zones.map((zone, index) => {
+                  const hasWeight = weight && Number(weight) > 0;
+                  let wkgDisplay = null;
+                  
+                  if (hasWeight) {
+                    // Handle special cases for Z1 (<X) and Z7 (>X)
+                    if (zone.range.includes('<')) {
+                      const maxWatts = parseInt(zone.range.replace('<', '').replace('w', ''));
+                      wkgDisplay = `<${(maxWatts / Number(weight)).toFixed(1)} W/kg`;
+                    } else if (zone.range.includes('>')) {
+                      const minWatts = parseInt(zone.range.replace('>', '').replace('w', ''));
+                      wkgDisplay = `>${(minWatts / Number(weight)).toFixed(1)} W/kg`;
+                    } else {
+                      // Normal range (X-Y)
+                      const [minWatts, maxWatts] = zone.range.split('-').map((w: string) => parseInt(w.replace('w', '')));
+                      const minWkg = (minWatts / Number(weight)).toFixed(1);
+                      const maxWkg = (maxWatts / Number(weight)).toFixed(1);
+                      wkgDisplay = `${minWkg}-${maxWkg} W/kg`;
+                    }
+                  }
+                  
+                  return (
+                    <View 
+                      key={index} 
+                      style={[
+                        styles.zoneRow,
+                        { borderBottomColor: borderColor }
+                      ]}
                     >
-                      Z{zone.zone}
-                    </ThemedText>
-                    
-                    <View style={styles.zoneDetails}>
-                      <ThemedText style={styles.zoneName} fontFamily="Inter-Medium">
-                        {zone.name}
+                      <ThemedText 
+                        style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
+                        fontFamily="Inter-SemiBold"
+                      >
+                        Z{zone.zone}
                       </ThemedText>
                       
-                      <ThemedText style={styles.zoneDescription}>
-                        {zone.description}
-                      </ThemedText>
+                      <View style={styles.zoneDetails}>
+                        <ThemedText style={styles.zoneName} fontFamily="Inter-Medium">
+                          {zone.name}
+                        </ThemedText>
+                        
+                        <ThemedText style={styles.zoneDescription}>
+                          {zone.description}
+                        </ThemedText>
+                      </View>
+                      
+                      <View style={styles.zoneRangeContainer}>
+                        <ThemedText 
+                          style={styles.zoneRange}
+                          fontFamily="Inter-Medium"
+                        >
+                          {zone.range}
+                        </ThemedText>
+                        {wkgDisplay && (
+                          <ThemedText 
+                            style={styles.zoneWkg}
+                            fontFamily="Inter-Regular"
+                          >
+                            {wkgDisplay}
+                          </ThemedText>
+                        )}
+                      </View>
                     </View>
-                    
-                    <ThemedText 
-                      style={styles.zoneRange}
-                      fontFamily="Inter-Medium"
-                    >
-                      {zone.range}
-                    </ThemedText>
-                  </View>
-                ))}
+                  );
+                })}
               </View>
 
               <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
@@ -383,9 +443,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
+  zoneRangeContainer: {
+    alignItems: 'flex-end',
+  },
   zoneRange: {
     fontSize: 14,
     textAlign: 'right',
+    fontVariant: ['tabular-nums'],
+  },
+  zoneWkg: {
+    fontSize: 12,
+    textAlign: 'right',
+    opacity: 0.6,
     fontVariant: ['tabular-nums'],
   },
   headerContainer: {

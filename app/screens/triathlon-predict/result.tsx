@@ -19,9 +19,10 @@ interface ExpandableSectionProps {
   color: string;
   factors: string[];
   icon: string;
+  pace?: string;
 }
 
-function ExpandableSection({ title, time, color, factors, icon }: ExpandableSectionProps) {
+function ExpandableSection({ title, time, color, factors, icon, pace }: ExpandableSectionProps) {
   const [expanded, setExpanded] = useState(false);
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
@@ -36,9 +37,16 @@ function ExpandableSection({ title, time, color, factors, icon }: ExpandableSect
             <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
               {title}
             </ThemedText>
-            <ThemedText style={[styles.sectionTime, { color }]} fontFamily="Inter-Bold">
-              {time}
-            </ThemedText>
+            <View style={styles.timeRow}>
+              <ThemedText style={[styles.sectionTime, { color }]} fontFamily="Inter-Bold">
+                {time}
+              </ThemedText>
+              {pace && (
+                <ThemedText style={styles.paceText} fontFamily="Inter-Regular">
+                  • {pace}
+                </ThemedText>
+              )}
+            </View>
           </View>
         </View>
         {factors.length > 0 && (
@@ -106,6 +114,33 @@ export default function ResultStep() {
   }
 
   const raceType = data.run?.raceType || 'olympic';
+
+  // Calcular paces médios
+  const calculateSwimPace = () => {
+    if (!prediction?.swim.timeSeconds || !data.swim?.raceDistance) return undefined;
+    const pacePer100m = (prediction.swim.timeSeconds / data.swim.raceDistance) * 100;
+    const mins = Math.floor(pacePer100m / 60);
+    const secs = Math.round(pacePer100m % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}/100m`;
+  };
+
+  const calculateBikePace = () => {
+    if (!prediction?.bike.timeSeconds || !data.bike?.distance) return undefined;
+    const avgSpeed = (data.bike.distance / (prediction.bike.timeSeconds / 3600));
+    return `${avgSpeed.toFixed(1)} km/h`;
+  };
+
+  const calculateRunPace = () => {
+    if (!prediction?.run.timeSeconds || !data.run?.raceDistance) return undefined;
+    const pacePerKm = prediction.run.timeSeconds / data.run.raceDistance;
+    const mins = Math.floor(pacePerKm / 60);
+    const secs = Math.round(pacePerKm % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}/km`;
+  };
+
+  const swimPace = calculateSwimPace();
+  const bikePace = calculateBikePace();
+  const runPace = calculateRunPace();
 
   const handleNewCalculation = () => {
     reset();
@@ -180,6 +215,7 @@ export default function ResultStep() {
           time={prediction.swim.timeFormatted}
           color={Colors.shared.swim}
           factors={prediction.swim.factors}
+          pace={swimPace}
         />
 
         <TransitionSection 
@@ -193,6 +229,7 @@ export default function ResultStep() {
           time={prediction.bike.timeFormatted}
           color={Colors.shared.bike}
           factors={prediction.bike.factors}
+          pace={bikePace}
         />
 
         <TransitionSection 
@@ -206,6 +243,7 @@ export default function ResultStep() {
           time={prediction.run.timeFormatted}
           color={Colors.shared.run}
           factors={prediction.run.factors}
+          pace={runPace}
         />
 
         {/* Resumo em tabela */}
@@ -375,8 +413,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   sectionTime: {
     fontSize: 18,
+  },
+  paceText: {
+    fontSize: 13,
+    opacity: 0.6,
   },
   factorsContainer: {
     paddingHorizontal: 16,
