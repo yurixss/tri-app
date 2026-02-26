@@ -42,7 +42,8 @@ const RACE_DISTANCES: Record<RaceDistance, RaceDistances> = {
 export default function RaceCalculatorScreen() {
   const modalShareRef = useRef<RNView>(null);
   const [shareModalVisible, setShareModalVisible] = useState(false);
-  const PREVIEW_WIDTH = Math.round(Dimensions.get('window').width * 0.78);
+  // Preview should occupy ~70% of modal width; modal is 94% of screen -> use ~66% of screen width
+  const PREVIEW_WIDTH = Math.round(Dimensions.get('window').width * 0.66);
   // Add extra vertical padding so title/footer aren't clipped in preview
   const PREVIEW_HEIGHT = Math.round(PREVIEW_WIDTH / (9 / 16)) + 40;
   const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
@@ -879,7 +880,7 @@ export default function RaceCalculatorScreen() {
               </View>
 
               <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modalScroll}>
-                <View style={[styles.modalPreviewWrapper, { height: CHECKERBOARD_HEIGHT }] }>
+                <View style={[styles.modalPreviewWrapper, { height: CHECKERBOARD_HEIGHT, width: PREVIEW_WIDTH }] }>
                   <View style={{ position: 'absolute', alignItems: 'center', justifyContent: 'center', bottom: 0 }}>
                     <CheckerboardBackground width={PREVIEW_WIDTH} height={CHECKERBOARD_HEIGHT} square={20} />
                   </View>

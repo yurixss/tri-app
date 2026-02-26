@@ -22,59 +22,73 @@ export const TriathlonShareCard = React.forwardRef((props: TriathlonShareCardPro
   const { date, totalTime, swim, t1, bike, t2, run, width, height } = props;
   const cardWidth = width ?? CARD_WIDTH;
   const cardHeight = height ?? CARD_HEIGHT;
+  const scale = cardWidth / CARD_WIDTH;
+  const titleSize = Math.round(28 * scale);
+  const dateSize = Math.round(16 * scale);
+  const totalTimeSize = Math.round(54 * scale);
+  const blockTitleSize = Math.round(18 * scale);
+  const blockValueSize = Math.round(28 * scale);
+  const blockSubSize = Math.round(15 * scale);
+  const footerSize = Math.round(13 * scale);
+  const paddingVertical = Math.round(32 * scale);
+  const paddingHorizontal = Math.round(28 * scale);
+  const borderRadius = Math.round(32 * scale);
 
   return (
     <View
       ref={ref}
-      style={[styles.card, { width: cardWidth, height: cardHeight }]}
+      style={[
+        styles.card,
+        { width: cardWidth, height: cardHeight, paddingVertical, paddingHorizontal, borderRadius },
+      ]}
       collapsable={false}
       pointerEvents="none"
     >
       <View style={styles.header}>
-        <Text style={styles.title}>TRIATHLON</Text>
-        <Text style={styles.date}>{date}</Text>
+        <Text style={[styles.title, { fontSize: titleSize } ]}>TRIATHLON</Text>
+        <Text style={[styles.date, { fontSize: dateSize }]}>{date}</Text>
       </View>
 
       <View style={styles.center}>
-        <Text style={styles.totalTime}>{totalTime}</Text>
+        <Text style={[styles.totalTime, { fontSize: totalTimeSize }]}>{totalTime}</Text>
       </View>
 
       <View style={styles.details}>
         <View style={styles.block}>
-          <Text style={styles.blockTitle}>SWIM</Text>
-          <Text style={styles.blockValue}>{swim.time}</Text>
-          <Text style={styles.blockSub}>{swim.distance}  •  {swim.pace}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>SWIM</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{swim.time}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{swim.distance}  •  {swim.pace}</Text>
         </View>
 
         {t1 && (
           <View style={styles.block}>
-            <Text style={styles.blockTitle}>T1</Text>
-            <Text style={styles.blockValue}>{t1.time}</Text>
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>T1</Text>
+            <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{t1.time}</Text>
           </View>
         )}
 
         <View style={styles.block}>
-          <Text style={styles.blockTitle}>BIKE</Text>
-          <Text style={styles.blockValue}>{bike.time}</Text>
-          <Text style={styles.blockSub}>{bike.distance}  •  {bike.speed}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>BIKE</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{bike.time}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{bike.distance}  •  {bike.speed}</Text>
         </View>
 
         {t2 && (
           <View style={styles.block}>
-            <Text style={styles.blockTitle}>T2</Text>
-            <Text style={styles.blockValue}>{t2.time}</Text>
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>T2</Text>
+            <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{t2.time}</Text>
           </View>
         )}
 
         <View style={styles.block}>
-          <Text style={styles.blockTitle}>RUN</Text>
-          <Text style={styles.blockValue}>{run.time}</Text>
-          <Text style={styles.blockSub}>{run.distance}  •  {run.pace}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>RUN</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{run.time}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{run.distance}  •  {run.pace}</Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Koa Endurance</Text>
+        <Text style={[styles.footerText, { fontSize: footerSize }]}>Koa Endurance</Text>
       </View>
     </View>
   );
