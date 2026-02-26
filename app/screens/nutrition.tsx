@@ -10,7 +10,7 @@ import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
 import { commonStyles } from '@/constants/Styles';
 import { useThemeColor } from '@/constants/Styles';
-import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
+import { formatTimeFromSeconds, parseTimeStringWithoutSeconds, isValidTimeFormatWithoutSeconds } from '@/utils/timeUtils';
 import { NUTRITION_CITATIONS } from '@/utils/citations';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -32,6 +32,7 @@ export default function NutritionScreen() {
   const [calculatedValues, setCalculatedValues] = useState<{
     carbs: number;
     sodium: number;
+    carbsPerHour?: number;
     protein: number;
     hydration: number;
   } | null>(null);
@@ -102,8 +103,8 @@ export default function NutritionScreen() {
       setError('Por favor, insira o tempo do seu treino');
       return;
     }
-    if (!isValidTimeFormat(trainingTime)) {
-      setError('Por favor, insira um formato de tempo válido (MM:SS ou H:MM:SS)');
+    if (!isValidTimeFormatWithoutSeconds(trainingTime)) {
+      setError('Por favor, insira um formato de tempo válido (MM ou H:MM)');
       return;
     }
     if (!profile || !profile.weight || !profile.height || !profile.gender) {
@@ -112,7 +113,7 @@ export default function NutritionScreen() {
     }
     setIsLoading(true);
     try {
-      const timeInSeconds = parseTimeString(trainingTime);
+      const timeInSeconds = parseTimeStringWithoutSeconds(trainingTime);
       const timeInHours = timeInSeconds / 3600;
       const weight = parseFloat(profile.weight);
       // Base values per hour adjusted by intensity
@@ -148,8 +149,11 @@ export default function NutritionScreen() {
         hydration = hydration * (1 + 0.1 * extraSteps);
       }
       const recommendedHydration = Math.round(hydration);
+      // Carbs per hour suggestion (avoid divide by zero)
+      const carbsPerHour = timeInHours > 0 ? Math.round(recommendedCarbs / timeInHours) : recommendedCarbs;
       setCalculatedValues({
         carbs: recommendedCarbs,
+        carbsPerHour,
         sodium: recommendedSodium,
         protein: recommendedProtein,
         hydration: recommendedHydration,
@@ -232,10 +236,10 @@ export default function NutritionScreen() {
             ]}
           >
             <ThemedInput
-              label="Tempo de Treino (HH:MM:SS)"
+              label="Tempo de Treino (HH:MM)"
               value={trainingTime}
               onChangeText={handleTimeChange}
-              placeholder="01:30:00"
+              placeholder="01:30"
               keyboardType="default"
               error={error}
             />
@@ -298,6 +302,7 @@ export default function NutritionScreen() {
                   >
                     {calculatedValues.carbs}g
                   </ThemedText>
+                  <ThemedText style={[styles.resultPerHour, { color: accentColor }]}>~{calculatedValues.carbsPerHour} g/h</ThemedText>
                   <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
                     Carboidratos
                   </ThemedText>
@@ -462,6 +467,11 @@ const styles = StyleSheet.create({
   resultDescription: {
     fontSize: 12,
     opacity: 0.6,
+  },
+  resultPerHour: {
+    fontSize: 12,
+    opacity: 0.9,
+    marginBottom: 4,
   },
   note: {
     fontSize: 14,

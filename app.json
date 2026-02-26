@@ -2,7 +2,7 @@
   "expo": {
     "name": "Koa Endurance",
     "slug": "tricalc-pro",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/images/tri-icon2.png",
     "scheme": "koaendurance",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.yurixss.tricalcpro",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false

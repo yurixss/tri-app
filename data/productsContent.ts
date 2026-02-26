@@ -285,42 +285,6 @@ export const PRODUCTS: Product[] = [
     whenToUse: 'Provas de triathlon e corrida de rua'
   },
   {
-    id: 'tri-suit-feminino',
-    name: 'Tri Suit Sem Manga Feminino',
-    category: 'corrida',
-    description: 'Macaquinho de triathlon feminino sem manga com pad integrado para as 3 modalidades.',
-    image: 'https://m.media-amazon.com/images/I/61zQrKvVURL._AC_SL1200_.jpg',
-    price: 'R$ 899,90',
-    rating: 4.7,
-    store: 'amazon',
-    affiliateLink: 'https://amzn.to/4tAzKyd',
-    features: [
-      'Pad integrado',
-      'Modelo sem manga',
-      'Bolsos traseiros',
-      'Zíper frontal'
-    ],
-    whenToUse: 'Provas de triathlon — natação, bike e corrida'
-  },
-  {
-    id: 'tri-suit-masculino',
-    name: 'Tri Suit Sem Manga Masculino',
-    category: 'corrida',
-    description: 'Macaquinho de triathlon masculino sem manga com pad integrado para as 3 modalidades.',
-    image: 'https://m.media-amazon.com/images/I/61uR8FVBGPL._AC_SL1200_.jpg',
-    price: 'R$ 899,90',
-    rating: 4.7,
-    store: 'amazon',
-    affiliateLink: 'https://amzn.to/4bTysIf',
-    features: [
-      'Pad integrado',
-      'Modelo sem manga',
-      'Bolsos traseiros',
-      'Zíper frontal'
-    ],
-    whenToUse: 'Provas de triathlon — natação, bike e corrida'
-  },
-  {
     id: 'cafeina-capsulas-dux',
     name: 'Cafeína em Cápsula DUX',
     category: 'nutricao',
