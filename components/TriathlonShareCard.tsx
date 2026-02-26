@@ -9,6 +9,8 @@ interface TriathlonShareCardProps {
   bike: { time: string; distance: string; speed: string };
   t2?: { time: string };
   run: { time: string; distance: string; pace: string };
+  width?: number;
+  height?: number;
 }
 
 const { width } = Dimensions.get('window');
@@ -17,12 +19,14 @@ const CARD_WIDTH = Math.round(width * 0.9);
 const CARD_HEIGHT = Math.round(CARD_WIDTH / CARD_RATIO);
 
 export const TriathlonShareCard = React.forwardRef((props: TriathlonShareCardProps, ref: React.Ref<View>) => {
-  const { date, totalTime, swim, t1, bike, t2, run } = props;
+  const { date, totalTime, swim, t1, bike, t2, run, width, height } = props;
+  const cardWidth = width ?? CARD_WIDTH;
+  const cardHeight = height ?? CARD_HEIGHT;
 
   return (
     <View
       ref={ref}
-      style={[styles.card, { width: CARD_WIDTH, height: CARD_HEIGHT }]}
+      style={[styles.card, { width: cardWidth, height: cardHeight }]}
       collapsable={false}
       pointerEvents="none"
     >

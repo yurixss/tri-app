@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable, Modal, Dimensions, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -40,7 +40,40 @@ const RACE_DISTANCES: Record<RaceDistance, RaceDistances> = {
 
 
 export default function RaceCalculatorScreen() {
-  const shareCardRef = useRef<RNView>(null);
+  const modalShareRef = useRef<RNView>(null);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
+  const PREVIEW_WIDTH = Math.round(Dimensions.get('window').width * 0.78);
+  // Add extra vertical padding so title/footer aren't clipped in preview
+  const PREVIEW_HEIGHT = Math.round(PREVIEW_WIDTH / (9 / 16)) + 40;
+  const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
+  const CHECKERBOARD_HEIGHT = MODAL_CONTAINER_HEIGHT - 100; // extend to near modal bottom
+
+  const CheckerboardBackground = ({ width, height, square = 20 }: { width: number; height: number; square?: number }) => {
+    const cols = Math.ceil(width / square);
+    const rows = Math.ceil(height / square);
+    const cells: JSX.Element[] = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const isDark = (r + c) % 2 === 0;
+        cells.push(
+          <View
+            key={`cell-${r}-${c}`}
+            style={{
+              width: square,
+              height: square,
+              backgroundColor: isDark ? '#111111' : '#333333'
+            }}
+          />
+        );
+      }
+    }
+
+    return (
+      <View style={{ width, height, overflow: 'hidden' }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>{cells}</View>
+      </View>
+    );
+  };
   const router = useRouter();
   const [raceDistance, setRaceDistance] = useState<RaceDistance>('sprint');
   const [swimTime, setSwimTime] = useState('');
@@ -709,7 +742,7 @@ export default function RaceCalculatorScreen() {
                       { borderColor: Colors.shared.primary },
                       { opacity: pressed ? 0.6 : 1 },
                     ]}
-                    onPress={handleShare}
+                    onPress={() => setShareModalVisible(true)}
                   >
                     <ShareNetwork size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
@@ -826,53 +859,75 @@ export default function RaceCalculatorScreen() {
               </View>
             </View>
           )}
-          {/* Preview do Share Card */}
-          {totalTime !== null && (
-            <View style={{ alignItems: 'center', marginVertical: 24 }}>
-              <TriathlonShareCard
-                ref={shareCardRef}
-                date={getFormattedDate()}
-                totalTime={formatTimeFromSeconds(totalTime)}
-                swim={{
-                  time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
-                  distance: `${distances.swim}m`,
-                  pace: paces.swim || '-',
-                }}
-                t1={t1Time ? { time: formatTimeFromSeconds(parseTransition(t1Time)) } : undefined}
-                bike={{
-                  time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
-                  distance: `${distances.bike}km`,
-                  speed: paces.bike || '-',
-                }}
-                t2={t2Time ? { time: formatTimeFromSeconds(parseTransition(t2Time)) } : undefined}
-                run={{
-                  time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
-                  distance: `${distances.run}km`,
-                  pace: paces.run || '-',
-                }}
-              />
-              <ThemedText style={{ color: Colors.shared.primary, marginTop: 8, fontSize: 13, opacity: 0.7 }}>
-                Preview do card para compartilhar
-              </ThemedText>
-              <ThemedButton
-                title="Exportar Card PNG Transparente"
-                color={Colors.shared.primary}
-                onPress={async () => {
-                  if (shareCardRef.current) {
-                    const uri = await exportShareCardToPng(shareCardRef.current);
-                    if (uri) {
-                      // Aqui você pode compartilhar, salvar ou mostrar feedback
-                      alert('Card exportado!\nArquivo salvo em:\n' + uri);
-                    } else {
-                      alert('Erro ao exportar card.');
-                    }
-                  }
-                }}
-                style={{ marginTop: 16, minWidth: 220 }}
-              />
-            </View>
-          )}
+          {/* preview moved into modal */}
         </ScrollView>
+        {/* Share Modal */}
+        <Modal
+          visible={shareModalVisible}
+          animationType="slide"
+          transparent
+          onRequestClose={() => setShareModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.modalContainer, { backgroundColor: cardBg }]}> 
+              <View style={styles.modalHeader}>
+                <TouchableOpacity onPress={() => setShareModalVisible(false)}>
+                  <ThemedText style={styles.modalClose}>Close</ThemedText>
+                </TouchableOpacity>
+                <ThemedText style={styles.modalTitle}>Share Activity</ThemedText>
+                <View style={{ width: 60 }} />
+              </View>
+
+              <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modalScroll}>
+                <View style={[styles.modalPreviewWrapper, { height: CHECKERBOARD_HEIGHT }] }>
+                  <View style={{ position: 'absolute', alignItems: 'center', justifyContent: 'center', bottom: 0 }}>
+                    <CheckerboardBackground width={PREVIEW_WIDTH} height={CHECKERBOARD_HEIGHT} square={20} />
+                  </View>
+                  <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', paddingVertical: 12 }}>
+                    <TriathlonShareCard
+                      ref={modalShareRef}
+                      width={PREVIEW_WIDTH}
+                      height={PREVIEW_HEIGHT}
+                      date={getFormattedDate()}
+                      totalTime={formatTimeFromSeconds(totalTime ?? 0)}
+                      swim={{
+                        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
+                        distance: `${distances.swim}m`,
+                        pace: paces.swim || '-',
+                      }}
+                      t1={t1Time ? { time: formatTimeFromSeconds(parseTransition(t1Time)) } : undefined}
+                      bike={{
+                        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
+                        distance: `${distances.bike}km`,
+                        speed: paces.bike || '-',
+                      }}
+                      t2={t2Time ? { time: formatTimeFromSeconds(parseTransition(t2Time)) } : undefined}
+                      run={{
+                        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
+                        distance: `${distances.run}km`,
+                        pace: paces.run || '-',
+                      }}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
+
+              <View style={styles.modalFooter}>
+                <ThemedButton
+                  title="Exportar Card PNG Transparente"
+                  color={Colors.shared.primary}
+                  onPress={async () => {
+                    if (modalShareRef.current) {
+                      const uri = await exportShareCardToPng(modalShareRef.current);
+                      if (uri) alert('Card exportado!\n' + uri);
+                      else alert('Erro ao exportar card.');
+                    }
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ThemedView>
     </KeyboardAvoidingView>
   );
@@ -882,6 +937,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer: {
+    width: '94%',
+    height: Dimensions.get('window').height * 0.9,
+    backgroundColor: Colors.shared.cardBackground,
+    borderRadius: 16,
+    padding: 12,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    marginBottom: 8,
+  },
+  modalClose: {
+    fontSize: 16,
+    color: Colors.shared.primary,
+    textDecorationLine: 'underline',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.shared.primary,
+  },
+  modalScroll: {
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  modalPreviewWrapper: {
+    width: Dimensions.get('window').width * 0.78,
+    height: Dimensions.get('window').width * 0.78 / (9 / 16),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalFooter: {
+    marginTop: 12,
+    alignItems: 'center',
   },
   scrollView: {
     flex: 1,
