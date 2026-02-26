@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable, Modal, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable, Modal, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -12,10 +12,11 @@ import { TriathlonShareCard } from '@/components/TriathlonShareCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
-import { ShareNetwork, Copy } from 'phosphor-react-native';
+import { ArrowSquareUp, Copy } from 'phosphor-react-native';
 import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
 import { exportShareCardToPng } from '@/utils/shareCardUtils';
 import { View as RNView } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
 
@@ -293,6 +294,8 @@ export default function RaceCalculatorScreen() {
       // Calculate total time
       const total = times.swim + times.t1 + times.bike + times.t2 + times.run;
       setTotalTime(total);
+      // Open share modal right after successful calculation
+      setShareModalVisible(true);
     } catch (e) {
       console.error('Erro ao calcular tempo de prova', e);
       setError('Ocorreu um erro ao calcular');
@@ -533,6 +536,29 @@ export default function RaceCalculatorScreen() {
     }
   };
 
+  const handleExportSave = async () => {
+    if (!modalShareRef.current) return;
+
+    try {
+      const tmpUri = await exportShareCardToPng(modalShareRef.current);
+      if (!tmpUri) {
+        Alert.alert('Erro', 'Não foi possível exportar o card.');
+        return;
+      }
+
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const filename = `tri-card-${timestamp}.png`;
+      const dest = FileSystem.documentDirectory + filename;
+
+      await FileSystem.moveAsync({ from: tmpUri, to: dest });
+
+      Alert.alert('Exportado', `Card salvo em: ${dest}`);
+    } catch (e) {
+      console.error('Erro ao salvar card:', e);
+      Alert.alert('Erro', 'Erro ao salvar o arquivo.');
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -540,7 +566,7 @@ export default function RaceCalculatorScreen() {
     >
       <ThemedView style={styles.container}>
           <Header
-            title="Calculadora de Tempo"
+            title="Share Triathlon Time"
             color={Colors.shared.primary}
             onBackPress={() => router.back()}
           />
@@ -585,6 +611,9 @@ export default function RaceCalculatorScreen() {
           >
             
             <View style={styles.inputWrapper}>
+              <ThemedText style={styles.instructionTitle} fontFamily="Inter-Bold">
+                Preencha seus tempos para compartilhar.
+              </ThemedText>
               <View style={styles.labelRow}>
                 <ThemedText 
                   style={styles.inputLabel}
@@ -593,7 +622,7 @@ export default function RaceCalculatorScreen() {
                   Tempo Natação
                 </ThemedText>
                 {paces.swim && (
-                  <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
+                  <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}> 
                     {paces.swim}
                   </ThemedText>
                 )}
@@ -692,7 +721,7 @@ export default function RaceCalculatorScreen() {
 
             <View style={styles.buttonRow}>
               <ThemedButton
-                title="Calcular"
+                title="Somar"
                 color={Colors.shared.primary}
                 onPress={validateAndCalculate}
                 isLoading={isLoading}
@@ -745,7 +774,7 @@ export default function RaceCalculatorScreen() {
                     ]}
                     onPress={() => setShareModalVisible(true)}
                   >
-                    <ShareNetwork size={16} color={Colors.shared.primary} weight="regular" />
+                    <ArrowSquareUp size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
                 </View>
               </View>
@@ -913,17 +942,19 @@ export default function RaceCalculatorScreen() {
                 </View>
               </ScrollView>
 
-              <View style={styles.modalFooter}>
+              <View style={styles.modalFooterRow}>
                 <ThemedButton
-                  title="Exportar Card PNG Transparente"
+                  title="Copiar"
                   color={Colors.shared.primary}
-                  onPress={async () => {
-                    if (modalShareRef.current) {
-                      const uri = await exportShareCardToPng(modalShareRef.current);
-                      if (uri) alert('Card exportado!\n' + uri);
-                      else alert('Erro ao exportar card.');
-                    }
-                  }}
+                  containerStyle={{ flex: 1, marginRight: 8 }}
+                  onPress={handleCopy}
+                />
+
+                <ThemedButton
+                  title="Exportar"
+                  color={Colors.shared.neutrals.gray700}
+                  containerStyle={{ flex: 1, marginLeft: 8 }}
+                  onPress={handleExportSave}
                 />
               </View>
             </View>
@@ -982,6 +1013,12 @@ const styles = StyleSheet.create({
   modalFooter: {
     marginTop: 12,
     alignItems: 'center',
+  },
+  modalFooterRow: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   scrollView: {
     flex: 1,
@@ -1129,5 +1166,12 @@ const styles = StyleSheet.create({
   },
   copyButton: {
     padding: 4,
+  },
+  instructionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+    color: Colors.shared.primary,
+    opacity: 0.96,
   },
 });

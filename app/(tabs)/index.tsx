@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { ForkKnife, Calculator, Backpack, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
+import { ForkKnife, ArrowSquareUp, Backpack, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
 import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
@@ -315,8 +315,8 @@ export default function HomeScreen() {
           />
 
           <SecondaryToolCard
-            title="Calculadora de prova"
-            icon={<Calculator size={24} color={Colors.shared.primary} weight="bold" />}
+            title="Share Tri"
+            icon={<ArrowSquareUp size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/race-calculator')}
             backgroundColor={cardBg}
