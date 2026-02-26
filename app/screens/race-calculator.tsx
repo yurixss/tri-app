@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
@@ -8,13 +8,22 @@ import { TimeInput } from '@/components/TimeInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { DropdownSelector } from '@/components/DropdownSelector';
 import { Header } from '@/components/Header';
+import { TriathlonShareCard } from '@/components/TriathlonShareCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
 import { ShareNetwork, Copy } from 'phosphor-react-native';
 import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
+import { exportShareCardToPng } from '@/utils/shareCardUtils';
+import { View as RNView } from 'react-native';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
+
+  // Função para formatar a data de hoje
+  function getFormattedDate() {
+    const now = new Date();
+    return now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
 
 interface RaceDistances {
   swim: number; // meters
@@ -29,7 +38,9 @@ const RACE_DISTANCES: Record<RaceDistance, RaceDistances> = {
   '140.6': { swim: 3800, bike: 180, run: 42.2 },
 };
 
+
 export default function RaceCalculatorScreen() {
+  const shareCardRef = useRef<RNView>(null);
   const router = useRouter();
   const [raceDistance, setRaceDistance] = useState<RaceDistance>('sprint');
   const [swimTime, setSwimTime] = useState('');
@@ -813,6 +824,52 @@ export default function RaceCalculatorScreen() {
                   </View>
                 </View>
               </View>
+            </View>
+          )}
+          {/* Preview do Share Card */}
+          {totalTime !== null && (
+            <View style={{ alignItems: 'center', marginVertical: 24 }}>
+              <TriathlonShareCard
+                ref={shareCardRef}
+                date={getFormattedDate()}
+                totalTime={formatTimeFromSeconds(totalTime)}
+                swim={{
+                  time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
+                  distance: `${distances.swim}m`,
+                  pace: paces.swim || '-',
+                }}
+                t1={t1Time ? { time: formatTimeFromSeconds(parseTransition(t1Time)) } : undefined}
+                bike={{
+                  time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
+                  distance: `${distances.bike}km`,
+                  speed: paces.bike || '-',
+                }}
+                t2={t2Time ? { time: formatTimeFromSeconds(parseTransition(t2Time)) } : undefined}
+                run={{
+                  time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
+                  distance: `${distances.run}km`,
+                  pace: paces.run || '-',
+                }}
+              />
+              <ThemedText style={{ color: Colors.shared.primary, marginTop: 8, fontSize: 13, opacity: 0.7 }}>
+                Preview do card para compartilhar
+              </ThemedText>
+              <ThemedButton
+                title="Exportar Card PNG Transparente"
+                color={Colors.shared.primary}
+                onPress={async () => {
+                  if (shareCardRef.current) {
+                    const uri = await exportShareCardToPng(shareCardRef.current);
+                    if (uri) {
+                      // Aqui você pode compartilhar, salvar ou mostrar feedback
+                      alert('Card exportado!\nArquivo salvo em:\n' + uri);
+                    } else {
+                      alert('Erro ao exportar card.');
+                    }
+                  }
+                }}
+                style={{ marginTop: 16, minWidth: 220 }}
+              />
             </View>
           )}
         </ScrollView>
