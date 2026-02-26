@@ -68,7 +68,6 @@ export default function MySetupScreen() {
   const [formCategory, setFormCategory] = useState<SetupCategory>('outros');
   const [formPrice, setFormPrice] = useState('');
   const [formDate, setFormDate] = useState('');
-  const [formNotes, setFormNotes] = useState('');
 
   useEffect(() => {
     initData();
@@ -98,7 +97,6 @@ export default function MySetupScreen() {
     setFormCategory('outros');
     setFormPrice('');
     setFormDate('');
-    setFormNotes('');
     setEditingId(null);
     setShowForm(false);
   };
@@ -109,7 +107,10 @@ export default function MySetupScreen() {
       return;
     }
 
-    const rawPrice = formPrice.replace(/[^\d.,]/g, '').replace(',', '.');
+    const rawPrice = formPrice
+      .replace(/\./g, '') // remove thousands separator
+      .replace(',', '.')
+      .replace(/[^\d.]/g, '');
     const pricePaid = parseFloat(rawPrice) || 0;
 
     // Parse date DD/MM/YYYY → ISO
@@ -132,7 +133,6 @@ export default function MySetupScreen() {
       category: formCategory,
       purchaseDate,
       pricePaid,
-      notes: formNotes.trim() || undefined,
       addedAt: editingId
         ? items.find((i) => i.id === editingId)?.addedAt ?? new Date().toISOString()
         : new Date().toISOString(),
@@ -150,13 +150,26 @@ export default function MySetupScreen() {
     resetForm();
   };
 
+  // Formats date as DD/MM/YYYY while typing and limits input to 8 digits (DDMMYYYY)
+  const handleDateChange = (text: string) => {
+    const digits = text.replace(/\D/g, '').slice(0, 8);
+    let formatted = digits;
+    if (digits.length >= 5) {
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+    } else if (digits.length >= 3) {
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    }
+    setFormDate(formatted);
+  };
+
+  
+
   const handleEdit = (item: SetupItem) => {
     setFormName(item.name);
     setFormModality(item.modality);
     setFormCategory(item.category);
     setFormPrice(item.pricePaid > 0 ? item.pricePaid.toString() : '');
     setFormDate(item.purchaseDate ? formatDate(item.purchaseDate) : '');
-    setFormNotes(item.notes ?? '');
     setEditingId(item.id);
     setShowForm(true);
     setTimeout(() => scrollRef.current?.scrollTo({ y: 0, animated: true }), 150);
@@ -202,9 +215,6 @@ export default function MySetupScreen() {
           <ThemedText style={styles.headerTitle} fontFamily="Inter-Bold">
             Meu Setup
           </ThemedText>
-          {/* <ThemedText style={[styles.headerSubtitle, { color: secondaryText }]}>
-            Painel de investimento em equipamentos
-          </ThemedText> */}
         </View>
         <TouchableOpacity
           style={styles.addButton}
@@ -238,10 +248,8 @@ export default function MySetupScreen() {
 
               {/* Name */}
               <View style={styles.formGroup}>
-                <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
-                  Equipamento *
-                </ThemedText>
                 <TextInput
+                  accessibilityLabel="Equipamento"
                   style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
                   value={formName}
                   onChangeText={setFormName}
@@ -255,8 +263,7 @@ export default function MySetupScreen() {
                 <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
                   Modalidade
                 </ThemedText>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={styles.chipRow}>
+                <View style={styles.chipRow}>
                     {modalityEntries.map(([key, config]) => (
                       <TouchableOpacity
                         key={key}
@@ -274,12 +281,11 @@ export default function MySetupScreen() {
                             { color: formModality === key ? '#FFF' : textColor },
                           ]}
                         >
-                          {config.emoji} {config.label}
+                          {config.label}
                         </ThemedText>
                       </TouchableOpacity>
                     ))}
                   </View>
-                </ScrollView>
               </View>
 
               {/* Category */}
@@ -287,8 +293,7 @@ export default function MySetupScreen() {
                 <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
                   Categoria
                 </ThemedText>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={styles.chipRow}>
+                <View style={styles.chipRow}>
                     {categoryEntries.map(([key, config]) => (
                       <TouchableOpacity
                         key={key}
@@ -306,63 +311,46 @@ export default function MySetupScreen() {
                             { color: formCategory === key ? '#FFF' : textColor },
                           ]}
                         >
-                          {config.emoji} {config.label}
+                          {config.label}
                         </ThemedText>
                       </TouchableOpacity>
                     ))}
                   </View>
-                </ScrollView>
               </View>
 
-              {/* Price */}
-              <View style={styles.formGroup}>
-                <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
-                  Valor pago (R$) *
-                </ThemedText>
-                <TextInput
-                  style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
-                  value={formPrice}
-                  onChangeText={setFormPrice}
-                  placeholder="Ex: 3899"
-                  placeholderTextColor={secondaryText}
-                  keyboardType="numeric"
-                />
+              {/* Price + Purchase Date (side by side) */}
+              <View style={styles.formRow}>
+                <View style={[styles.formGroup, styles.formHalf, { marginRight: 8 }]}> 
+                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}> 
+                    Valor pago (R$) *
+                  </ThemedText>
+                  <TextInput
+                    style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
+                    value={formPrice}
+                    onChangeText={setFormPrice}
+                    placeholder="Ex: 3899"
+                    placeholderTextColor={secondaryText}
+                    keyboardType="numeric"
+                  />
+                </View>
+
+                <View style={[styles.formGroup, styles.formHalf]}> 
+                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}> 
+                    Data da compra
+                  </ThemedText>
+                  <TextInput
+                    style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
+                    value={formDate}
+                    onChangeText={handleDateChange}
+                    placeholder="DD/MM/AAAA"
+                    placeholderTextColor={secondaryText}
+                    keyboardType={RNPlatform.OS === 'ios' ? 'number-pad' : 'numeric'}
+                    maxLength={10}
+                  />
+                </View>
               </View>
 
-              {/* Purchase Date */}
-              <View style={styles.formGroup}>
-                <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
-                  Data da compra
-                </ThemedText>
-                <TextInput
-                  style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
-                  value={formDate}
-                  onChangeText={setFormDate}
-                  placeholder="DD/MM/AAAA"
-                  placeholderTextColor={secondaryText}
-                  keyboardType="numbers-and-punctuation"
-                />
-              </View>
-
-              {/* Notes */}
-              <View style={styles.formGroup}>
-                <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
-                  Observações
-                </ThemedText>
-                <TextInput
-                  style={[
-                    styles.input,
-                    styles.inputMultiline,
-                    { borderColor, color: textColor, backgroundColor: bgColor },
-                  ]}
-                  value={formNotes}
-                  onChangeText={setFormNotes}
-                  placeholder="Ex: Precisão GPS multibanda, excelente bateria"
-                  placeholderTextColor={secondaryText}
-                  multiline
-                  numberOfLines={3}
-                />
-              </View>
+              {/* Notes removed */}
 
               {/* Actions */}
               <View style={styles.formActions}>
@@ -428,8 +416,10 @@ export default function MySetupScreen() {
 
               {/* ── Modality Cards 2×2 ── */}
               <View style={styles.modalityGrid}>
-                {(['ciclismo', 'corrida', 'natacao', 'transicao'] as SetupModality[]).map(
-                  (mod) => {
+                {(Object.keys(MODALITY_CONFIG) as SetupModality[])
+                  .sort((a, b) => (summary.byModality[b] ?? 0) - (summary.byModality[a] ?? 0))
+                  .slice(0, 4)
+                  .map((mod) => {
                     const config = MODALITY_CONFIG[mod];
                     const val = summary.byModality[mod];
                     const pct = calcPercentage(val, summary.total);
@@ -469,8 +459,7 @@ export default function MySetupScreen() {
                         </ThemedText>
                       </View>
                     );
-                  },
-                )}
+                  })}
               </View>
 
               {/* ── Category Breakdown ── */}
@@ -892,6 +881,7 @@ const styles = StyleSheet.create({
   },
   inputMultiline: { minHeight: 80, textAlignVertical: 'top' },
   chipRow: { flexDirection: 'row', gap: 8 },
+  chipRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -899,6 +889,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   chipText: { fontSize: 12 },
+  formRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  formHalf: { flex: 1, minWidth: 0 },
   formActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

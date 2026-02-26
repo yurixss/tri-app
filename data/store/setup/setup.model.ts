@@ -21,7 +21,8 @@ export type SetupCategory =
   | 'calcados'
   | 'bike_componentes'
   | 'recuperacao'
-  | 'outros';
+  | 'outros'
+  | 'inscricao_provas';
 
 // ─── SetupItem ───────────────────────────────────────────────────────
 
@@ -71,15 +72,16 @@ export const CATEGORY_SETUP_CONFIG: Record<SetupCategory, {
   label: string;
   emoji: string;
 }> = {
-  aerodinamica: { label: 'Aerodinâmica', emoji: '💨' },
   nutricao: { label: 'Nutrição', emoji: '🍎' },
   eletronicos: { label: 'Eletrônicos', emoji: '⌚' },
   vestuario: { label: 'Vestuário', emoji: '👕' },
   protecao: { label: 'Proteção', emoji: '🛡️' },
   acessorios: { label: 'Acessórios', emoji: '🎒' },
   calcados: { label: 'Calçados', emoji: '👟' },
-  bike_componentes: { label: 'Bike Componentes', emoji: '⚙️' },
+  bike_componentes: { label: 'Componentes', emoji: '⚙️' },
   recuperacao: { label: 'Recuperação', emoji: '💆' },
+  aerodinamica: { label: 'Aerodinâmica', emoji: '💨' },
+  inscricao_provas: { label: 'Inscrição de Provas', emoji: '🎫' },
   outros: { label: 'Outros', emoji: '📦' },
 };
 
