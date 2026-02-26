@@ -47,6 +47,38 @@ export default function RaceCalculatorScreen() {
 
   const distances = RACE_DISTANCES[raceDistance];
 
+  // Normalize inputs:
+  // - For fields that accept hours but no seconds (swim/bike/run), a single number
+  //   should be treated as hours -> "H:00" (hours:minutes).
+  // - For transitions (T1/T2), a single number should be treated as minutes -> "M:00" (minutes:seconds).
+  const normalizeNoSecondsWithHours = (timeStr: string) => {
+    if (!timeStr || timeStr.trim() === '') return timeStr;
+    const s = timeStr.trim();
+    if (!s.includes(':') && /^\d+$/.test(s)) {
+      return `${parseInt(s, 10)}:00`;
+    }
+    return s;
+  };
+
+  const normalizeTransition = (timeStr: string) => {
+    if (!timeStr || timeStr.trim() === '') return timeStr;
+    const s = timeStr.trim();
+    if (!s.includes(':') && /^\d+$/.test(s)) {
+      return `${parseInt(s, 10)}:00`;
+    }
+    return s;
+  };
+
+  const parseNoSecondsWithHours = (timeStr: string) => {
+    const normalized = normalizeNoSecondsWithHours(timeStr);
+    return parseTimeStringWithoutSeconds(normalized);
+  };
+
+  const parseTransition = (timeStr: string) => {
+    const normalized = normalizeTransition(timeStr);
+    return parseTimeString(normalized);
+  };
+
   // Helper function to parse partial time strings from TimeInput
   // TimeInput returns formats like: "1", "1:30", "1:30:45" (without padding while typing)
   const parsePartialTime = (timeStr: string, hasHours: boolean): number => {
@@ -175,32 +207,40 @@ export default function RaceCalculatorScreen() {
           setIsLoading(false);
           return;
         }
+        // Normalize single-number hour entries (e.g. "1" -> "1:00")
+        const normalized = normalizeNoSecondsWithHours(field.value);
         // swim, bike, run use H:M format (no seconds)
-        if (!isValidTimeFormatWithoutSeconds(field.value)) {
+        if (!isValidTimeFormatWithoutSeconds(normalized)) {
           setError(`Por favor, insira um formato válido para ${field.name} (H:M ou H:MM)`);
           setIsLoading(false);
           return;
         }
-        times[field.key] = parseTimeStringWithoutSeconds(field.value);
+        times[field.key] = parseTimeStringWithoutSeconds(normalized);
       }
 
-      // Optional transition times
-      if (t1Time && isValidTimeFormat(t1Time)) {
-        times.t1 = parseTimeString(t1Time);
-      } else if (t1Time) {
-        setError('Por favor, insira um formato válido para T1 (MM:SS ou H:MM:SS)');
-        setIsLoading(false);
-        return;
+      // Optional transition times (normalize single-number to minutes:seconds)
+      if (t1Time) {
+        const normalizedT1 = normalizeTransition(t1Time);
+        if (isValidTimeFormat(normalizedT1)) {
+          times.t1 = parseTimeString(normalizedT1);
+        } else {
+          setError('Por favor, insira um formato válido para T1 (MM:SS ou H:MM:SS)');
+          setIsLoading(false);
+          return;
+        }
       } else {
         times.t1 = 0;
       }
 
-      if (t2Time && isValidTimeFormat(t2Time)) {
-        times.t2 = parseTimeString(t2Time);
-      } else if (t2Time) {
-        setError('Por favor, insira um formato válido para T2 (MM:SS ou H:MM:SS)');
-        setIsLoading(false);
-        return;
+      if (t2Time) {
+        const normalizedT2 = normalizeTransition(t2Time);
+        if (isValidTimeFormat(normalizedT2)) {
+          times.t2 = parseTimeString(normalizedT2);
+        } else {
+          setError('Por favor, insira um formato válido para T2 (MM:SS ou H:MM:SS)');
+          setIsLoading(false);
+          return;
+        }
       } else {
         times.t2 = 0;
       }
@@ -249,17 +289,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -267,13 +307,13 @@ export default function RaceCalculatorScreen() {
 
     if (t1Time) {
       raceData.t1 = {
-        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+        time: formatTimeFromSeconds(parseTransition(t1Time)),
       };
     }
 
     if (t2Time) {
       raceData.t2 = {
-        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+        time: formatTimeFromSeconds(parseTransition(t2Time)),
       };
     }
 
@@ -287,17 +327,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -305,13 +345,13 @@ export default function RaceCalculatorScreen() {
 
     if (t1Time) {
       raceData.t1 = {
-        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+        time: formatTimeFromSeconds(parseTransition(t1Time)),
       };
     }
 
     if (t2Time) {
       raceData.t2 = {
-        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+        time: formatTimeFromSeconds(parseTransition(t2Time)),
       };
     }
 
@@ -329,17 +369,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -347,13 +387,13 @@ export default function RaceCalculatorScreen() {
 
     if (t1Time) {
       raceData.t1 = {
-        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+        time: formatTimeFromSeconds(parseTransition(t1Time)),
       };
     }
 
     if (t2Time) {
       raceData.t2 = {
-        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+        time: formatTimeFromSeconds(parseTransition(t2Time)),
       };
     }
 
@@ -371,17 +411,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -389,13 +429,13 @@ export default function RaceCalculatorScreen() {
 
     if (t1Time) {
       raceData.t1 = {
-        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+        time: formatTimeFromSeconds(parseTransition(t1Time)),
       };
     }
 
     if (t2Time) {
       raceData.t2 = {
-        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+        time: formatTimeFromSeconds(parseTransition(t2Time)),
       };
     }
 
@@ -413,17 +453,17 @@ export default function RaceCalculatorScreen() {
       raceDistance: getRaceDistanceLabel(raceDistance),
       totalTime: formatTimeFromSeconds(totalTime),
       swim: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
         pace: paces.swim,
         distance: `${distances.swim}m`,
       },
       bike: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
         pace: paces.bike,
         distance: `${distances.bike}km`,
       },
       run: {
-        time: formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime)),
+        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
         pace: paces.run,
         distance: `${distances.run}km`,
       },
@@ -431,13 +471,13 @@ export default function RaceCalculatorScreen() {
 
     if (t1Time) {
       raceData.t1 = {
-        time: formatTimeFromSeconds(parseTimeString(t1Time)),
+        time: formatTimeFromSeconds(parseTransition(t1Time)),
       };
     }
 
     if (t2Time) {
       raceData.t2 = {
-        time: formatTimeFromSeconds(parseTimeString(t2Time)),
+        time: formatTimeFromSeconds(parseTransition(t2Time)),
       };
     }
 
@@ -695,7 +735,7 @@ export default function RaceCalculatorScreen() {
                   </View>
                   <View style={styles.breakdownRight}>
                     <ThemedText style={styles.breakdownValue}>
-                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(swimTime))}
+                      {formatTimeFromSeconds(parseNoSecondsWithHours(swimTime))}
                     </ThemedText>
                     <Pressable 
                       style={({ pressed }) => [
@@ -712,7 +752,7 @@ export default function RaceCalculatorScreen() {
                   <View style={styles.breakdownItem}>
                     <ThemedText style={styles.breakdownLabel}>T1:</ThemedText>
                     <ThemedText style={styles.breakdownValue}>
-                      {formatTimeFromSeconds(parseTimeString(t1Time))}
+                      {formatTimeFromSeconds(parseTransition(t1Time))}
                     </ThemedText>
                   </View>
                 )}
@@ -727,7 +767,7 @@ export default function RaceCalculatorScreen() {
                   </View>
                   <View style={styles.breakdownRight}>
                     <ThemedText style={styles.breakdownValue}>
-                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(bikeTime))}
+                      {formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime))}
                     </ThemedText>
                     <Pressable 
                       style={({ pressed }) => [
@@ -744,7 +784,7 @@ export default function RaceCalculatorScreen() {
                   <View style={styles.breakdownItem}>
                     <ThemedText style={styles.breakdownLabel}>T2:</ThemedText>
                     <ThemedText style={styles.breakdownValue}>
-                      {formatTimeFromSeconds(parseTimeString(t2Time))}
+                      {formatTimeFromSeconds(parseTransition(t2Time))}
                     </ThemedText>
                   </View>
                 )}
@@ -759,7 +799,7 @@ export default function RaceCalculatorScreen() {
                   </View>
                   <View style={styles.breakdownRight}>
                     <ThemedText style={styles.breakdownValue}>
-                      {formatTimeFromSeconds(parseTimeStringWithoutSeconds(runTime))}
+                      {formatTimeFromSeconds(parseNoSecondsWithHours(runTime))}
                     </ThemedText>
                     <Pressable 
                       style={({ pressed }) => [

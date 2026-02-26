@@ -139,6 +139,59 @@ export const PROTOCOLS: Protocol[] = [
     'Combinar com pré-treinos desconhecidos',
     'Ignorar sensibilidade individual ou histórico de ansiedade'
   ]
+},
+{
+  "id": "gut-training-protocol",
+  "title": "Treino do Intestino - Protocolo de Adaptação Gastrointestinal",
+  "category": "performance",
+  "duration": "4-6 semanas",
+  "whenToUse": "Durante a preparação para provas acima de 2 horas (meia maratona, maratona, 70.3 e Ironman), especialmente se o atleta pretende ingerir >60g de carboidrato por hora.",
+  "objective": "Aumentar capacidade de absorção de carboidratos por hora, reduzir risco de desconforto gastrointestinal e permitir maior ingestão energética sem queda de performance.",
+  "steps": [
+    {
+      "order": 1,
+      "title": "Definição da Meta de Ingestão",
+      "description": "Estabelecer meta de ingestão baseada na duração da prova: 60g/h (2-3h), 75-90g/h (3-5h), 90-100g/h (5h+). Preferir combinação glicose + frutose (2:1 ou 1:0.8) para aumentar taxa de absorção.",
+      "tip": "Não iniciar direto em 90g/h se nunca treinou acima de 50-60g/h. Progressão é fundamental."
+    },
+    {
+      "order": 2,
+      "title": "Exposição Progressiva Semanal",
+      "description": "Introduzir ingestão de carboidrato durante treinos longos 1-2x por semana. Iniciar com 60g/h e aumentar 10-15g por semana até atingir meta desejada.",
+      "tip": "Aplicar principalmente em treinos de bike, onde a tolerância gastrointestinal tende a ser maior."
+    },
+    {
+      "order": 3,
+      "title": "Simulação de Prova",
+      "description": "Realizar pelo menos 2-3 treinos longos simulando exatamente a estratégia da prova: mesmos géis, mesma concentração de carboidrato líquido, mesma frequência de ingestão (ex: a cada 15-20 minutos).",
+      "tip": "Evitar testar novos produtos no dia da prova. O intestino adapta-se ao tipo específico de carboidrato utilizado."
+    },
+    {
+      "order": 4,
+      "title": "Distribuição Fracionada",
+      "description": "Dividir ingestão total por hora em pequenas doses frequentes (ex: 20-25g a cada 15-20 minutos) para reduzir sobrecarga intestinal e melhorar absorção.",
+      "tip": "Grandes bolos de ingestão aumentam risco de estufamento e desconforto."
+    },
+    {
+      "order": 5,
+      "title": "Monitoramento de Sintomas",
+      "description": "Registrar após cada treino: náusea, distensão abdominal, refluxo, urgência intestinal, queda de energia. Ajustar volume, concentração ou tipo de carboidrato conforme resposta.",
+      "tip": "Desconforto leve pode ocorrer nas primeiras sessões, mas deve reduzir com adaptação progressiva."
+    }
+  ],
+  "signsItWorks": [
+    "Capacidade de ingerir >75-90g/h sem desconforto significativo",
+    "Energia estável em treinos longos acima de 2-3 horas",
+    "Ausência de náusea ou distensão abdominal tardia",
+    "Melhor manutenção de potência ou pace na fase final do treino"
+  ],
+  "commonMistakes": [
+    "Aumentar ingestão muito rápido sem adaptação progressiva",
+    "Testar estratégia apenas na corrida (maior impacto gastrointestinal)",
+    "Não ajustar ingestão de líquidos junto com carboidrato",
+    "Misturar múltiplas marcas ou fórmulas sem teste prévio",
+    "Ignorar sinais repetidos de desconforto moderado a severo"
+  ]
 }
 ];
 
