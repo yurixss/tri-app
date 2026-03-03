@@ -9,14 +9,16 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { DropdownSelector } from '@/components/DropdownSelector';
 import { Header } from '@/components/Header';
 import { TriathlonShareCard } from '@/components/TriathlonShareCard';
+import TriathlonSplitShareCard from '@/components/TriathlonSplitShareCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { formatTimeFromSeconds, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
+import { formatTimeFromSeconds, formatHoursMinutes, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
 import { ArrowSquareUp, Copy } from 'phosphor-react-native';
 import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
-import { exportShareCardToPng } from '@/utils/shareCardUtils';
+import { exportShareCardToPng, copyShareCardToClipboard } from '@/utils/shareCardUtils';
 import { View as RNView } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as MediaLibrary from 'expo-media-library';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
 
@@ -42,13 +44,20 @@ const RACE_DISTANCES: Record<RaceDistance, RaceDistances> = {
 
 export default function RaceCalculatorScreen() {
   const modalShareRef = useRef<RNView>(null);
+  const modalShareSplitRef = useRef<RNView>(null);
+  const [activePreviewIndex, setActivePreviewIndex] = useState(0);
+  const PREVIEW_COUNT = 2;
   const [shareModalVisible, setShareModalVisible] = useState(false);
-  // Preview should occupy ~70% of modal width; modal is 94% of screen -> use ~66% of screen width
-  const PREVIEW_WIDTH = Math.round(Dimensions.get('window').width * 0.66);
-  // Add extra vertical padding so title/footer aren't clipped in preview
-  const PREVIEW_HEIGHT = Math.round(PREVIEW_WIDTH / (9 / 16)) + 40;
+  // Modal and preview sizing
   const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
-  const CHECKERBOARD_HEIGHT = MODAL_CONTAINER_HEIGHT - 100; // extend to near modal bottom
+  const MODAL_CONTAINER_WIDTH = Math.round(Dimensions.get('window').width * 0.94);
+  // Inner content width inside modal (account for modal padding 12 on each side)
+  const MODAL_INNER_WIDTH = MODAL_CONTAINER_WIDTH - 24;
+  // Each preview should occupy 80% of the modal inner width
+  const PREVIEW_WIDTH = Math.round(MODAL_INNER_WIDTH * 0.8);
+  // Each preview should occupy 60% of modal height
+  const PREVIEW_HEIGHT = Math.round(MODAL_CONTAINER_HEIGHT * 0.6);
+  const CHECKERBOARD_HEIGHT = PREVIEW_HEIGHT;
 
   const CheckerboardBackground = ({ width, height, square = 20 }: { width: number; height: number; square?: number }) => {
     const cols = Math.ceil(width / square);
@@ -100,8 +109,10 @@ export default function RaceCalculatorScreen() {
   const normalizeNoSecondsWithHours = (timeStr: string) => {
     if (!timeStr || timeStr.trim() === '') return timeStr;
     const s = timeStr.trim();
+    // Keep single numeric input as-is so it will be treated as minutes
+    // by `parseTimeStringWithoutSeconds` (e.g. "10" -> 10 minutes).
     if (!s.includes(':') && /^\d+$/.test(s)) {
-      return `${parseInt(s, 10)}:00`;
+      return s;
     }
     return s;
   };
@@ -161,18 +172,10 @@ export default function RaceCalculatorScreen() {
                          (parseInt(parts[1]) || 0) * 60;
         }
       } else if (colonCount === 0 && parts.length === 1) {
-        // Only one value - could be hours, minutes, or seconds
-        // Check position by looking at the original string structure
-        // If it's the first field (hours), it comes before any colon
-        // For now, assume it's hours if reasonable (< 24), otherwise minutes
+        // Only one value - ambiguous. Treat single-number input as minutes
+        // (e.g. "10" -> 10 minutes) to avoid interpreting "10" as 10 hours.
         const value = parseInt(parts[0]) || 0;
-        if (value < 24) {
-          totalSeconds = value * 3600; // Assume hours
-        } else if (value < 60) {
-          totalSeconds = value * 60; // Assume minutes
-        } else {
-          totalSeconds = value; // Assume seconds
-        }
+        totalSeconds = value * 60; // treat as minutes
       }
     } else {
       // Without hours: TimeInput format is M, M:S, MM:SS
@@ -537,25 +540,44 @@ export default function RaceCalculatorScreen() {
   };
 
   const handleExportSave = async () => {
-    if (!modalShareRef.current) return;
+    const refToExport = activePreviewIndex === 0 ? modalShareRef.current : modalShareSplitRef.current;
+    if (!refToExport) return;
 
     try {
-      const tmpUri = await exportShareCardToPng(modalShareRef.current);
+      const tmpUri = await exportShareCardToPng(refToExport);
       if (!tmpUri) {
         Alert.alert('Erro', 'Não foi possível exportar o card.');
         return;
       }
 
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const filename = `tri-card-${timestamp}.png`;
-      const dest = FileSystem.documentDirectory + filename;
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissão negada', 'Precisamos de acesso à sua galeria para salvar a imagem.');
+        return;
+      }
 
-      await FileSystem.moveAsync({ from: tmpUri, to: dest });
-
-      Alert.alert('Exportado', `Card salvo em: ${dest}`);
+      await MediaLibrary.saveToLibraryAsync(tmpUri);
+      Alert.alert('Exportado!', 'Card salvo na galeria.');
     } catch (e) {
       console.error('Erro ao salvar card:', e);
       Alert.alert('Erro', 'Erro ao salvar o arquivo.');
+    }
+  };
+
+  const handleCopyImage = async () => {
+    const refToExport = activePreviewIndex === 0 ? modalShareRef.current : modalShareSplitRef.current;
+    if (!refToExport) return;
+
+    try {
+      const success = await copyShareCardToClipboard(refToExport);
+      if (success) {
+        Alert.alert('Sucesso', 'Imagem copiada para a área de transferência!');
+      } else {
+        Alert.alert('Erro', 'Não foi possível copiar a imagem.');
+      }
+    } catch (e) {
+      console.error('Erro ao copiar imagem:', e);
+      Alert.alert('Erro', 'Erro ao copiar a imagem.');
     }
   };
 
@@ -908,12 +930,22 @@ export default function RaceCalculatorScreen() {
                 <View style={{ width: 60 }} />
               </View>
 
-              <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={styles.modalScroll}>
-                <View style={[styles.modalPreviewWrapper, { height: CHECKERBOARD_HEIGHT, width: PREVIEW_WIDTH }] }>
-                  <View style={{ position: 'absolute', alignItems: 'center', justifyContent: 'center', bottom: 0 }}>
-                    <CheckerboardBackground width={PREVIEW_WIDTH} height={CHECKERBOARD_HEIGHT} square={20} />
+              <ScrollView
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.modalScroll}
+                onMomentumScrollEnd={(e) => {
+                  const offsetX = e.nativeEvent.contentOffset.x;
+                  const idx = Math.round(offsetX / MODAL_INNER_WIDTH);
+                  setActivePreviewIndex(idx);
+                }}
+              >
+                <View style={[styles.modalPreviewWrapper, { height: PREVIEW_HEIGHT, width: MODAL_INNER_WIDTH, alignItems: 'center', justifyContent: 'center' }] }>
+                  <View style={{ position: 'absolute', top: 0, alignSelf: 'center' }}>
+                    <CheckerboardBackground width={PREVIEW_WIDTH} height={PREVIEW_HEIGHT} square={20} />
                   </View>
-                  <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', paddingVertical: 12 }}>
+                  <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', height: PREVIEW_HEIGHT, width: PREVIEW_WIDTH }}>
                     <TriathlonShareCard
                       ref={modalShareRef}
                       width={PREVIEW_WIDTH}
@@ -921,19 +953,51 @@ export default function RaceCalculatorScreen() {
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
-                        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(swimTime)),
                         distance: `${distances.swim}m`,
                         pace: paces.swim || '-',
                       }}
                       t1={t1Time ? { time: formatTimeFromSeconds(parseTransition(t1Time)) } : undefined}
                       bike={{
-                        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(bikeTime)),
                         distance: `${distances.bike}km`,
                         speed: paces.bike || '-',
                       }}
                       t2={t2Time ? { time: formatTimeFromSeconds(parseTransition(t2Time)) } : undefined}
                       run={{
-                        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(runTime)),
+                        distance: `${distances.run}km`,
+                        pace: paces.run || '-',
+                      }}
+                    />
+                  </View>
+                </View>
+
+                <View style={[styles.modalPreviewWrapper, { height: PREVIEW_HEIGHT, width: MODAL_INNER_WIDTH, alignItems: 'center', justifyContent: 'center' }] }>
+                  <View style={{ position: 'absolute', top: 0, alignSelf: 'center' }}>
+                    <CheckerboardBackground width={PREVIEW_WIDTH} height={PREVIEW_HEIGHT} square={20} />
+                  </View>
+                  <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', height: PREVIEW_HEIGHT, width: PREVIEW_WIDTH }}>
+                    <TriathlonSplitShareCard
+                      ref={modalShareSplitRef}
+                      width={PREVIEW_WIDTH}
+                      height={PREVIEW_HEIGHT}
+                      date={getFormattedDate()}
+                      totalTime={formatTimeFromSeconds(totalTime ?? 0)}
+                      swim={{
+                        time: formatHoursMinutes(parseNoSecondsWithHours(swimTime)),
+                        distance: `${distances.swim}m`,
+                        pace: paces.swim || '-',
+                      }}
+                      t1={t1Time ? { time: formatTimeFromSeconds(parseTransition(t1Time)) } : undefined}
+                      bike={{
+                        time: formatHoursMinutes(parseNoSecondsWithHours(bikeTime)),
+                        distance: `${distances.bike}km`,
+                        speed: paces.bike || '-',
+                      }}
+                      t2={t2Time ? { time: formatTimeFromSeconds(parseTransition(t2Time)) } : undefined}
+                      run={{
+                        time: formatHoursMinutes(parseNoSecondsWithHours(runTime)),
                         distance: `${distances.run}km`,
                         pace: paces.run || '-',
                       }}
@@ -942,12 +1006,24 @@ export default function RaceCalculatorScreen() {
                 </View>
               </ScrollView>
 
+              <View style={styles.paginationContainer}>
+                {Array.from({ length: PREVIEW_COUNT }).map((_, i) => (
+                  <View
+                    key={`dot-${i}`}
+                    style={[
+                      styles.dot,
+                      i === activePreviewIndex ? styles.activeDot : null,
+                    ]}
+                  />
+                ))}
+              </View>
+
               <View style={styles.modalFooterRow}>
                 <ThemedButton
                   title="Copiar"
                   color={Colors.shared.primary}
                   containerStyle={{ flex: 1, marginRight: 8 }}
-                  onPress={handleCopy}
+                  onPress={handleCopyImage}
                 />
 
                 <ThemedButton
@@ -1002,7 +1078,7 @@ const styles = StyleSheet.create({
   },
   modalScroll: {
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 0,
   },
   modalPreviewWrapper: {
     width: Dimensions.get('window').width * 0.78,
@@ -1019,6 +1095,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  paginationContainer: {
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    marginHorizontal: 6,
+  },
+  activeDot: {
+    backgroundColor: Colors.shared.primary,
+    width: 12,
+    height: 12,
+    borderRadius: 12,
   },
   scrollView: {
     flex: 1,

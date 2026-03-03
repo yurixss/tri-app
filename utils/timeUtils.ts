@@ -10,6 +10,12 @@ export function formatTimeFromSeconds(totalSeconds: number): string {
   }
 }
 
+export function formatHoursMinutes(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  return `${hours}:${minutes.toString().padStart(2, '0')}`;
+}
+
 export function formatPace(secondsPer100m: number): string {
   const minutes = Math.floor(secondsPer100m / 60);
   const seconds = Math.floor(secondsPer100m % 60);

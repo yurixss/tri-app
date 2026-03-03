@@ -22,17 +22,17 @@ export const TriathlonShareCard = React.forwardRef((props: TriathlonShareCardPro
   const { date, totalTime, swim, t1, bike, t2, run, width, height } = props;
   const cardWidth = width ?? CARD_WIDTH;
   const cardHeight = height ?? CARD_HEIGHT;
-  const scale = cardWidth / CARD_WIDTH;
-  const titleSize = Math.round(28 * scale);
-  const dateSize = Math.round(16 * scale);
-  const totalTimeSize = Math.round(54 * scale);
-  const blockTitleSize = Math.round(18 * scale);
-  const blockValueSize = Math.round(28 * scale);
-  const blockSubSize = Math.round(15 * scale);
-  const footerSize = Math.round(13 * scale);
-  const paddingVertical = Math.round(32 * scale);
-  const paddingHorizontal = Math.round(28 * scale);
-  const borderRadius = Math.round(32 * scale);
+  const scale = Math.min(cardWidth / CARD_WIDTH, cardHeight / CARD_HEIGHT);
+  const titleSize = Math.round(22 * scale);
+  const dateSize = Math.round(12 * scale);
+  const totalTimeSize = Math.round(44 * scale);
+  const blockTitleSize = Math.round(16 * scale);
+  const blockValueSize = Math.round(22 * scale);
+  const blockSubSize = Math.round(12 * scale);
+  const footerSize = Math.round(11 * scale);
+  const paddingVertical = Math.round(18 * scale);
+  const paddingHorizontal = Math.round(16 * scale);
+  const borderRadius = Math.round(24 * scale);
 
   return (
     <View

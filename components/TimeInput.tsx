@@ -89,6 +89,16 @@ export function TimeInput({
     if (showHours) {
       if (skipPadding) {
         // Don't pad when user is typing
+        // If user filled hours but not minutes, include trailing ':' so
+        // parsers can know the user intended the hours field (e.g. "1:")
+        if (hours && !minutes && !(showSeconds && seconds)) {
+          return `${hours}:`;
+        }
+
+        if (hours && minutes && showSeconds && !seconds) {
+          return `${hours}:${minutes}:`;
+        }
+
         const parts = [];
         if (hours) parts.push(hours);
         if (minutes) parts.push(minutes);
@@ -104,6 +114,11 @@ export function TimeInput({
       return `${h}:${m}`;
     } else {
       if (skipPadding) {
+        // When not showing hours, if minutes are present but seconds empty,
+        // include trailing ':' to indicate seconds field is active (e.g. "5:")
+        if (minutes && showSeconds && !seconds) {
+          return `${minutes}:`;
+        }
         const parts = [];
         if (minutes) parts.push(minutes);
         if (showSeconds && seconds) parts.push(seconds);

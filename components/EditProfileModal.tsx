@@ -16,7 +16,7 @@ import { DropdownSelector } from './DropdownSelector';
 import { RadioSelector } from './RadioSelector';
 import { useThemeColor } from '@/constants/Styles';
 import Colors from '@/constants/Colors';
-import { X } from 'phosphor-react-native';
+import { X, Trash } from 'phosphor-react-native';
 import { Profile } from '@/hooks/useStorage';
 
 type TrainingGoal =
@@ -46,6 +46,8 @@ interface EditProfileModalProps {
   onSave: (profile: Profile) => void;
   profile: Profile;
   isLoading?: boolean;
+  onDelete?: () => void;
+  isDeleting?: boolean;
 }
 
 export function EditProfileModal({
@@ -54,6 +56,8 @@ export function EditProfileModal({
   onSave,
   profile: initialProfile,
   isLoading = false,
+  onDelete,
+  isDeleting = false,
 }: EditProfileModalProps) {
   const [draft, setDraft] = useState<Profile>(initialProfile);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -265,6 +269,14 @@ export function EditProfileModal({
               />
             </View>
           </View>
+
+          <ThemedButton
+            title="Deletar Conta"
+            color={Colors.shared.delete}
+            onPress={() => onDelete && onDelete()}
+            containerStyle={{ marginTop: 12 }}
+            isLoading={isDeleting}
+          />
 
           <View style={{ height: 40 }} />
         </ScrollView>

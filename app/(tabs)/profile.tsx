@@ -21,7 +21,6 @@ import { useAppLanguage } from '@/hooks/useAppLanguage';
 import {
   UserCircle,
   PencilSimple,
-  Trash,
   CheckCircle,
   Medal,
   Barbell,
@@ -716,19 +715,7 @@ export default function ProfileScreen() {
           </View>
         )}
 
-        {/* ─── ACTIONS ─── */}
-        <View style={styles.actionsSection}>
-          <TouchableOpacity
-            style={styles.deleteLink}
-            onPress={handleDeleteAccount}
-            disabled={isDeletingAccount}
-          >
-            <Trash size={16} color="#EF4444" weight="regular" />
-            <ThemedText style={styles.deleteLinkText} fontFamily="Inter-Medium">
-              {isDeletingAccount ? 'Deletando Conta...' : 'Deletar Conta'}
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
+        {/* ações movidas para o modal de edição */}
       </ScrollView>
 
       {/* ─── EDIT MODAL ─── */}
@@ -738,6 +725,8 @@ export default function ProfileScreen() {
         onSave={handleSaveProfile}
         profile={profile}
         isLoading={isSaving}
+        onDelete={handleDeleteAccount}
+        isDeleting={isDeletingAccount}
       />
 
       {/* ─── SUCCESS TOAST ─── */}

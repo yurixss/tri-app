@@ -18,12 +18,7 @@ import {
   INTENSITY_LABELS,
 } from '@/hooks/useIntensityMode';
 
-function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Bom dia';
-  if (hour < 18) return 'Boa tarde';
-  return 'Boa noite';
-}
+// Saudação substituída por texto fixo conforme solicitado.
 
 // Componente para cards de ações principais (grandes)
 interface PrimaryActionCardProps {
@@ -186,7 +181,7 @@ export default function HomeScreen() {
     }, [])
   );
 
-  const userName = profile?.name?.split(' ')[0] || 'Atleta';
+  // nome do usuário removido — exibiremos título fixo
 
   // Calcular valores baseados na intensidade selecionada
   const heroValues = useMemo(() => {
@@ -247,7 +242,7 @@ export default function HomeScreen() {
             style={styles.greetingIcon}
           /> */}
           <ThemedText style={styles.greeting} fontFamily="Inter-Bold">
-            {getGreeting()}, {userName}
+            Seu Painel
           </ThemedText>
         </View>
       </View>
