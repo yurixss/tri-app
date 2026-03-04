@@ -11,6 +11,8 @@ interface TriathlonShareCardProps {
   run: { time: string; distance: string; pace: string };
   width?: number;
   height?: number;
+  textColor?: string;
+  cardBgColor?: string;
 }
 
 const { width } = Dimensions.get('window');
@@ -19,7 +21,7 @@ const CARD_WIDTH = Math.round(width * 0.9);
 const CARD_HEIGHT = Math.round(CARD_WIDTH / CARD_RATIO);
 
 export const TriathlonShareCard = React.forwardRef((props: TriathlonShareCardProps, ref: React.Ref<View>) => {
-  const { date, totalTime, swim, t1, bike, t2, run, width, height } = props;
+  const { date, totalTime, swim, t1, bike, t2, run, width, height, textColor = '#fff', cardBgColor = 'transparent' } = props;
   const cardWidth = width ?? CARD_WIDTH;
   const cardHeight = height ?? CARD_HEIGHT;
   const scale = Math.min(cardWidth / CARD_WIDTH, cardHeight / CARD_HEIGHT);
@@ -39,60 +41,61 @@ export const TriathlonShareCard = React.forwardRef((props: TriathlonShareCardPro
       ref={ref}
       style={[
         styles.card,
-        { width: cardWidth, height: cardHeight, paddingVertical, paddingHorizontal, borderRadius },
+        { width: cardWidth, paddingVertical, paddingHorizontal, borderRadius, backgroundColor: cardBgColor },
       ]}
       collapsable={false}
       pointerEvents="none"
     >
-      <View style={styles.header}>
-        <Text style={[styles.title, { fontSize: titleSize } ]}>TRIATHLON</Text>
-        <Text style={[styles.date, { fontSize: dateSize }]}>{date}</Text>
-      </View>
-
-      <View style={styles.center}>
-        <Text style={[styles.totalTime, { fontSize: totalTimeSize }]}>{totalTime}</Text>
+      <View style={styles.topGroup}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { fontSize: titleSize, color: textColor } ]}>TRIATHLON</Text>
+          <Text style={[styles.date, { fontSize: dateSize, color: textColor }]}>{date}</Text>
+        </View>
+        <Text style={[styles.totalTime, { fontSize: totalTimeSize, color: textColor }]}>{totalTime}</Text>
       </View>
 
       <View style={styles.details}>
         <View style={styles.block}>
-          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>SWIM</Text>
-          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{swim.time}</Text>
-          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{swim.distance}  •  {swim.pace}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>SWIM</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>{swim.distance}  •  {swim.pace}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>{swim.time}</Text>
         </View>
 
         {t1 && (
           <View style={styles.block}>
-            <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>T1</Text>
-            <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{t1.time}</Text>
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>T1</Text>
+            <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>{t1.time}</Text>
           </View>
         )}
 
         <View style={styles.block}>
-          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>BIKE</Text>
-          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{bike.time}</Text>
-          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{bike.distance}  •  {bike.speed}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>BIKE</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>{bike.distance}  •  {bike.speed}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>{bike.time}</Text>
         </View>
 
         {t2 && (
           <View style={styles.block}>
-            <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>T2</Text>
-            <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{t2.time}</Text>
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>T2</Text>
+            <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>{t2.time}</Text>
           </View>
         )}
 
         <View style={styles.block}>
-          <Text style={[styles.blockTitle, { fontSize: blockTitleSize }]}>RUN</Text>
-          <Text style={[styles.blockValue, { fontSize: blockValueSize }]}>{run.time}</Text>
-          <Text style={[styles.blockSub, { fontSize: blockSubSize }]}>{run.distance}  •  {run.pace}</Text>
+          <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>RUN</Text>
+          <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>{run.distance}  •  {run.pace}</Text>
+          <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>{run.time}</Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <Text style={[styles.footerText, { fontSize: footerSize }]}>Koa Endurance</Text>
+        <Text style={[styles.footerText, { fontSize: footerSize, color: textColor }]}>Koa Endurance</Text>
       </View>
     </View>
   );
 });
+
+TriathlonShareCard.displayName = 'TriathlonShareCard';
 
 const styles = StyleSheet.create({
   card: {
@@ -100,13 +103,15 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     paddingVertical: 32,
     paddingHorizontal: 28,
-    justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: 'transparent',
   },
+  topGroup: {
+    alignItems: 'center',
+  },
   header: {
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 2,
   },
   title: {
     fontSize: 28,
@@ -120,12 +125,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     opacity: 0.7,
-    marginTop: 2,
+    marginTop: 1,
     fontWeight: '500',
-  },
-  center: {
-    alignItems: 'center',
-    marginVertical: 18,
   },
   totalTime: {
     fontSize: 54,
@@ -139,8 +140,8 @@ const styles = StyleSheet.create({
   },
   details: {
     width: '100%',
-    gap: 18,
-    marginVertical: 8,
+    gap: 6,
+    marginVertical: 4,
   },
   block: {
     alignItems: 'center',
@@ -152,14 +153,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.85,
     letterSpacing: 1.2,
-    marginBottom: 2,
+    marginBottom: 0,
   },
   blockValue: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
     opacity: 0.96,
-    marginBottom: 2,
+    marginBottom: 0,
   },
   blockSub: {
     fontSize: 15,
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 4,
   },
   footerText: {
     fontSize: 13,

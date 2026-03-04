@@ -14,10 +14,9 @@ import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { formatTimeFromSeconds, formatHoursMinutes, parseTimeString, parseTimeStringWithoutSeconds, isValidTimeFormat, isValidTimeFormatWithoutSeconds, formatPace, formatRunPace } from '@/utils/timeUtils';
 import { ArrowSquareUp, Copy } from 'phosphor-react-native';
-import { shareRaceTime, copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
+import { copyRaceTimeToClipboard, copySwimTimeToClipboard, copyBikeTimeToClipboard, copyRunTimeToClipboard, RaceTimeData } from '@/utils/shareUtils';
 import { exportShareCardToPng, copyShareCardToClipboard } from '@/utils/shareCardUtils';
 import { View as RNView } from 'react-native';
-import * as FileSystem from 'expo-file-system/legacy';
 import * as MediaLibrary from 'expo-media-library';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
@@ -48,6 +47,8 @@ export default function RaceCalculatorScreen() {
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
   const PREVIEW_COUNT = 2;
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [shareTextColor, setShareTextColor] = useState<'#fff' | '#000'>('#fff');
+  const [shareBgColor, setShareBgColor] = useState<'transparent' | '#000' | '#fff'>('transparent');
   // Modal and preview sizing
   const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
   const MODAL_CONTAINER_WIDTH = Math.round(Dimensions.get('window').width * 0.94);
@@ -136,7 +137,6 @@ export default function RaceCalculatorScreen() {
     return parseTimeString(normalized);
   };
 
-  // Helper function to parse partial time strings from TimeInput
   // TimeInput returns formats like: "1", "1:30", "1:30:45" (without padding while typing)
   const parsePartialTime = (timeStr: string, hasHours: boolean): number => {
     if (!timeStr || timeStr.trim() === '') return 0;
@@ -331,44 +331,6 @@ export default function RaceCalculatorScreen() {
       default:
         return 'Sprint';
     }
-  };
-
-  const handleShare = async () => {
-    if (totalTime === null) return;
-
-    const raceData: RaceTimeData = {
-      raceDistance: getRaceDistanceLabel(raceDistance),
-      totalTime: formatTimeFromSeconds(totalTime),
-      swim: {
-        time: formatTimeFromSeconds(parseNoSecondsWithHours(swimTime)),
-        pace: paces.swim,
-        distance: `${distances.swim}m`,
-      },
-      bike: {
-        time: formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime)),
-        pace: paces.bike,
-        distance: `${distances.bike}km`,
-      },
-      run: {
-        time: formatTimeFromSeconds(parseNoSecondsWithHours(runTime)),
-        pace: paces.run,
-        distance: `${distances.run}km`,
-      },
-    };
-
-    if (t1Time) {
-      raceData.t1 = {
-        time: formatTimeFromSeconds(parseTransition(t1Time)),
-      };
-    }
-
-    if (t2Time) {
-      raceData.t2 = {
-        time: formatTimeFromSeconds(parseTransition(t2Time)),
-      };
-    }
-
-    await shareRaceTime(raceData);
   };
 
   const handleCopy = async () => {
@@ -950,6 +912,8 @@ export default function RaceCalculatorScreen() {
                       ref={modalShareRef}
                       width={PREVIEW_WIDTH}
                       height={PREVIEW_HEIGHT}
+                      textColor={shareTextColor}
+                      cardBgColor={shareBgColor}
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
@@ -982,6 +946,8 @@ export default function RaceCalculatorScreen() {
                       ref={modalShareSplitRef}
                       width={PREVIEW_WIDTH}
                       height={PREVIEW_HEIGHT}
+                      textColor={shareTextColor}
+                      cardBgColor={shareBgColor}
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
@@ -1016,6 +982,61 @@ export default function RaceCalculatorScreen() {
                     ]}
                   />
                 ))}
+              </View>
+
+              <View style={styles.colorToggleRow}>
+                <ThemedText style={styles.colorToggleLabel}>Cor do texto</ThemedText>
+                <View style={styles.colorToggleButtons}>
+                  <TouchableOpacity
+                    onPress={() => setShareTextColor('#fff')}
+                    style={[
+                      styles.colorToggleBtn,
+                      { backgroundColor: '#fff', borderColor: shareTextColor === '#fff' ? Colors.shared.primary : '#555' },
+                      shareTextColor === '#fff' && styles.colorToggleBtnActive,
+                    ]}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShareTextColor('#000')}
+                    style={[
+                      styles.colorToggleBtn,
+                      { backgroundColor: '#000', borderColor: shareTextColor === '#000' ? Colors.shared.primary : '#555' },
+                      shareTextColor === '#000' && styles.colorToggleBtnActive,
+                    ]}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.colorToggleRow}>
+                <ThemedText style={styles.colorToggleLabel}>Fundo</ThemedText>
+                <View style={styles.colorToggleButtons}>
+                  <TouchableOpacity
+                    onPress={() => setShareBgColor('transparent')}
+                    style={[
+                      styles.colorToggleBtn,
+                      styles.transparentBtn,
+                      { borderColor: shareBgColor === 'transparent' ? Colors.shared.primary : '#555' },
+                      shareBgColor === 'transparent' && styles.colorToggleBtnActive,
+                    ]}
+                  >
+                    <View style={styles.transparentLine} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setShareBgColor('#000')}
+                    style={[
+                      styles.colorToggleBtn,
+                      { backgroundColor: '#000', borderColor: shareBgColor === '#000' ? Colors.shared.primary : '#555' },
+                      shareBgColor === '#000' && styles.colorToggleBtnActive,
+                    ]}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShareBgColor('#fff')}
+                    style={[
+                      styles.colorToggleBtn,
+                      { backgroundColor: '#fff', borderColor: shareBgColor === '#fff' ? Colors.shared.primary : '#555' },
+                      shareBgColor === '#fff' && styles.colorToggleBtnActive,
+                    ]}
+                  />
+                </View>
               </View>
 
               <View style={styles.modalFooterRow}>
@@ -1114,6 +1135,44 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 12,
+  },
+  colorToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    gap: 12,
+  },
+  colorToggleLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    opacity: 0.8,
+  },
+  colorToggleButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  colorToggleBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+  },
+  colorToggleBtnActive: {
+    borderWidth: 3,
+  },
+  transparentBtn: {
+    backgroundColor: '#222',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  transparentLine: {
+    position: 'absolute',
+    width: 36,
+    height: 2,
+    backgroundColor: '#f44',
+    transform: [{ rotate: '45deg' }],
   },
   scrollView: {
     flex: 1,

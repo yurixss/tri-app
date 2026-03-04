@@ -252,24 +252,6 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Hero Card - Resumo de Performance com Quick Switch */}
-        {/* <HeroCard
-          swimValue={heroValues.swimValue}
-          swimIntensityLabel={INTENSITY_LABELS.swim[modes.swim]}
-          bikeValue={heroValues.bikeValue}
-          bikeIntensityLabel={INTENSITY_LABELS.bike[modes.bike]}
-          runValue={heroValues.runValue}
-          runIntensityLabel={INTENSITY_LABELS.run[modes.run]}
-          onSwimTap={cycleSwim}
-          onSwimLongPress={handleSwimLongPress}
-          onBikeTap={cycleBike}
-          onBikeLongPress={handleBikeLongPress}
-          onRunTap={cycleRun}
-          onRunLongPress={handleRunLongPress}
-          highlightedSport={lastChanged?.sport}
-          feedbackMessage={feedbackMessage}
-        /> */}
-
 
         <PrimaryActionCard
           title="Simulador de prova"

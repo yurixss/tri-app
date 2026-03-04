@@ -9,7 +9,6 @@ export async function exportShareCardToPng(ref: any): Promise<string | null> {
       quality: 1,
       result: 'tmpfile',
       width: 1080,
-      height: 1920,
       backgroundColor: 'transparent',
     });
     return uri;
