@@ -49,6 +49,7 @@ export default function RaceCalculatorScreen() {
   const [shareModalVisible, setShareModalVisible] = useState(false);
   const [shareTextColor, setShareTextColor] = useState<'#fff' | '#000'>('#fff');
   const [shareBgColor, setShareBgColor] = useState<'transparent' | '#000' | '#fff'>('transparent');
+  const [showTransitions, setShowTransitions] = useState(true);
   // Modal and preview sizing
   const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
   const MODAL_CONTAINER_WIDTH = Math.round(Dimensions.get('window').width * 0.94);
@@ -914,6 +915,7 @@ export default function RaceCalculatorScreen() {
                       height={PREVIEW_HEIGHT}
                       textColor={shareTextColor}
                       cardBgColor={shareBgColor}
+                      showTransitions={showTransitions}
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
@@ -948,6 +950,7 @@ export default function RaceCalculatorScreen() {
                       height={PREVIEW_HEIGHT}
                       textColor={shareTextColor}
                       cardBgColor={shareBgColor}
+                      showTransitions={showTransitions}
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
@@ -1036,6 +1039,32 @@ export default function RaceCalculatorScreen() {
                       shareBgColor === '#fff' && styles.colorToggleBtnActive,
                     ]}
                   />
+                </View>
+              </View>
+
+              <View style={styles.colorToggleRow}>
+                <ThemedText style={styles.colorToggleLabel}>Mostrar T1/T2</ThemedText>
+                <View style={styles.colorToggleButtons}>
+                  <TouchableOpacity
+                    onPress={() => setShowTransitions(true)}
+                    style={[
+                      styles.transitionToggleBtn,
+                      { borderColor: showTransitions ? Colors.shared.primary : '#555' },
+                      showTransitions && styles.colorToggleBtnActive,
+                    ]}
+                  >
+                    <ThemedText style={[styles.transitionToggleText, { color: showTransitions ? Colors.shared.primary : '#999' }]}>Sim</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setShowTransitions(false)}
+                    style={[
+                      styles.transitionToggleBtn,
+                      { borderColor: !showTransitions ? Colors.shared.primary : '#555' },
+                      !showTransitions && styles.colorToggleBtnActive,
+                    ]}
+                  >
+                    <ThemedText style={[styles.transitionToggleText, { color: !showTransitions ? Colors.shared.primary : '#999' }]}>Não</ThemedText>
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -1173,6 +1202,18 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: '#f44',
     transform: [{ rotate: '45deg' }],
+  },
+  transitionToggleBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  transitionToggleText: {
+    fontSize: 13,
+    fontWeight: '700',
   },
   scrollView: {
     flex: 1,

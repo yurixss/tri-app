@@ -14,6 +14,7 @@ interface TriathlonSplitShareCardProps {
   height?: number;
   textColor?: string;
   cardBgColor?: string;
+  showTransitions?: boolean;
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -22,7 +23,7 @@ const DEFAULT_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.9);
 const DEFAULT_CARD_HEIGHT = Math.round(DEFAULT_CARD_WIDTH / CARD_RATIO);
 
 const TriathlonSplitShareCard = React.forwardRef((props: TriathlonSplitShareCardProps, ref: React.Ref<View>) => {
-  const { date, totalTime, swim, t1, bike, t2, run, width, height, textColor = '#fff', cardBgColor = 'transparent' } = props;
+  const { date, totalTime, swim, t1, bike, t2, run, width, height, textColor = '#fff', cardBgColor = 'transparent', showTransitions = true } = props;
   const cardWidth = width ?? DEFAULT_CARD_WIDTH;
   const cardHeight = height ?? DEFAULT_CARD_HEIGHT;
   const scale = Math.min(cardWidth / DEFAULT_CARD_WIDTH, cardHeight / DEFAULT_CARD_HEIGHT);
@@ -60,10 +61,12 @@ const TriathlonSplitShareCard = React.forwardRef((props: TriathlonSplitShareCard
           <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{swim.time}</Text>
         </View>
 
-        <View style={styles.splitColMiddle}>
-          <Text style={[styles.iconSmall, { color: textColor }]}>T1</Text>
-          <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t1?.time ?? '-'}</Text>
-        </View>
+        {showTransitions && (
+          <View style={styles.splitColMiddle}>
+            <Text style={[styles.iconSmall, { color: textColor }]}>T1</Text>
+            <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t1?.time ?? '-'}</Text>
+          </View>
+        )}
 
         <View style={styles.splitCol}>
           <Bicycle size={iconSize} color={textColor} weight="regular" />
@@ -72,10 +75,12 @@ const TriathlonSplitShareCard = React.forwardRef((props: TriathlonSplitShareCard
           <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{bike.time}</Text>
         </View>
 
-        <View style={styles.splitColMiddle}>
-          <Text style={[styles.iconSmall, { color: textColor }]}>T2</Text>
-          <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t2?.time ?? '-'}</Text>
-        </View>
+        {showTransitions && (
+          <View style={styles.splitColMiddle}>
+            <Text style={[styles.iconSmall, { color: textColor }]}>T2</Text>
+            <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t2?.time ?? '-'}</Text>
+          </View>
+        )}
 
         <View style={styles.splitCol}>
           <SneakerMove size={iconSize} color={textColor} weight="regular" />
