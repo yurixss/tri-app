@@ -22,80 +22,173 @@ const CARD_RATIO = 9 / 16;
 const DEFAULT_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.9);
 const DEFAULT_CARD_HEIGHT = Math.round(DEFAULT_CARD_WIDTH / CARD_RATIO);
 
-const TriathlonSplitShareCard = React.forwardRef((props: TriathlonSplitShareCardProps, ref: React.Ref<View>) => {
-  const { date, totalTime, swim, t1, bike, t2, run, width, height, textColor = '#fff', cardBgColor = 'transparent', showTransitions = true } = props;
-  const cardWidth = width ?? DEFAULT_CARD_WIDTH;
-  const cardHeight = height ?? DEFAULT_CARD_HEIGHT;
-  const scale = Math.min(cardWidth / DEFAULT_CARD_WIDTH, cardHeight / DEFAULT_CARD_HEIGHT);
+const TriathlonSplitShareCard = React.forwardRef(
+  (props: TriathlonSplitShareCardProps, ref: React.Ref<View>) => {
+    const {
+      date,
+      totalTime,
+      swim,
+      t1,
+      bike,
+      t2,
+      run,
+      width,
+      height,
+      textColor = '#fff',
+      cardBgColor = 'transparent',
+      showTransitions = true,
+    } = props;
+    const cardWidth = width ?? DEFAULT_CARD_WIDTH;
+    const cardHeight = height ?? DEFAULT_CARD_HEIGHT;
+    const scale = Math.min(
+      cardWidth / DEFAULT_CARD_WIDTH,
+      cardHeight / DEFAULT_CARD_HEIGHT,
+    );
 
-  const iconSize = Math.round(24 * scale);
-  // decrease modality time size
-  const timeSize = Math.round(18 * scale);
-  const smallSize = Math.round(12 * scale);
-  // total time slightly larger but constrained
-  const totalSize = Math.round(40 * scale);
-  const footerSize = Math.round(10 * scale);
-  const borderRadius = Math.round(16 * scale);
+    const iconSize = Math.round(24 * scale);
+    // decrease modality time size
+    const timeSize = Math.round(18 * scale);
+    const smallSize = Math.round(12 * scale);
+    // total time slightly larger but constrained
+    const totalSize = Math.round(40 * scale);
+    const footerSize = Math.round(10 * scale);
+    const borderRadius = Math.round(16 * scale);
 
-  return (
-    <View
-      ref={ref}
-      style={[styles.card, { width: cardWidth, borderRadius, backgroundColor: cardBgColor }]}
-      collapsable={false}
-      pointerEvents="none"
-    >
-      <View style={styles.topRow}>
-        <Text style={[styles.date, { fontSize: smallSize, color: textColor }]}>{date}</Text>
-        <Text style={[styles.title, { fontSize: smallSize, color: textColor }]}>TRIATHLON</Text>
-      </View>
-
-      <View style={[styles.totalContainer, { width: '100%' }]}> 
-        <Text style={[styles.total, { fontSize: totalSize, fontWeight: '800', color: textColor }]}>{totalTime}</Text>
-      </View>
-
-      <View style={styles.splitRow}>
-        <View style={styles.splitCol}>
-          <Waves size={iconSize} color={textColor} weight="regular" />
-          <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>{swim.distance}</Text>
-          <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>{swim.pace}</Text>
-          <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{swim.time}</Text>
+    return (
+      <View
+        ref={ref}
+        style={[
+          styles.card,
+          { width: cardWidth, borderRadius, backgroundColor: cardBgColor },
+        ]}
+        collapsable={false}
+        pointerEvents="none"
+      >
+        <View style={styles.topRow}>
+          <Text
+            style={[styles.date, { fontSize: smallSize, color: textColor }]}
+          >
+            {date}
+          </Text>
+          <Text
+            style={[styles.title, { fontSize: smallSize, color: textColor }]}
+          >
+            TRIATHLON
+          </Text>
         </View>
 
-        {showTransitions && (
-          <View style={styles.splitColMiddle}>
-            <Text style={[styles.iconSmall, { color: textColor }]}>T1</Text>
-            <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t1?.time ?? '-'}</Text>
+        <View style={[styles.totalContainer, { width: '100%' }]}>
+          <Text
+            style={[
+              styles.total,
+              { fontSize: totalSize, fontWeight: '800', color: textColor },
+            ]}
+          >
+            {totalTime}
+          </Text>
+        </View>
+
+        <View style={styles.splitRow}>
+          <View style={styles.splitCol}>
+            <Waves size={iconSize} color={textColor} weight="regular" />
+            <Text
+              style={[styles.time, { fontSize: timeSize, color: textColor }]}
+            >
+              {swim.distance}
+            </Text>
+            <Text
+              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
+            >
+              {swim.pace}
+            </Text>
+            <Text
+              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
+            >
+              {swim.time}
+            </Text>
           </View>
-        )}
 
-        <View style={styles.splitCol}>
-          <Bicycle size={iconSize} color={textColor} weight="regular" />
-          <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>{bike.distance}</Text>
-          <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>{bike.speed}</Text>
-          <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{bike.time}</Text>
-        </View>
+          {showTransitions && (
+            <View style={styles.splitColMiddle}>
+              <Text style={[styles.iconSmall, { color: textColor }]}>T1</Text>
+              <Text
+                style={[
+                  styles.smallTime,
+                  { fontSize: smallSize, color: textColor },
+                ]}
+              >
+                {t1?.time ?? '-'}
+              </Text>
+            </View>
+          )}
 
-        {showTransitions && (
-          <View style={styles.splitColMiddle}>
-            <Text style={[styles.iconSmall, { color: textColor }]}>T2</Text>
-            <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>{t2?.time ?? '-'}</Text>
+          <View style={styles.splitCol}>
+            <Bicycle size={iconSize} color={textColor} weight="regular" />
+            <Text
+              style={[styles.time, { fontSize: timeSize, color: textColor }]}
+            >
+              {bike.distance}
+            </Text>
+            <Text
+              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
+            >
+              {bike.speed}
+            </Text>
+            <Text
+              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
+            >
+              {bike.time}
+            </Text>
           </View>
-        )}
 
-        <View style={styles.splitCol}>
-          <SneakerMove size={iconSize} color={textColor} weight="regular" />
-          <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>{run.distance}</Text>
-          <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>{run.pace}</Text>
-          <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{run.time}</Text>
+          {showTransitions && (
+            <View style={styles.splitColMiddle}>
+              <Text style={[styles.iconSmall, { color: textColor }]}>T2</Text>
+              <Text
+                style={[
+                  styles.smallTime,
+                  { fontSize: smallSize, color: textColor },
+                ]}
+              >
+                {t2?.time ?? '-'}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.splitCol}>
+            <SneakerMove size={iconSize} color={textColor} weight="regular" />
+            <Text
+              style={[styles.time, { fontSize: timeSize, color: textColor }]}
+            >
+              {run.distance}
+            </Text>
+            <Text
+              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
+            >
+              {run.pace}
+            </Text>
+            <Text
+              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
+            >
+              {run.time}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.footerRow}>
+          <Text
+            style={[
+              styles.watermark,
+              { fontSize: footerSize, color: textColor },
+            ]}
+          >
+            Koa Endurance
+          </Text>
         </View>
       </View>
-
-      <View style={styles.footerRow}>
-        <Text style={[styles.watermark, { fontSize: footerSize, color: textColor }]}>Koa Endurance</Text>
-      </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   card: {
@@ -186,5 +279,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
+
+TriathlonSplitShareCard.displayName = 'TriathlonSplitShareCard';
 
 export default TriathlonSplitShareCard;

@@ -9,7 +9,6 @@ export async function exportShareCardToPng(ref: any): Promise<string | null> {
       quality: 1,
       result: 'tmpfile',
       width: 1080,
-      backgroundColor: 'transparent',
     });
     return uri;
   } catch (e) {
@@ -33,10 +32,10 @@ export async function copyShareCardToClipboard(ref: any): Promise<boolean> {
 
     // Copiar para o clipboard
     await Clipboard.setImageAsync(base64);
-    
+
     // Limpar arquivo temporário
     await FileSystem.deleteAsync(uri).catch(() => {});
-    
+
     return true;
   } catch (e) {
     console.error('Erro ao copiar card para clipboard:', e);

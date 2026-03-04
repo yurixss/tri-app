@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme, Image } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  useColorScheme,
+  Image,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,8 +14,20 @@ import { ThemedText } from '@/components/ThemedText';
 import { HeroCard } from '@/components/HeroCard';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
-import { ForkKnife, ArrowSquareUp, Backpack, ClipboardText, FlagCheckered, Target } from 'phosphor-react-native';
-import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
+import {
+  ForkKnife,
+  ArrowSquareUp,
+  Backpack,
+  ClipboardText,
+  FlagCheckered,
+  Target,
+} from 'phosphor-react-native';
+import {
+  getProfile,
+  getTestResults,
+  Profile,
+  TestResults,
+} from '@/hooks/useStorage';
 import {
   useIntensityMode,
   calculateSwimPace,
@@ -31,14 +50,14 @@ interface PrimaryActionCardProps {
   borderColor: string;
 }
 
-function PrimaryActionCard({ 
-  title, 
+function PrimaryActionCard({
+  title,
   subtitle,
   icon,
-  color, 
+  color,
   onPress,
   backgroundColor,
-  borderColor
+  borderColor,
 }: PrimaryActionCardProps) {
   const [isPressed, setIsPressed] = React.useState(false);
   const colorScheme = useColorScheme();
@@ -52,32 +71,34 @@ function PrimaryActionCard({
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
     >
-      <View 
+      <View
         style={[
-          styles.primaryCard, 
-          { 
-            backgroundColor: isPressed 
-              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
+          styles.primaryCard,
+          {
+            backgroundColor: isPressed
+              ? isDark
+                ? Colors.shared.backgrounds.slateGray
+                : Colors.shared.neutrals.gray100
               : backgroundColor,
             borderColor: isPressed ? brandColor : borderColor,
             opacity: isPressed ? 0.95 : 1,
-          }
+          },
         ]}
       >
         <View style={styles.primaryCardContent}>
-          <View style={[styles.primaryIconContainer, { backgroundColor: brandColor + '12' }]}>
+          <View
+            style={[
+              styles.primaryIconContainer,
+              { backgroundColor: brandColor + '12' },
+            ]}
+          >
             {icon}
           </View>
           <View style={styles.primaryTextContainer}>
-            <ThemedText 
-              style={styles.primaryTitle}
-              fontFamily="Inter-Bold"
-            >
+            <ThemedText style={styles.primaryTitle} fontFamily="Inter-Bold">
               {title}
             </ThemedText>
-            <ThemedText style={styles.primarySubtitle}>
-              {subtitle}
-            </ThemedText>
+            <ThemedText style={styles.primarySubtitle}>{subtitle}</ThemedText>
           </View>
         </View>
       </View>
@@ -95,13 +116,13 @@ interface SecondaryToolCardProps {
   borderColor: string;
 }
 
-function SecondaryToolCard({ 
-  title, 
+function SecondaryToolCard({
+  title,
   icon,
-  color, 
+  color,
   onPress,
   backgroundColor,
-  borderColor
+  borderColor,
 }: SecondaryToolCardProps) {
   const [isPressed, setIsPressed] = React.useState(false);
   const colorScheme = useColorScheme();
@@ -116,25 +137,29 @@ function SecondaryToolCard({
       onPressOut={() => setIsPressed(false)}
       style={styles.toolCardWrapper}
     >
-      <View 
+      <View
         style={[
-          styles.toolCard, 
-          { 
-            backgroundColor: isPressed 
-              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
+          styles.toolCard,
+          {
+            backgroundColor: isPressed
+              ? isDark
+                ? Colors.shared.backgrounds.slateGray
+                : Colors.shared.neutrals.gray100
               : backgroundColor,
             borderColor: isPressed ? brandColor : borderColor,
             opacity: isPressed ? 0.95 : 1,
-          }
+          },
         ]}
       >
-        <View style={[styles.toolIconContainer, { backgroundColor: brandColor + '10' }]}>
+        <View
+          style={[
+            styles.toolIconContainer,
+            { backgroundColor: brandColor + '10' },
+          ]}
+        >
           {icon}
         </View>
-        <ThemedText 
-          style={styles.toolTitle}
-          fontFamily="Inter-SemiBold"
-        >
+        <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
           {title}
         </ThemedText>
       </View>
@@ -153,14 +178,8 @@ export default function HomeScreen() {
   const [testResults, setTestResults] = useState<TestResults>({});
 
   // Hook para gerenciar modos de intensidade
-  const {
-    modes,
-    isLoaded,
-    lastChanged,
-    cycleSwim,
-    cycleBike,
-    cycleRun,
-  } = useIntensityMode();
+  const { modes, isLoaded, lastChanged, cycleSwim, cycleBike, cycleRun } =
+    useIntensityMode();
 
   const loadData = async () => {
     const [profileData, testsData] = await Promise.all([
@@ -178,7 +197,7 @@ export default function HomeScreen() {
   useFocusEffect(
     React.useCallback(() => {
       loadData();
-    }, [])
+    }, []),
   );
 
   // nome do usuário removido — exibiremos título fixo
@@ -192,7 +211,7 @@ export default function HomeScreen() {
       const pace = calculateSwimPace(
         testResults.swim.testTime,
         testDistance as 200 | 400,
-        modes.swim
+        modes.swim,
       );
       swimValue = formatPace(pace);
     }
@@ -211,7 +230,7 @@ export default function HomeScreen() {
       const pace = calculateRunPace(
         testResults.run.testTime,
         testDistance as 3 | 5,
-        modes.run
+        modes.run,
       );
       runValue = formatPace(pace);
     }
@@ -223,7 +242,10 @@ export default function HomeScreen() {
   const feedbackMessage = useMemo(() => {
     if (!lastChanged) return null;
     const sportLabels = { swim: 'Natação', bike: 'Ciclismo', run: 'Corrida' };
-    const modeLabel = INTENSITY_LABELS[lastChanged.sport][lastChanged.mode as keyof typeof INTENSITY_LABELS[typeof lastChanged.sport]];
+    const modeLabel =
+      INTENSITY_LABELS[lastChanged.sport][
+        lastChanged.mode as keyof (typeof INTENSITY_LABELS)[typeof lastChanged.sport]
+      ];
     return `${modeLabel}`;
   }, [lastChanged]);
 
@@ -247,16 +269,21 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-
         <PrimaryActionCard
           title="Simulador de prova"
           subtitle="Simule sua prova"
-          icon={<FlagCheckered size={28} color={Colors.shared.primary} weight="bold" />}
+          icon={
+            <FlagCheckered
+              size={28}
+              color={Colors.shared.primary}
+              weight="bold"
+            />
+          }
           color={Colors.shared.primary}
           onPress={() => router.push('/screens/race-prediction')}
           backgroundColor={cardBg}
@@ -266,7 +293,9 @@ export default function HomeScreen() {
         <PrimaryActionCard
           title="Zonas de treino"
           subtitle="Zonas de treino baseadas em testes"
-          icon={<Target size={28} color={Colors.shared.primary} weight="bold" />}
+          icon={
+            <Target size={28} color={Colors.shared.primary} weight="bold" />
+          }
           color={Colors.shared.primary}
           onPress={() => router.push('/screens/training-zones')}
           backgroundColor={cardBg}
@@ -274,7 +303,12 @@ export default function HomeScreen() {
         />
 
         {/* Separador */}
-        <View style={[styles.separator, { backgroundColor: borderColor, marginTop: 8 }]} />
+        <View
+          style={[
+            styles.separator,
+            { backgroundColor: borderColor, marginTop: 8 },
+          ]}
+        />
 
         {/* Sessão - Ferramentas Secundárias */}
         <ThemedText style={styles.sectionTitle} fontFamily="Inter-SemiBold">
@@ -284,7 +318,13 @@ export default function HomeScreen() {
         <View style={styles.toolsGrid}>
           <SecondaryToolCard
             title="Calculadora Nutrição"
-            icon={<ForkKnife size={24} color={Colors.shared.primary} weight="bold" />}
+            icon={
+              <ForkKnife
+                size={24}
+                color={Colors.shared.primary}
+                weight="bold"
+              />
+            }
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/nutrition')}
             backgroundColor={cardBg}
@@ -293,32 +333,44 @@ export default function HomeScreen() {
 
           <SecondaryToolCard
             title="Share Tri"
-            icon={<ArrowSquareUp size={24} color={Colors.shared.primary} weight="bold" />}
+            icon={
+              <ArrowSquareUp
+                size={24}
+                color={Colors.shared.primary}
+                weight="bold"
+              />
+            }
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/race-calculator')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
-          
+
           <SecondaryToolCard
             title="Equipamentos"
-            icon={<Backpack size={24} color={Colors.shared.primary} weight="bold" />}
+            icon={
+              <Backpack size={24} color={Colors.shared.primary} weight="bold" />
+            }
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/store/my-setup')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
-          
+
           <SecondaryToolCard
             title="Protocolos"
-            icon={<ClipboardText size={24} color={Colors.shared.primary} weight="bold" />}
+            icon={
+              <ClipboardText
+                size={24}
+                color={Colors.shared.primary}
+                weight="bold"
+              />
+            }
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/protocol/protocols')}
             backgroundColor={cardBg}
             borderColor={borderColor}
           />
-          
-
         </View>
       </ScrollView>
     </ThemedView>
