@@ -42,10 +42,7 @@ import {
   copyRunTimeToClipboard,
   RaceTimeData,
 } from '@/utils/shareUtils';
-import {
-  exportShareCardToPng,
-  copyShareCardToClipboard,
-} from '@/utils/shareCardUtils';
+import { exportShareCardToPng, copyShareCardToClipboard } from '@/utils/shareCardUtils';
 import * as MediaLibrary from 'expo-media-library';
 
 type RaceDistance = 'sprint' | 'olympic' | '70.3' | '140.6';
@@ -80,17 +77,11 @@ export default function RaceCalculatorScreen() {
   const PREVIEW_COUNT = 2;
   const [shareModalVisible, setShareModalVisible] = useState(false);
   const [shareTextColor, setShareTextColor] = useState<'#fff' | '#000'>('#fff');
-  const [shareBgColor, setShareBgColor] = useState<
-    'transparent' | '#000' | '#fff'
-  >('transparent');
+  const [shareBgColor, setShareBgColor] = useState<'transparent' | '#000' | '#fff'>('transparent');
   const [showTransitions, setShowTransitions] = useState(true);
   // Modal and preview sizing
-  const MODAL_CONTAINER_HEIGHT = Math.round(
-    Dimensions.get('window').height * 0.9,
-  );
-  const MODAL_CONTAINER_WIDTH = Math.round(
-    Dimensions.get('window').width * 0.94,
-  );
+  const MODAL_CONTAINER_HEIGHT = Math.round(Dimensions.get('window').height * 0.9);
+  const MODAL_CONTAINER_WIDTH = Math.round(Dimensions.get('window').width * 0.94);
   // Inner content width inside modal (account for modal padding 12 on each side)
   const MODAL_INNER_WIDTH = MODAL_CONTAINER_WIDTH - 24;
   // Each preview should occupy 80% of the modal inner width
@@ -229,8 +220,7 @@ export default function RaceCalculatorScreen() {
 
       if (colonCount === 1) {
         // Format: M:S (minutes and seconds)
-        totalSeconds =
-          (parseInt(parts[0]) || 0) * 60 + (parseInt(parts[1]) || 0);
+        totalSeconds = (parseInt(parts[0]) || 0) * 60 + (parseInt(parts[1]) || 0);
       } else if (colonCount === 0 && parts.length === 1) {
         // Only one value - could be minutes or seconds
         const value = parseInt(parts[0]) || 0;
@@ -306,9 +296,7 @@ export default function RaceCalculatorScreen() {
         const normalized = normalizeNoSecondsWithHours(field.value);
         // swim, bike, run use H:M format (no seconds)
         if (!isValidTimeFormatWithoutSeconds(normalized)) {
-          setError(
-            `Por favor, insira um formato válido para ${field.name} (H:M ou H:MM)`,
-          );
+          setError(`Por favor, insira um formato válido para ${field.name} (H:M ou H:MM)`);
           setIsLoading(false);
           return;
         }
@@ -321,9 +309,7 @@ export default function RaceCalculatorScreen() {
         if (isValidTimeFormat(normalizedT1)) {
           times.t1 = parseTimeString(normalizedT1);
         } else {
-          setError(
-            'Por favor, insira um formato válido para T1 (MM:SS ou H:MM:SS)',
-          );
+          setError('Por favor, insira um formato válido para T1 (MM:SS ou H:MM:SS)');
           setIsLoading(false);
           return;
         }
@@ -336,9 +322,7 @@ export default function RaceCalculatorScreen() {
         if (isValidTimeFormat(normalizedT2)) {
           times.t2 = parseTimeString(normalizedT2);
         } else {
-          setError(
-            'Por favor, insira um formato válido para T2 (MM:SS ou H:MM:SS)',
-          );
+          setError('Por favor, insira um formato válido para T2 (MM:SS ou H:MM:SS)');
           setIsLoading(false);
           return;
         }
@@ -555,9 +539,7 @@ export default function RaceCalculatorScreen() {
 
   const handleExportSave = async () => {
     const refToExport =
-      activePreviewIndex === 0
-        ? modalShareRef.current
-        : modalShareSplitRef.current;
+      activePreviewIndex === 0 ? modalShareRef.current : modalShareSplitRef.current;
     if (!refToExport) return;
 
     try {
@@ -569,10 +551,7 @@ export default function RaceCalculatorScreen() {
 
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert(
-          'Permissão negada',
-          'Precisamos de acesso à sua galeria para salvar a imagem.',
-        );
+        Alert.alert('Permissão negada', 'Precisamos de acesso à sua galeria para salvar a imagem.');
         return;
       }
 
@@ -586,9 +565,7 @@ export default function RaceCalculatorScreen() {
 
   const handleCopyImage = async () => {
     const refToExport =
-      activePreviewIndex === 0
-        ? modalShareRef.current
-        : modalShareSplitRef.current;
+      activePreviewIndex === 0 ? modalShareRef.current : modalShareSplitRef.current;
     if (!refToExport) return;
 
     try {
@@ -639,9 +616,7 @@ export default function RaceCalculatorScreen() {
                 { label: '140.6 (3800m / 180km / 42.2km)', value: '140.6' },
               ]}
               selectedValue={raceDistance}
-              onValueChange={(value: string) =>
-                setRaceDistance(value as RaceDistance)
-              }
+              onValueChange={(value: string) => setRaceDistance(value as RaceDistance)}
               placeholder="Selecione a distância da prova"
             />
           </View>
@@ -657,10 +632,7 @@ export default function RaceCalculatorScreen() {
             ]}
           >
             <View style={styles.inputWrapper}>
-              <ThemedText
-                style={styles.instructionTitle}
-                fontFamily="Inter-Bold"
-              >
+              <ThemedText style={styles.instructionTitle} fontFamily="Inter-Bold">
                 Preencha seus tempos para compartilhar.
               </ThemedText>
               <View style={styles.labelRow}>
@@ -668,9 +640,7 @@ export default function RaceCalculatorScreen() {
                   Tempo Natação
                 </ThemedText>
                 {paces.swim && (
-                  <ThemedText
-                    style={[styles.paceText, { color: Colors.shared.primary }]}
-                  >
+                  <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
                     {paces.swim}
                   </ThemedText>
                 )}
@@ -704,9 +674,7 @@ export default function RaceCalculatorScreen() {
                   Tempo Bike
                 </ThemedText>
                 {paces.bike && (
-                  <ThemedText
-                    style={[styles.paceText, { color: Colors.shared.primary }]}
-                  >
+                  <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
                     {paces.bike}
                   </ThemedText>
                 )}
@@ -740,9 +708,7 @@ export default function RaceCalculatorScreen() {
                   Tempo Corrida
                 </ThemedText>
                 {paces.run && (
-                  <ThemedText
-                    style={[styles.paceText, { color: Colors.shared.primary }]}
-                  >
+                  <ThemedText style={[styles.paceText, { color: Colors.shared.primary }]}>
                     {paces.run}
                   </ThemedText>
                 )}
@@ -760,9 +726,7 @@ export default function RaceCalculatorScreen() {
             </View>
 
             {error && (
-              <ThemedText style={[styles.errorText, { color: '#E84A4A' }]}>
-                {error}
-              </ThemedText>
+              <ThemedText style={[styles.errorText, { color: '#E84A4A' }]}>{error}</ThemedText>
             )}
 
             <View style={styles.buttonRow}>
@@ -794,10 +758,7 @@ export default function RaceCalculatorScreen() {
             >
               <View style={styles.titleContainer}>
                 <ThemedText
-                  style={[
-                    styles.resultsTitle,
-                    { color: Colors.shared.primary },
-                  ]}
+                  style={[styles.resultsTitle, { color: Colors.shared.primary }]}
                   fontFamily="Inter-Bold"
                 >
                   Tempo Total
@@ -812,11 +773,7 @@ export default function RaceCalculatorScreen() {
                     ]}
                     onPress={handleCopy}
                   >
-                    <Copy
-                      size={16}
-                      color={Colors.shared.primary}
-                      weight="regular"
-                    />
+                    <Copy size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
 
                   <Pressable
@@ -827,11 +784,7 @@ export default function RaceCalculatorScreen() {
                     ]}
                     onPress={() => setShareModalVisible(true)}
                   >
-                    <ArrowSquareUp
-                      size={16}
-                      color={Colors.shared.primary}
-                      weight="regular"
-                    />
+                    <ArrowSquareUp size={16} color={Colors.shared.primary} weight="regular" />
                   </Pressable>
                 </View>
               </View>
@@ -854,13 +807,9 @@ export default function RaceCalculatorScreen() {
               <View style={styles.breakdown}>
                 <View style={styles.breakdownItem}>
                   <View style={styles.breakdownLeft}>
-                    <ThemedText style={styles.breakdownLabel}>
-                      Natação:
-                    </ThemedText>
+                    <ThemedText style={styles.breakdownLabel}>Natação:</ThemedText>
                     {paces.swim && (
-                      <ThemedText style={styles.breakdownPace}>
-                        {paces.swim}
-                      </ThemedText>
+                      <ThemedText style={styles.breakdownPace}>{paces.swim}</ThemedText>
                     )}
                   </View>
                   <View style={styles.breakdownRight}>
@@ -868,17 +817,10 @@ export default function RaceCalculatorScreen() {
                       {formatTimeFromSeconds(parseNoSecondsWithHours(swimTime))}
                     </ThemedText>
                     <Pressable
-                      style={({ pressed }) => [
-                        styles.copyButton,
-                        { opacity: pressed ? 0.6 : 1 },
-                      ]}
+                      style={({ pressed }) => [styles.copyButton, { opacity: pressed ? 0.6 : 1 }]}
                       onPress={handleCopySwim}
                     >
-                      <Copy
-                        size={14}
-                        color={Colors.shared.primary}
-                        weight="regular"
-                      />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>
@@ -894,9 +836,7 @@ export default function RaceCalculatorScreen() {
                   <View style={styles.breakdownLeft}>
                     <ThemedText style={styles.breakdownLabel}>Bike:</ThemedText>
                     {paces.bike && (
-                      <ThemedText style={styles.breakdownPace}>
-                        {paces.bike}
-                      </ThemedText>
+                      <ThemedText style={styles.breakdownPace}>{paces.bike}</ThemedText>
                     )}
                   </View>
                   <View style={styles.breakdownRight}>
@@ -904,17 +844,10 @@ export default function RaceCalculatorScreen() {
                       {formatTimeFromSeconds(parseNoSecondsWithHours(bikeTime))}
                     </ThemedText>
                     <Pressable
-                      style={({ pressed }) => [
-                        styles.copyButton,
-                        { opacity: pressed ? 0.6 : 1 },
-                      ]}
+                      style={({ pressed }) => [styles.copyButton, { opacity: pressed ? 0.6 : 1 }]}
                       onPress={handleCopyBike}
                     >
-                      <Copy
-                        size={14}
-                        color={Colors.shared.primary}
-                        weight="regular"
-                      />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>
@@ -928,31 +861,18 @@ export default function RaceCalculatorScreen() {
                 )}
                 <View style={styles.breakdownItem}>
                   <View style={styles.breakdownLeft}>
-                    <ThemedText style={styles.breakdownLabel}>
-                      Corrida:
-                    </ThemedText>
-                    {paces.run && (
-                      <ThemedText style={styles.breakdownPace}>
-                        {paces.run}
-                      </ThemedText>
-                    )}
+                    <ThemedText style={styles.breakdownLabel}>Corrida:</ThemedText>
+                    {paces.run && <ThemedText style={styles.breakdownPace}>{paces.run}</ThemedText>}
                   </View>
                   <View style={styles.breakdownRight}>
                     <ThemedText style={styles.breakdownValue}>
                       {formatTimeFromSeconds(parseNoSecondsWithHours(runTime))}
                     </ThemedText>
                     <Pressable
-                      style={({ pressed }) => [
-                        styles.copyButton,
-                        { opacity: pressed ? 0.6 : 1 },
-                      ]}
+                      style={({ pressed }) => [styles.copyButton, { opacity: pressed ? 0.6 : 1 }]}
                       onPress={handleCopyRun}
                     >
-                      <Copy
-                        size={14}
-                        color={Colors.shared.primary}
-                        weight="regular"
-                      />
+                      <Copy size={14} color={Colors.shared.primary} weight="regular" />
                     </Pressable>
                   </View>
                 </View>
@@ -974,9 +894,7 @@ export default function RaceCalculatorScreen() {
                 <TouchableOpacity onPress={() => setShareModalVisible(false)}>
                   <ThemedText style={styles.modalClose}>Close</ThemedText>
                 </TouchableOpacity>
-                <ThemedText style={styles.modalTitle}>
-                  Share Activity
-                </ThemedText>
+                <ThemedText style={styles.modalTitle}>Share Activity</ThemedText>
                 <View style={{ width: 60 }} />
               </View>
 
@@ -1034,41 +952,31 @@ export default function RaceCalculatorScreen() {
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(swimTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(swimTime)),
                         distance: `${distances.swim}m`,
                         pace: paces.swim || '-',
                       }}
                       t1={
                         t1Time
                           ? {
-                              time: formatTimeFromSeconds(
-                                parseTransition(t1Time),
-                              ),
+                              time: formatTimeFromSeconds(parseTransition(t1Time)),
                             }
                           : undefined
                       }
                       bike={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(bikeTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(bikeTime)),
                         distance: `${distances.bike}km`,
                         speed: paces.bike || '-',
                       }}
                       t2={
                         t2Time
                           ? {
-                              time: formatTimeFromSeconds(
-                                parseTransition(t2Time),
-                              ),
+                              time: formatTimeFromSeconds(parseTransition(t2Time)),
                             }
                           : undefined
                       }
                       run={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(runTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(runTime)),
                         distance: `${distances.run}km`,
                         pace: paces.run || '-',
                       }}
@@ -1119,41 +1027,31 @@ export default function RaceCalculatorScreen() {
                       date={getFormattedDate()}
                       totalTime={formatTimeFromSeconds(totalTime ?? 0)}
                       swim={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(swimTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(swimTime)),
                         distance: `${distances.swim}m`,
                         pace: paces.swim || '-',
                       }}
                       t1={
                         t1Time
                           ? {
-                              time: formatTimeFromSeconds(
-                                parseTransition(t1Time),
-                              ),
+                              time: formatTimeFromSeconds(parseTransition(t1Time)),
                             }
                           : undefined
                       }
                       bike={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(bikeTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(bikeTime)),
                         distance: `${distances.bike}km`,
                         speed: paces.bike || '-',
                       }}
                       t2={
                         t2Time
                           ? {
-                              time: formatTimeFromSeconds(
-                                parseTransition(t2Time),
-                              ),
+                              time: formatTimeFromSeconds(parseTransition(t2Time)),
                             }
                           : undefined
                       }
                       run={{
-                        time: formatHoursMinutes(
-                          parseNoSecondsWithHours(runTime),
-                        ),
+                        time: formatHoursMinutes(parseNoSecondsWithHours(runTime)),
                         distance: `${distances.run}km`,
                         pace: paces.run || '-',
                       }}
@@ -1166,18 +1064,13 @@ export default function RaceCalculatorScreen() {
                 {Array.from({ length: PREVIEW_COUNT }).map((_, i) => (
                   <View
                     key={`dot-${i}`}
-                    style={[
-                      styles.dot,
-                      i === activePreviewIndex ? styles.activeDot : null,
-                    ]}
+                    style={[styles.dot, i === activePreviewIndex ? styles.activeDot : null]}
                   />
                 ))}
               </View>
 
               <View style={styles.colorToggleRow}>
-                <ThemedText style={styles.colorToggleLabel}>
-                  Cor do texto
-                </ThemedText>
+                <ThemedText style={styles.colorToggleLabel}>Cor do texto</ThemedText>
                 <View style={styles.colorToggleButtons}>
                   <TouchableOpacity
                     onPress={() => setShareTextColor('#fff')}
@@ -1185,10 +1078,7 @@ export default function RaceCalculatorScreen() {
                       styles.colorToggleBtn,
                       {
                         backgroundColor: '#fff',
-                        borderColor:
-                          shareTextColor === '#fff'
-                            ? Colors.shared.primary
-                            : '#555',
+                        borderColor: shareTextColor === '#fff' ? Colors.shared.primary : '#555',
                       },
                       shareTextColor === '#fff' && styles.colorToggleBtnActive,
                     ]}
@@ -1199,10 +1089,7 @@ export default function RaceCalculatorScreen() {
                       styles.colorToggleBtn,
                       {
                         backgroundColor: '#000',
-                        borderColor:
-                          shareTextColor === '#000'
-                            ? Colors.shared.primary
-                            : '#555',
+                        borderColor: shareTextColor === '#000' ? Colors.shared.primary : '#555',
                       },
                       shareTextColor === '#000' && styles.colorToggleBtnActive,
                     ]}
@@ -1220,12 +1107,9 @@ export default function RaceCalculatorScreen() {
                       styles.transparentBtn,
                       {
                         borderColor:
-                          shareBgColor === 'transparent'
-                            ? Colors.shared.primary
-                            : '#555',
+                          shareBgColor === 'transparent' ? Colors.shared.primary : '#555',
                       },
-                      shareBgColor === 'transparent' &&
-                        styles.colorToggleBtnActive,
+                      shareBgColor === 'transparent' && styles.colorToggleBtnActive,
                     ]}
                   >
                     <View style={styles.transparentLine} />
@@ -1236,10 +1120,7 @@ export default function RaceCalculatorScreen() {
                       styles.colorToggleBtn,
                       {
                         backgroundColor: '#000',
-                        borderColor:
-                          shareBgColor === '#000'
-                            ? Colors.shared.primary
-                            : '#555',
+                        borderColor: shareBgColor === '#000' ? Colors.shared.primary : '#555',
                       },
                       shareBgColor === '#000' && styles.colorToggleBtnActive,
                     ]}
@@ -1250,10 +1131,7 @@ export default function RaceCalculatorScreen() {
                       styles.colorToggleBtn,
                       {
                         backgroundColor: '#fff',
-                        borderColor:
-                          shareBgColor === '#fff'
-                            ? Colors.shared.primary
-                            : '#555',
+                        borderColor: shareBgColor === '#fff' ? Colors.shared.primary : '#555',
                       },
                       shareBgColor === '#fff' && styles.colorToggleBtnActive,
                     ]}
@@ -1262,18 +1140,14 @@ export default function RaceCalculatorScreen() {
               </View>
 
               <View style={styles.colorToggleRow}>
-                <ThemedText style={styles.colorToggleLabel}>
-                  Mostrar T1/T2
-                </ThemedText>
+                <ThemedText style={styles.colorToggleLabel}>Mostrar T1/T2</ThemedText>
                 <View style={styles.colorToggleButtons}>
                   <TouchableOpacity
                     onPress={() => setShowTransitions(true)}
                     style={[
                       styles.transitionToggleBtn,
                       {
-                        borderColor: showTransitions
-                          ? Colors.shared.primary
-                          : '#555',
+                        borderColor: showTransitions ? Colors.shared.primary : '#555',
                       },
                       showTransitions && styles.colorToggleBtnActive,
                     ]}
@@ -1282,9 +1156,7 @@ export default function RaceCalculatorScreen() {
                       style={[
                         styles.transitionToggleText,
                         {
-                          color: showTransitions
-                            ? Colors.shared.primary
-                            : '#999',
+                          color: showTransitions ? Colors.shared.primary : '#999',
                         },
                       ]}
                     >
@@ -1296,9 +1168,7 @@ export default function RaceCalculatorScreen() {
                     style={[
                       styles.transitionToggleBtn,
                       {
-                        borderColor: !showTransitions
-                          ? Colors.shared.primary
-                          : '#555',
+                        borderColor: !showTransitions ? Colors.shared.primary : '#555',
                       },
                       !showTransitions && styles.colorToggleBtnActive,
                     ]}
@@ -1307,9 +1177,7 @@ export default function RaceCalculatorScreen() {
                       style={[
                         styles.transitionToggleText,
                         {
-                          color: !showTransitions
-                            ? Colors.shared.primary
-                            : '#999',
+                          color: !showTransitions ? Colors.shared.primary : '#999',
                         },
                       ]}
                     >

@@ -12,10 +12,10 @@ interface WizardStepperProps {
 
 const DEFAULT_LABELS = ['Natação', 'Ciclismo', 'Corrida', 'Resultado'];
 
-export function WizardStepper({ 
-  currentStep, 
+export function WizardStepper({
+  currentStep,
   totalSteps = 4,
-  labels = DEFAULT_LABELS 
+  labels = DEFAULT_LABELS,
 }: WizardStepperProps) {
   const borderColor = useThemeColor({}, 'border');
   const textColor = useThemeColor({}, 'text');
@@ -32,15 +32,14 @@ export function WizardStepper({
             <React.Fragment key={stepNumber}>
               {/* Linha conectora (antes do círculo, exceto primeiro) */}
               {index > 0 && (
-                <View 
+                <View
                   style={[
                     styles.connector,
-                    { 
-                      backgroundColor: isCompleted || isActive 
-                        ? Colors.shared.primary 
-                        : borderColor 
-                    }
-                  ]} 
+                    {
+                      backgroundColor:
+                        isCompleted || isActive ? Colors.shared.primary : borderColor,
+                    },
+                  ]}
                 />
               )}
 

@@ -13,7 +13,13 @@ import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { useTriathlonWizard } from '@/hooks/useTriathlonWizard';
 import { getTestResults } from '@/hooks/useStorage';
-import { WaterType, OpenWaterType, SwellLevel, getRaceDistances, RaceType } from '@/utils/triathlonPredictor';
+import {
+  WaterType,
+  OpenWaterType,
+  SwellLevel,
+  getRaceDistances,
+  RaceType,
+} from '@/utils/triathlonPredictor';
 import { parseTimeString, isValidTimeFormat, formatTimeFromSeconds } from '@/utils/timeUtils';
 
 const WATER_TYPE_OPTIONS = [
@@ -104,7 +110,7 @@ export default function SwimStep() {
     if (!validate()) return;
 
     const timeSeconds = parseTimeString(baseTime);
-    
+
     setSwimData({
       baseTimeSeconds: timeSeconds,
       baseDistance: parseInt(baseDistance),
@@ -124,29 +130,29 @@ export default function SwimStep() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Previsão de Triathlon"
-        onBackPress={handleBack}
-      />
+      <Header title="Previsão de Triathlon" onBackPress={handleBack} />
 
       <WizardStepper currentStep={1} />
 
-      <ScrollView 
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
-            <View style={styles.cardHeader}>
-              <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
-                🏊 Natação
-              </ThemedText>
-            </View>
-
-            <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
-              Tipo de Prova
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
+          <View style={styles.cardHeader}>
+            <ThemedText
+              style={[styles.cardTitle, { color: Colors.shared.primary }]}
+              fontFamily="Inter-Bold"
+            >
+              🏊 Natação
             </ThemedText>
-            <RadioSelector
+          </View>
+
+          <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
+            Tipo de Prova
+          </ThemedText>
+          <RadioSelector
             options={RACE_TYPE_OPTIONS}
             selectedValue={raceType}
             onValueChange={(value) => setRaceType(value as RaceType)}
@@ -154,15 +160,16 @@ export default function SwimStep() {
           />
 
           <View style={[styles.infoBox, { backgroundColor: 'rgba(6, 102, 153, 0.1)' }]}>
-          <ThemedText style={styles.infoText}>
-            Distância da natação: <ThemedText fontFamily="Inter-Bold">{getRaceDistance()}m</ThemedText>
-          </ThemedText>
-        </View>
+            <ThemedText style={styles.infoText}>
+              Distância da natação:{' '}
+              <ThemedText fontFamily="Inter-Bold">{getRaceDistance()}m</ThemedText>
+            </ThemedText>
+          </View>
 
           <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
             Seu Tempo Base
           </ThemedText>
-          
+
           <RadioSelector
             options={BASE_DISTANCE_OPTIONS}
             selectedValue={baseDistance}
@@ -181,7 +188,7 @@ export default function SwimStep() {
           <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
             Ambiente
           </ThemedText>
-          
+
           <RadioSelector
             options={WATER_TYPE_OPTIONS}
             selectedValue={waterType}
@@ -229,15 +236,14 @@ export default function SwimStep() {
           )}
         </View>
 
-   
-          <View style={styles.footer}>
-            <ThemedButton
-              title="Próximo Passo →"
-              color={Colors.shared.primary}
-              onPress={handleNext}
-            />
-          </View>
-        </ScrollView>
+        <View style={styles.footer}>
+          <ThemedButton
+            title="Próximo Passo →"
+            color={Colors.shared.primary}
+            onPress={handleNext}
+          />
+        </View>
+      </ScrollView>
     </ThemedView>
   );
 }

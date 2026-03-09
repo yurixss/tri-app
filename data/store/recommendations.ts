@@ -41,9 +41,7 @@ const BUDGET_ORDER: Record<BudgetLevel, number> = {
 
 // ─── Main function ───────────────────────────────────────────────────
 
-export function generateRecommendations(
-  input: RecommendationInput
-): RecommendationOutput {
+export function generateRecommendations(input: RecommendationInput): RecommendationOutput {
   const reasoning: string[] = [];
   const scored: { product: Product; score: number }[] = [];
 
@@ -136,7 +134,7 @@ export function generateRecommendations(
   reasoning.push(
     `Distância: ${input.distance.toUpperCase()} — priorizando ${
       input.distance === 'sprint' ? 'velocidade e aero' : 'conforto e nutrição'
-    }.`
+    }.`,
   );
 
   if (input.climate === 'quente') {
@@ -149,9 +147,7 @@ export function generateRecommendations(
     reasoning.push('Objetivo completar: foco em conforto e prevenção de quebra.');
   }
   if (input.ftp && input.ftp > 250) {
-    reasoning.push(
-      `FTP ${input.ftp}W: aerodinâmica tem ROI alto pra sua potência.`
-    );
+    reasoning.push(`FTP ${input.ftp}W: aerodinâmica tem ROI alto pra sua potência.`);
   }
   if (input.budgetLevel === 'baixo') {
     reasoning.push('Orçamento econômico: priorizando melhor custo-benefício.');

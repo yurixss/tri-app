@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, useColorScheme, Alert, Share, Modal } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  useColorScheme,
+  Alert,
+  Share,
+  Modal,
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,13 +16,22 @@ import { Header } from '@/components/Header';
 import { SourcesInfo } from '@/components/SourcesInfo';
 import { useThemeColor } from '@/constants/Styles';
 import { getProtocolById, PROTOCOL_CATEGORY_CONFIG } from '@/data/protocolsContent';
-import { ShareNetwork as ShareIcon, Copy, Clock, CheckCircle, Warning, Target, Calendar, Lightbulb } from 'phosphor-react-native';
+import {
+  ShareNetwork as ShareIcon,
+  Copy,
+  Clock,
+  CheckCircle,
+  Warning,
+  Target,
+  Calendar,
+  Lightbulb,
+} from 'phosphor-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { getProtocolCitation } from '@/utils/citations';
 
 /**
  * Tela de detalhes do Protocolo.
- * 
+ *
  * Design decisions:
  * - Layout focado em leitura mobile
  * - Passos numerados e claros
@@ -34,14 +52,9 @@ export default function ProtocolDetailScreen() {
   if (!protocol) {
     return (
       <ThemedView style={styles.container}>
-        <Header 
-          title="Protocolo"
-          onBackPress={() => router.back()}
-        />
+        <Header title="Protocolo" onBackPress={() => router.back()} />
         <View style={styles.errorContainer}>
-          <ThemedText style={styles.errorText}>
-            Protocolo não encontrado
-          </ThemedText>
+          <ThemedText style={styles.errorText}>Protocolo não encontrado</ThemedText>
         </View>
       </ThemedView>
     );
@@ -49,9 +62,7 @@ export default function ProtocolDetailScreen() {
 
   const categoryConfig = PROTOCOL_CATEGORY_CONFIG[protocol.category];
 
-  const protocolCitations = [
-    { category: 'Protocolos', ...getProtocolCitation(protocol.id) },
-  ];
+  const protocolCitations = [{ category: 'Protocolos', ...getProtocolCitation(protocol.id) }];
 
   const formatProtocolText = () => {
     let text = `📋 ${protocol.title}\n\n`;
@@ -60,7 +71,7 @@ export default function ProtocolDetailScreen() {
     text += `🎯 Objetivo:\n${protocol.objective}\n\n`;
     text += `📅 Quando usar:\n${protocol.whenToUse}\n\n`;
     text += `📝 Passos:\n`;
-    
+
     protocol.steps.forEach((step) => {
       text += `\n${step.order}. ${step.title}\n`;
       text += `   ${step.description}\n`;
@@ -108,7 +119,7 @@ export default function ProtocolDetailScreen() {
   return (
     <ThemedView style={styles.container}>
       {/* Header com título ocupando 100% */}
-      <Header 
+      <Header
         title={protocol.title}
         color={categoryConfig.color}
         onBackPress={() => router.back()}
@@ -121,39 +132,30 @@ export default function ProtocolDetailScreen() {
       >
         {/* Meta info */}
         <View style={styles.metaRow}>
-          <View 
-            style={[
-              styles.categoryBadge, 
-              { backgroundColor: categoryConfig.color + '15' }
-            ]}
-          >
-            <ThemedText style={styles.categoryEmoji}>
-              {categoryConfig.emoji}
-            </ThemedText>
-            <ThemedText 
+          <View style={[styles.categoryBadge, { backgroundColor: categoryConfig.color + '15' }]}>
+            <ThemedText style={styles.categoryEmoji}>{categoryConfig.emoji}</ThemedText>
+            <ThemedText
               style={[styles.categoryLabel, { color: categoryConfig.color }]}
               fontFamily="Inter-Medium"
             >
               {categoryConfig.label}
             </ThemedText>
           </View>
-          
+
           <View style={styles.durationBadge}>
             <Clock size={14} color={isDark ? '#999' : '#666'} weight="regular" />
-            <ThemedText style={styles.durationText}>
-              {protocol.duration}
-            </ThemedText>
+            <ThemedText style={styles.durationText}>{protocol.duration}</ThemedText>
           </View>
 
           <View style={styles.metaActions}>
-            <TouchableOpacity 
-              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+            <TouchableOpacity
+              style={[styles.actionButton, { borderColor: categoryConfig.color }]}
               onPress={handleShare}
             >
               <ShareIcon size={18} color={categoryConfig.color} weight="regular" />
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.actionButton, { borderColor: categoryConfig.color }]} 
+            <TouchableOpacity
+              style={[styles.actionButton, { borderColor: categoryConfig.color }]}
               onPress={handleCopy}
             >
               <Copy size={18} color={categoryConfig.color} weight="regular" />
@@ -169,23 +171,19 @@ export default function ProtocolDetailScreen() {
               <ThemedText style={styles.infoLabel} fontFamily="Inter-SemiBold">
                 Quando usar
               </ThemedText>
-              <ThemedText style={styles.infoText}>
-                {protocol.whenToUse}
-              </ThemedText>
+              <ThemedText style={styles.infoText}>{protocol.whenToUse}</ThemedText>
             </View>
           </View>
-          
+
           <View style={[styles.separator, { backgroundColor: borderColor }]} />
-          
+
           <View style={styles.infoRow}>
             <Target size={18} color={categoryConfig.color} weight="regular" />
             <View style={styles.infoContent}>
               <ThemedText style={styles.infoLabel} fontFamily="Inter-SemiBold">
                 Objetivo
               </ThemedText>
-              <ThemedText style={styles.infoText}>
-                {protocol.objective}
-              </ThemedText>
+              <ThemedText style={styles.infoText}>{protocol.objective}</ThemedText>
             </View>
           </View>
         </View>
@@ -197,15 +195,15 @@ export default function ProtocolDetailScreen() {
 
         <View style={styles.stepsContainer}>
           {protocol.steps.map((step, index) => (
-            <View 
-              key={step.order} 
+            <View
+              key={step.order}
               style={[
-                styles.stepCard, 
-                { 
-                  backgroundColor: cardBg, 
+                styles.stepCard,
+                {
+                  backgroundColor: cardBg,
                   borderColor,
                   borderLeftColor: categoryConfig.color,
-                }
+                },
               ]}
             >
               <View style={styles.stepHeader}>
@@ -218,22 +216,20 @@ export default function ProtocolDetailScreen() {
                   {step.title}
                 </ThemedText>
               </View>
-              
-              <ThemedText style={styles.stepDescription}>
-                {step.description}
-              </ThemedText>
-              
+
+              <ThemedText style={styles.stepDescription}>{step.description}</ThemedText>
+
               {step.duration && (
                 <View style={styles.stepMeta}>
                   <Clock size={12} color={isDark ? '#999' : '#666'} weight="regular" />
-                  <ThemedText style={styles.stepMetaText}>
-                    {step.duration}
-                  </ThemedText>
+                  <ThemedText style={styles.stepMetaText}>{step.duration}</ThemedText>
                 </View>
               )}
-              
+
               {step.tip && (
-                <View style={[styles.tipContainer, { backgroundColor: categoryConfig.color + '10' }]}>
+                <View
+                  style={[styles.tipContainer, { backgroundColor: categoryConfig.color + '10' }]}
+                >
                   <Lightbulb size={14} color={categoryConfig.color} weight="regular" />
                   <ThemedText style={[styles.tipText, { color: categoryConfig.color }]}>
                     {step.tip}
@@ -248,14 +244,12 @@ export default function ProtocolDetailScreen() {
         <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
           ✅ Sinais de que está funcionando
         </ThemedText>
-        
+
         <View style={[styles.listCard, { backgroundColor: cardBg, borderColor }]}>
           {protocol.signsItWorks.map((sign, index) => (
             <View key={index} style={styles.listItem}>
               <CheckCircle size={16} color="#10B981" weight="regular" />
-              <ThemedText style={styles.listItemText}>
-                {sign}
-              </ThemedText>
+              <ThemedText style={styles.listItemText}>{sign}</ThemedText>
             </View>
           ))}
         </View>
@@ -264,14 +258,12 @@ export default function ProtocolDetailScreen() {
         <ThemedText style={styles.sectionTitle} fontFamily="Inter-Bold">
           ⚠️ Erros comuns
         </ThemedText>
-        
+
         <View style={[styles.listCard, { backgroundColor: cardBg, borderColor }]}>
           {protocol.commonMistakes.map((mistake, index) => (
             <View key={index} style={styles.listItem}>
               <Warning size={16} color="#F59E0B" weight="regular" />
-              <ThemedText style={styles.listItemText}>
-                {mistake}
-              </ThemedText>
+              <ThemedText style={styles.listItemText}>{mistake}</ThemedText>
             </View>
           ))}
         </View>

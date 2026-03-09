@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
-import { useThemeColor } from '../constants/Styles';
-import { commonStyles } from '../constants/Styles';
+import { useThemeColor, commonStyles } from '../constants/Styles';
 
 interface TimeInputProps {
   label: string;
@@ -30,8 +29,8 @@ export function TimeInput({
     if (!timeStr || timeStr === '00:00' || timeStr === '00:00:00') {
       return { hours: '', minutes: '', seconds: '' };
     }
-    
-    const parts = timeStr.split(':').filter(p => p !== '');
+
+    const parts = timeStr.split(':').filter((p) => p !== '');
     if (showHours) {
       if (parts.length === 3) {
         return {
@@ -79,13 +78,18 @@ export function TimeInput({
       setIsInternalChange(false);
       return;
     }
-    
+
     // Only update if the value actually changed externally
     const parsed = parseTime(value);
     setTimeParts(parsed);
   }, [value, showHours]);
 
-  const formatTime = (hours: string, minutes: string, seconds: string, skipPadding: boolean = false): string => {
+  const formatTime = (
+    hours: string,
+    minutes: string,
+    seconds: string,
+    skipPadding: boolean = false,
+  ): string => {
     if (showHours) {
       if (skipPadding) {
         // Don't pad when user is typing
@@ -136,7 +140,7 @@ export function TimeInput({
   const handleChange = (field: 'hours' | 'minutes' | 'seconds', text: string) => {
     // Only allow numbers
     const numericValue = text.replace(/[^0-9]/g, '');
-    
+
     // Limit length
     let limitedValue = numericValue;
     if (field === 'hours') {
@@ -158,9 +162,9 @@ export function TimeInput({
       newTimeParts.hours,
       newTimeParts.minutes,
       newTimeParts.seconds,
-      true // skip padding while user is typing
+      true, // skip padding while user is typing
     );
-    
+
     // If all fields are empty, send empty string
     if (!newTimeParts.hours && !newTimeParts.minutes && !newTimeParts.seconds) {
       onChange('');
@@ -172,23 +176,17 @@ export function TimeInput({
   return (
     <View style={styles.container}>
       {label && (
-        <ThemedText 
-          style={commonStyles.inputLabel}
-          fontFamily="Inter-Medium"
-        >
+        <ThemedText style={commonStyles.inputLabel} fontFamily="Inter-Medium">
           {label}
         </ThemedText>
       )}
-      
+
       <View style={styles.timeContainer}>
         {showHours && (
           <>
             <View style={styles.inputGroup}>
               <TextInput
-                style={[
-                  styles.timeInput,
-                  { backgroundColor, color: textColor, borderColor }
-                ]}
+                style={[styles.timeInput, { backgroundColor, color: textColor, borderColor }]}
                 value={timeParts.hours}
                 onChangeText={(text) => handleChange('hours', text)}
                 placeholder="00"
@@ -202,13 +200,10 @@ export function TimeInput({
             <ThemedText style={styles.separator}>:</ThemedText>
           </>
         )}
-        
+
         <View style={styles.inputGroup}>
           <TextInput
-            style={[
-              styles.timeInput,
-              { backgroundColor, color: textColor, borderColor }
-            ]}
+            style={[styles.timeInput, { backgroundColor, color: textColor, borderColor }]}
             value={timeParts.minutes}
             onChangeText={(text) => handleChange('minutes', text)}
             placeholder="00"
@@ -219,17 +214,14 @@ export function TimeInput({
           />
           <ThemedText style={styles.unitLabel}>m</ThemedText>
         </View>
-        
+
         {showSeconds && (
           <>
             <ThemedText style={styles.separator}>:</ThemedText>
-            
+
             <View style={styles.inputGroup}>
               <TextInput
-                style={[
-                  styles.timeInput,
-                  { backgroundColor, color: textColor, borderColor }
-                ]}
+                style={[styles.timeInput, { backgroundColor, color: textColor, borderColor }]}
                 value={timeParts.seconds}
                 onChangeText={(text) => handleChange('seconds', text)}
                 placeholder="00"

@@ -150,7 +150,20 @@ export function formatDateShort(isoString?: string): string {
   if (!isoString) return '—';
   try {
     const d = new Date(isoString);
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const months = [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ];
     return `${months[d.getMonth()]} ${d.getFullYear()}`;
   } catch {
     return '—';

@@ -13,12 +13,12 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Header } from '@/components/Header';
 import { useThemeColor } from '@/constants/Styles';
-import { 
-  PRODUCTS, 
-  PRODUCT_CATEGORY_CONFIG, 
+import {
+  PRODUCTS,
+  PRODUCT_CATEGORY_CONFIG,
   ProductCategory,
   STORE_CONFIG,
-  type Product 
+  type Product,
 } from '@/data/productsContent';
 import { Star, StarHalf, CheckCircle, ShoppingCart, Info, Storefront } from 'phosphor-react-native';
 import Colors from '@/constants/Colors';
@@ -40,9 +40,8 @@ export default function ProductListScreen() {
   const textColor = useThemeColor({}, 'text');
   const secondaryTextColor = useThemeColor({}, 'tabIconDefault');
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+  const filteredProducts =
+    selectedCategory === 'all' ? PRODUCTS : PRODUCTS.filter((p) => p.category === selectedCategory);
 
   const handleBuyPress = async (product: Product) => {
     try {
@@ -61,15 +60,15 @@ export default function ProductListScreen() {
     if (!rating) return null;
     return (
       <View style={styles.starsContainer}>
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map((star) =>
           star <= rating ? (
             <Star key={star} size={14} color="#F59E0B" weight="fill" />
           ) : star - 0.5 <= rating ? (
             <StarHalf key={star} size={14} color="#F59E0B" weight="fill" />
           ) : (
             <Star key={star} size={14} color="#F59E0B" weight="regular" />
-          )
-        ))}
+          ),
+        )}
         <ThemedText style={[styles.ratingText, { color: secondaryTextColor }]}>
           {rating.toFixed(1)}
         </ThemedText>
@@ -79,32 +78,29 @@ export default function ProductListScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header
-        title="Loja do Triatleta"
-        onBackPress={() => router.back()}
-      />
+      <Header title="Loja do Triatleta" onBackPress={() => router.back()} />
 
       {/* Filtros por modalidade */}
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.filterContainer}
       >
         <TouchableOpacity
           style={[
             styles.filterChip,
-            { 
+            {
               backgroundColor: selectedCategory === 'all' ? Colors.shared.primary : cardBg,
               borderColor: borderColor,
               borderWidth: 1,
-            }
+            },
           ]}
           onPress={() => setSelectedCategory('all')}
         >
-          <ThemedText 
+          <ThemedText
             style={[
               styles.filterText,
-              { color: selectedCategory === 'all' ? '#FFFFFF' : textColor }
+              { color: selectedCategory === 'all' ? '#FFFFFF' : textColor },
             ]}
             fontFamily="Inter-SemiBold"
           >
@@ -117,18 +113,18 @@ export default function ProductListScreen() {
             key={key}
             style={[
               styles.filterChip,
-              { 
+              {
                 backgroundColor: selectedCategory === key ? config.color : cardBg,
                 borderColor: borderColor,
                 borderWidth: 1,
-              }
+              },
             ]}
             onPress={() => setSelectedCategory(key as ProductCategory)}
           >
-            <ThemedText 
+            <ThemedText
               style={[
                 styles.filterText,
-                { color: selectedCategory === key ? '#FFFFFF' : textColor }
+                { color: selectedCategory === key ? '#FFFFFF' : textColor },
               ]}
               fontFamily="Inter-SemiBold"
             >
@@ -139,7 +135,7 @@ export default function ProductListScreen() {
       </ScrollView>
 
       {/* Lista de produtos */}
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.productsList}
         showsVerticalScrollIndicator={false}
@@ -153,33 +149,31 @@ export default function ProductListScreen() {
               key={product.id}
               style={[
                 styles.productCard,
-                { 
+                {
                   backgroundColor: cardBg,
                   borderColor: borderColor,
-                }
+                },
               ]}
               onPress={() => handleBuyPress(product)}
               activeOpacity={0.7}
             >
               {/* Imagem do produto */}
               <View style={styles.imageContainer}>
-                <Image 
+                <Image
                   source={{ uri: product.image }}
                   style={styles.productImage}
                   resizeMode="cover"
                 />
                 <View style={[styles.categoryBadge, { backgroundColor: categoryConfig.color }]}>
-                  <ThemedText style={styles.categoryEmoji}>
-                    {categoryConfig.emoji}
-                  </ThemedText>
+                  <ThemedText style={styles.categoryEmoji}>{categoryConfig.emoji}</ThemedText>
                 </View>
               </View>
 
               {/* Info do produto */}
               <View style={styles.productInfo}>
                 <View style={styles.productHeader}>
-                  <ThemedText 
-                    style={styles.productName} 
+                  <ThemedText
+                    style={styles.productName}
                     fontFamily="Inter-SemiBold"
                     numberOfLines={2}
                   >
@@ -188,7 +182,7 @@ export default function ProductListScreen() {
                   {renderStars(product.rating)}
                 </View>
 
-                <ThemedText 
+                <ThemedText
                   style={[styles.productDescription, { color: secondaryTextColor }]}
                   numberOfLines={2}
                 >
@@ -201,7 +195,7 @@ export default function ProductListScreen() {
                     {product.features.slice(0, 3).map((feature, index) => (
                       <View key={index} style={styles.featureItem}>
                         <CheckCircle size={14} color="#10B981" weight="fill" />
-                        <ThemedText 
+                        <ThemedText
                           style={[styles.featureText, { color: secondaryTextColor }]}
                           numberOfLines={1}
                         >

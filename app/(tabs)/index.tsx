@@ -22,12 +22,7 @@ import {
   FlagCheckered,
   Target,
 } from 'phosphor-react-native';
-import {
-  getProfile,
-  getTestResults,
-  Profile,
-  TestResults,
-} from '@/hooks/useStorage';
+import { getProfile, getTestResults, Profile, TestResults } from '@/hooks/useStorage';
 import {
   useIntensityMode,
   calculateSwimPace,
@@ -86,12 +81,7 @@ function PrimaryActionCard({
         ]}
       >
         <View style={styles.primaryCardContent}>
-          <View
-            style={[
-              styles.primaryIconContainer,
-              { backgroundColor: brandColor + '12' },
-            ]}
-          >
+          <View style={[styles.primaryIconContainer, { backgroundColor: brandColor + '12' }]}>
             {icon}
           </View>
           <View style={styles.primaryTextContainer}>
@@ -151,12 +141,7 @@ function SecondaryToolCard({
           },
         ]}
       >
-        <View
-          style={[
-            styles.toolIconContainer,
-            { backgroundColor: brandColor + '10' },
-          ]}
-        >
+        <View style={[styles.toolIconContainer, { backgroundColor: brandColor + '10' }]}>
           {icon}
         </View>
         <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
@@ -178,14 +163,10 @@ export default function HomeScreen() {
   const [testResults, setTestResults] = useState<TestResults>({});
 
   // Hook para gerenciar modos de intensidade
-  const { modes, isLoaded, lastChanged, cycleSwim, cycleBike, cycleRun } =
-    useIntensityMode();
+  const { modes, isLoaded, lastChanged, cycleSwim, cycleBike, cycleRun } = useIntensityMode();
 
   const loadData = async () => {
-    const [profileData, testsData] = await Promise.all([
-      getProfile(),
-      getTestResults(),
-    ]);
+    const [profileData, testsData] = await Promise.all([getProfile(), getTestResults()]);
     setProfile(profileData);
     setTestResults(testsData);
   };
@@ -227,11 +208,7 @@ export default function HomeScreen() {
     let runValue = '--';
     if (testResults.run) {
       const testDistance = testResults.run.testType === '5km' ? 5 : 3;
-      const pace = calculateRunPace(
-        testResults.run.testTime,
-        testDistance as 3 | 5,
-        modes.run,
-      );
+      const pace = calculateRunPace(testResults.run.testTime, testDistance as 3 | 5, modes.run);
       runValue = formatPace(pace);
     }
 
@@ -277,13 +254,7 @@ export default function HomeScreen() {
         <PrimaryActionCard
           title="Simulador de prova"
           subtitle="Simule sua prova"
-          icon={
-            <FlagCheckered
-              size={28}
-              color={Colors.shared.primary}
-              weight="bold"
-            />
-          }
+          icon={<FlagCheckered size={28} color={Colors.shared.primary} weight="bold" />}
           color={Colors.shared.primary}
           onPress={() => router.push('/screens/race-prediction')}
           backgroundColor={cardBg}
@@ -293,9 +264,7 @@ export default function HomeScreen() {
         <PrimaryActionCard
           title="Zonas de treino"
           subtitle="Zonas de treino baseadas em testes"
-          icon={
-            <Target size={28} color={Colors.shared.primary} weight="bold" />
-          }
+          icon={<Target size={28} color={Colors.shared.primary} weight="bold" />}
           color={Colors.shared.primary}
           onPress={() => router.push('/screens/training-zones')}
           backgroundColor={cardBg}
@@ -303,12 +272,7 @@ export default function HomeScreen() {
         />
 
         {/* Separador */}
-        <View
-          style={[
-            styles.separator,
-            { backgroundColor: borderColor, marginTop: 8 },
-          ]}
-        />
+        <View style={[styles.separator, { backgroundColor: borderColor, marginTop: 8 }]} />
 
         {/* Sessão - Ferramentas Secundárias */}
         <ThemedText style={styles.sectionTitle} fontFamily="Inter-SemiBold">
@@ -318,13 +282,7 @@ export default function HomeScreen() {
         <View style={styles.toolsGrid}>
           <SecondaryToolCard
             title="Calculadora Nutrição"
-            icon={
-              <ForkKnife
-                size={24}
-                color={Colors.shared.primary}
-                weight="bold"
-              />
-            }
+            icon={<ForkKnife size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/nutrition')}
             backgroundColor={cardBg}
@@ -333,13 +291,7 @@ export default function HomeScreen() {
 
           <SecondaryToolCard
             title="Share Tri"
-            icon={
-              <ArrowSquareUp
-                size={24}
-                color={Colors.shared.primary}
-                weight="bold"
-              />
-            }
+            icon={<ArrowSquareUp size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/race-calculator')}
             backgroundColor={cardBg}
@@ -348,9 +300,7 @@ export default function HomeScreen() {
 
           <SecondaryToolCard
             title="Equipamentos"
-            icon={
-              <Backpack size={24} color={Colors.shared.primary} weight="bold" />
-            }
+            icon={<Backpack size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/store/my-setup')}
             backgroundColor={cardBg}
@@ -359,13 +309,7 @@ export default function HomeScreen() {
 
           <SecondaryToolCard
             title="Protocolos"
-            icon={
-              <ClipboardText
-                size={24}
-                color={Colors.shared.primary}
-                weight="bold"
-              />
-            }
+            icon={<ClipboardText size={24} color={Colors.shared.primary} weight="bold" />}
             color={Colors.shared.primary}
             onPress={() => router.push('/screens/protocol/protocols')}
             backgroundColor={cardBg}

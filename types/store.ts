@@ -171,11 +171,14 @@ export interface AnalyticsEntry {
 
 // ─── UI Config ───────────────────────────────────────────────────────
 
-export const CATEGORY_CONFIG: Record<ProductCategory, {
-  label: string;
-  color: string;
-  emoji: string;
-}> = {
+export const CATEGORY_CONFIG: Record<
+  ProductCategory,
+  {
+    label: string;
+    color: string;
+    emoji: string;
+  }
+> = {
   natacao: { label: 'Natação', color: '#0EA5E9', emoji: '🏊' },
   ciclismo: { label: 'Ciclismo', color: '#F97316', emoji: '🚴' },
   corrida: { label: 'Corrida', color: '#EF4444', emoji: '🏃' },
@@ -186,11 +189,14 @@ export const CATEGORY_CONFIG: Record<ProductCategory, {
   transicao: { label: 'Transição', color: '#EC4899', emoji: '🔄' },
 };
 
-export const STORE_CONFIG: Record<AffiliateStore, {
-  name: string;
-  color: string;
-  icon: string;
-}> = {
+export const STORE_CONFIG: Record<
+  AffiliateStore,
+  {
+    name: string;
+    color: string;
+    icon: string;
+  }
+> = {
   shopee: { name: 'Shopee', color: '#EE4D2D', icon: 'cart' },
   amazon: { name: 'Amazon', color: '#FF9900', icon: 'package-variant' },
   mercadolivre: { name: 'Mercado Livre', color: '#FFE600', icon: 'storefront' },

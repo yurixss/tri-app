@@ -16,8 +16,10 @@ export const PRODUCTS: Product[] = [
     name: 'Wetsuit Masculino Orca',
     category: 'natacao',
     description: 'Wetsuit Athlex Float Triathlon V2 Masc',
-    technicalJustification: 'Neoprene Yamamoto 39 melhora flutuabilidade em 8–12%, reduzindo esforço de pernas. Painéis flex nos ombros mantêm amplitude de braçada.',
-    image: 'https://http2.mlstatic.com/D_NQ_NP_2X_787569-MLB83390796246_042025-F-wetsuit-athlex-float-triathlon-v2-masc.webp',
+    technicalJustification:
+      'Neoprene Yamamoto 39 melhora flutuabilidade em 8–12%, reduzindo esforço de pernas. Painéis flex nos ombros mantêm amplitude de braçada.',
+    image:
+      'https://http2.mlstatic.com/D_NQ_NP_2X_787569-MLB83390796246_042025-F-wetsuit-athlex-float-triathlon-v2-masc.webp',
     price: 'R$ 3.699,90',
     averageCost: 3699,
     rating: 5,
@@ -38,7 +40,8 @@ export const PRODUCTS: Product[] = [
     name: 'Capacete Aero Giro',
     category: 'ciclismo',
     description: 'Capacete super aerodinâmico Giro com proteção MIPS.',
-    technicalJustification: 'Design super aero reduz arrasto. MIPS reduz forças rotacionais em 10–15% vs capacetes convencionais. Ideal para provas de triathlon e contra-relógio.',
+    technicalJustification:
+      'Design super aero reduz arrasto. MIPS reduz forças rotacionais em 10–15% vs capacetes convencionais. Ideal para provas de triathlon e contra-relógio.',
     image: 'https://m.media-amazon.com/images/I/71hF5McaHJL._AC_SL1500_.jpg',
     price: 'R$ 3.399,90',
     averageCost: 3390,
@@ -59,15 +62,22 @@ export const PRODUCTS: Product[] = [
     id: 'adidas-adios-pro-4',
     name: 'Adidas Adios Pro 4 com Placa de Carbono',
     category: 'corrida',
-    description: 'Tênis de alta performance com placa de carbono EnergyRods 2.0 para máximo retorno de energia.',
-    technicalJustification: 'Placa de carbono EnergyRods 2.0 com 5 hastes atua como alavanca no impulso. Espuma Lightstrike Pro retorna alta energia de impacto, ganho de 4–6% em economia de corrida.',
+    description:
+      'Tênis de alta performance com placa de carbono EnergyRods 2.0 para máximo retorno de energia.',
+    technicalJustification:
+      'Placa de carbono EnergyRods 2.0 com 5 hastes atua como alavanca no impulso. Espuma Lightstrike Pro retorna alta energia de impacto, ganho de 4–6% em economia de corrida.',
     image: 'https://m.media-amazon.com/images/I/51BNTM0iDOL._AC_SY695_.jpg',
     price: 'R$ 1.499,90',
     averageCost: 1500,
     rating: 4.8,
     store: 'amazon',
     affiliateLink: 'https://amzn.to/46FFOvt',
-    features: ['Placa de carbono EnergyRods 2.0', 'Espuma Lightstrike Pro', 'Drop 6.5mm', 'Ultraleve'],
+    features: [
+      'Placa de carbono EnergyRods 2.0',
+      'Espuma Lightstrike Pro',
+      'Drop 6.5mm',
+      'Ultraleve',
+    ],
     problemTags: [],
     performanceGainEstimate: '2–5 min na meia-maratona',
     timeGainMinutes: { min: 2, max: 5, context: 'em 21km (corrida do tri)' },
@@ -83,7 +93,8 @@ export const PRODUCTS: Product[] = [
     name: 'Gel 10 Sachês 226ERS',
     category: 'nutricao',
     description: '50g de carboidratos de múltiplas fontes + eletrólitos. Pack com 10 sachês.',
-    technicalJustification: 'Ratio 1:0.8 maltodextrina:frutose maximiza absorção intestinal (até 90g/h). Sódio 125mg previne hiponatremia em provas longas e quentes.',
+    technicalJustification:
+      'Ratio 1:0.8 maltodextrina:frutose maximiza absorção intestinal (até 90g/h). Sódio 125mg previne hiponatremia em provas longas e quentes.',
     image: 'https://m.media-amazon.com/images/I/61Xf8PU4XfL._AC_SL1200_.jpg',
     price: 'R$ 235',
     averageCost: 235,
@@ -103,7 +114,8 @@ export const PRODUCTS: Product[] = [
     name: 'Cafeína em Cápsula DUX',
     category: 'nutricao',
     description: 'Suplemento de cafeína DUX Nutrition para boost de performance em provas.',
-    technicalJustification: 'Meta-análises mostram ganho de 2–4% em performance de endurance com 3–6mg/kg de cafeína. Pico de ação em 45–60min pós-ingestão.',
+    technicalJustification:
+      'Meta-análises mostram ganho de 2–4% em performance de endurance com 3–6mg/kg de cafeína. Pico de ação em 45–60min pós-ingestão.',
     image: 'https://m.media-amazon.com/images/I/51mdjhty5UL._AC_SL1000_.jpg',
     price: 'R$ 39,90',
     averageCost: 40,
@@ -124,7 +136,8 @@ export const PRODUCTS: Product[] = [
     name: 'Rolo de Liberação Miofascial',
     category: 'recuperacao',
     description: 'Rolo texturizado para liberação miofascial e recuperação muscular.',
-    technicalJustification: 'Auto-massagem miofascial reduz DOMS em 20–30% e melhora amplitude de movimento. Essencial para quem treina 5+ vezes por semana.',
+    technicalJustification:
+      'Auto-massagem miofascial reduz DOMS em 20–30% e melhora amplitude de movimento. Essencial para quem treina 5+ vezes por semana.',
     image: 'https://m.media-amazon.com/images/I/51SZAoEQVAL._AC_SL1000_.jpg',
     price: 'R$ 89,90',
     averageCost: 90,
@@ -142,7 +155,8 @@ export const PRODUCTS: Product[] = [
     name: 'Pistola de Massagem Hypervolt',
     category: 'recuperacao',
     description: 'Massagem percussiva profissional com motor silencioso.',
-    technicalJustification: 'Percussão a 40Hz penetra tecido profundo, melhorando circulação local em 40%. Motor QuietGlide permite uso a qualquer hora sem incômodo.',
+    technicalJustification:
+      'Percussão a 40Hz penetra tecido profundo, melhorando circulação local em 40%. Motor QuietGlide permite uso a qualquer hora sem incômodo.',
     image: 'https://m.media-amazon.com/images/I/61LhOnTCuKL._AC_SL1000_.jpg',
     price: 'R$ 1.199,90',
     averageCost: 1200,
@@ -162,7 +176,8 @@ export const PRODUCTS: Product[] = [
     name: 'Garmin Forerunner 965',
     category: 'tecnologia',
     description: 'Relógio GPS premium com tela AMOLED e métricas avançadas.',
-    technicalJustification: 'GPS multibanda com precisão <1m. Training Readiness + HRV Status permitem periodizar carga com base em dados reais vs sensação.',
+    technicalJustification:
+      'GPS multibanda com precisão <1m. Training Readiness + HRV Status permitem periodizar carga com base em dados reais vs sensação.',
     image: 'https://m.media-amazon.com/images/I/51ggNPVW4kL._AC_SX679_.jpg',
     price: 'R$ 4.999,90',
     averageCost: 5000,
@@ -180,7 +195,8 @@ export const PRODUCTS: Product[] = [
     name: 'Garmin Forerunner 165',
     category: 'tecnologia',
     description: 'Relógio GPS com tela AMOLED, excelente custo-benefício para triatletas.',
-    technicalJustification: 'GPS de alta precisão com tela AMOLED colorida. Perfil de corrida com métricas de treino essenciais. Ótima opção de entrada para quem quer dados confiáveis sem investir em modelos topo de linha.',
+    technicalJustification:
+      'GPS de alta precisão com tela AMOLED colorida. Perfil de corrida com métricas de treino essenciais. Ótima opção de entrada para quem quer dados confiáveis sem investir em modelos topo de linha.',
     image: 'https://m.media-amazon.com/images/I/61m+fKy7wzL._AC_SL1500_.jpg',
     price: 'R$ 1.999,90',
     averageCost: 2000,
@@ -200,7 +216,8 @@ export const PRODUCTS: Product[] = [
     name: 'Porta Número de Corrida',
     category: 'transicao',
     description: 'Cinto porta número elástico com presilhas para fixação rápida.',
-    technicalJustification: 'Elimina necessidade de alfinetes (30s de transição). Gira o número para frente (corrida) ou costas (bike) instantaneamente.',
+    technicalJustification:
+      'Elimina necessidade de alfinetes (30s de transição). Gira o número para frente (corrida) ou costas (bike) instantaneamente.',
     image: 'https://m.media-amazon.com/images/I/51trkyv57EL._AC_SX679_.jpg',
     price: 'R$ 34,90',
     averageCost: 35,
@@ -218,7 +235,8 @@ export const PRODUCTS: Product[] = [
     name: 'Cadarço Elástico (2 Pares)',
     category: 'transicao',
     description: 'Cadarço elástico com trava para transição rápida. Kit com 2 pares.',
-    technicalJustification: 'Substitui amarração convencional (15–30s) por calçamento instantâneo. Tensão uniforme evita pontos de pressão durante a corrida.',
+    technicalJustification:
+      'Substitui amarração convencional (15–30s) por calçamento instantâneo. Tensão uniforme evita pontos de pressão durante a corrida.',
     image: 'https://m.media-amazon.com/images/I/51tLS6hKvTL._AC_SY695_.jpg',
     price: 'R$ 29,90',
     averageCost: 30,
@@ -232,4 +250,3 @@ export const PRODUCTS: Product[] = [
     distanceRelevance: ['sprint', 'olimpico', '70.3', 'full'],
   },
 ];
-

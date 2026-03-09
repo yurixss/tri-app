@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native'; 
-import { ShareNetwork, Copy } from 'phosphor-react-native'; 
+import { View, StyleSheet, Pressable } from 'react-native';
+import { ShareNetwork, Copy } from 'phosphor-react-native';
 import { copyZonesToClipboard, shareZones } from '@/utils/shareUtils';
 
 interface ZoneActionsProps {
   title: string;
-  zones: any[]; 
+  zones: any[];
   color: string;
-  onCopySuccess?: () => void; 
+  onCopySuccess?: () => void;
 }
 
 export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsProps) {
@@ -24,7 +24,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
 
   return (
     <View style={styles.container}>
-      <Pressable 
+      <Pressable
         style={({ pressed }) => [
           styles.button,
           { borderColor: color },
@@ -35,7 +35,7 @@ export function ZoneActions({ title, zones, color, onCopySuccess }: ZoneActionsP
         <Copy size={16} color={color} weight="regular" />
       </Pressable>
 
-      <Pressable 
+      <Pressable
         style={({ pressed }) => [
           styles.button,
           { borderColor: color },

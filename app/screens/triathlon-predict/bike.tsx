@@ -26,13 +26,13 @@ export default function BikeStep() {
   const [bikeWeight, setBikeWeight] = useState('9');
   const [distance, setDistance] = useState('40');
   const [elevation, setElevation] = useState('500');
-  
+
   // Campos opcionais avançados
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [cda, setCda] = useState('0.32');
   const [wind, setWind] = useState('0');
   const [temperature, setTemperature] = useState('25');
-  
+
   const [error, setError] = useState<string | null>(null);
 
   // Carregar FTP salvo e dados existentes
@@ -146,21 +146,21 @@ export default function BikeStep() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Previsão de Triathlon"
-        onBackPress={handleBack}
-      />
+      <Header title="Previsão de Triathlon" onBackPress={handleBack} />
 
       <WizardStepper currentStep={2} />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
+            <ThemedText
+              style={[styles.cardTitle, { color: Colors.shared.primary }]}
+              fontFamily="Inter-Bold"
+            >
               🚴 Ciclismo
             </ThemedText>
           </View>
@@ -194,8 +194,12 @@ export default function BikeStep() {
 
           {parseFloat(ftpPercentage) > 0 && (
             <View style={[styles.zoneIndicator, { backgroundColor: Colors.shared.primary + '20' }]}>
-              <ThemedText style={[styles.zoneText, { color: Colors.shared.primary }]} fontFamily="Inter-Medium">
-                {zoneInfo.name} • Potência: {Math.round(parseFloat(ftp || '0') * parseFloat(ftpPercentage) / 100)}W
+              <ThemedText
+                style={[styles.zoneText, { color: Colors.shared.primary }]}
+                fontFamily="Inter-Medium"
+              >
+                {zoneInfo.name} • Potência:{' '}
+                {Math.round((parseFloat(ftp || '0') * parseFloat(ftpPercentage)) / 100)}W
               </ThemedText>
             </View>
           )}

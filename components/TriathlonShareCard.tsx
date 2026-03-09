@@ -69,159 +69,76 @@ export const TriathlonShareCard = React.forwardRef(
       >
         <View style={styles.topGroup}>
           <View style={styles.header}>
-            <Text
-              style={[styles.title, { fontSize: titleSize, color: textColor }]}
-            >
-              TRIATHLON
-            </Text>
-            <Text
-              style={[styles.date, { fontSize: dateSize, color: textColor }]}
-            >
-              {date}
-            </Text>
+            <Text style={[styles.title, { fontSize: titleSize, color: textColor }]}>TRIATHLON</Text>
+            <Text style={[styles.date, { fontSize: dateSize, color: textColor }]}>{date}</Text>
           </View>
-          <Text
-            style={[
-              styles.totalTime,
-              { fontSize: totalTimeSize, color: textColor },
-            ]}
-          >
+          <Text style={[styles.totalTime, { fontSize: totalTimeSize, color: textColor }]}>
             {totalTime}
           </Text>
         </View>
 
         <View style={styles.details}>
           <View style={styles.block}>
-            <Text
-              style={[
-                styles.blockTitle,
-                { fontSize: blockTitleSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>
               SWIM
             </Text>
-            <Text
-              style={[
-                styles.blockValue,
-                { fontSize: blockValueSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>
               {swim.distance} • {swim.pace}
             </Text>
-            <Text
-              style={[
-                styles.blockSub,
-                { fontSize: blockSubSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>
               {swim.time}
             </Text>
           </View>
 
           {showTransitions && t1 && (
             <View style={styles.block}>
-              <Text
-                style={[
-                  styles.blockTitle,
-                  { fontSize: blockTitleSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>
                 T1
               </Text>
-              <Text
-                style={[
-                  styles.blockValue,
-                  { fontSize: blockValueSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>
                 {t1.time}
               </Text>
             </View>
           )}
 
           <View style={styles.block}>
-            <Text
-              style={[
-                styles.blockTitle,
-                { fontSize: blockTitleSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>
               BIKE
             </Text>
-            <Text
-              style={[
-                styles.blockValue,
-                { fontSize: blockValueSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>
               {bike.distance} • {bike.speed}
             </Text>
-            <Text
-              style={[
-                styles.blockSub,
-                { fontSize: blockSubSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>
               {bike.time}
             </Text>
           </View>
 
           {showTransitions && t2 && (
             <View style={styles.block}>
-              <Text
-                style={[
-                  styles.blockTitle,
-                  { fontSize: blockTitleSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>
                 T2
               </Text>
-              <Text
-                style={[
-                  styles.blockValue,
-                  { fontSize: blockValueSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>
                 {t2.time}
               </Text>
             </View>
           )}
 
           <View style={styles.block}>
-            <Text
-              style={[
-                styles.blockTitle,
-                { fontSize: blockTitleSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockTitle, { fontSize: blockTitleSize, color: textColor }]}>
               RUN
             </Text>
-            <Text
-              style={[
-                styles.blockValue,
-                { fontSize: blockValueSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockValue, { fontSize: blockValueSize, color: textColor }]}>
               {run.distance} • {run.pace}
             </Text>
-            <Text
-              style={[
-                styles.blockSub,
-                { fontSize: blockSubSize, color: textColor },
-              ]}
-            >
+            <Text style={[styles.blockSub, { fontSize: blockSubSize, color: textColor }]}>
               {run.time}
             </Text>
           </View>
         </View>
 
         <View style={styles.footer}>
-          <Text
-            style={[
-              styles.footerText,
-              { fontSize: footerSize, color: textColor },
-            ]}
-          >
+          <Text style={[styles.footerText, { fontSize: footerSize, color: textColor }]}>
             Koa Endurance
           </Text>
         </View>

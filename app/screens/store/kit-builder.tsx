@@ -12,7 +12,14 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { CaretLeft, TrendUp, CheckCircle, Star, Rocket, ArrowCounterClockwise } from 'phosphor-react-native';
+import {
+  CaretLeft,
+  TrendUp,
+  CheckCircle,
+  Star,
+  Rocket,
+  ArrowCounterClockwise,
+} from 'phosphor-react-native';
 import { buildKit } from '@/data/store/kitBuilder';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import type {
@@ -89,7 +96,7 @@ export default function KitBuilderScreen() {
   const renderOption = <T extends string>(
     options: Record<T, string | { label: string; [key: string]: any }>,
     selected: T | undefined,
-    onSelect: (val: T) => void
+    onSelect: (val: T) => void,
   ) => {
     return Object.entries(options).map(([key, val]) => {
       const label = typeof val === 'string' ? val : (val as any).label;
@@ -117,7 +124,10 @@ export default function KitBuilderScreen() {
           </ThemedText>
           {val != null && typeof val === 'object' && 'range' in val && (
             <ThemedText
-              style={[styles.optionSubtext, { color: isSelected ? 'rgba(255,255,255,0.7)' : secondaryText }]}
+              style={[
+                styles.optionSubtext,
+                { color: isSelected ? 'rgba(255,255,255,0.7)' : secondaryText },
+              ]}
             >
               {(val as any).range}
             </ThemedText>
@@ -143,7 +153,10 @@ export default function KitBuilderScreen() {
             <ThemedText style={styles.productName} fontFamily="Inter-SemiBold" numberOfLines={2}>
               {product.name}
             </ThemedText>
-            <ThemedText style={[styles.productJustification, { color: secondaryText }]} numberOfLines={2}>
+            <ThemedText
+              style={[styles.productJustification, { color: secondaryText }]}
+              numberOfLines={2}
+            >
               {product.technicalJustification}
             </ThemedText>
             <View style={styles.productBottom}>
@@ -165,7 +178,12 @@ export default function KitBuilderScreen() {
     );
   };
 
-  const renderProductSection = (title: string, products: Product[], icon: string, color: string) => {
+  const renderProductSection = (
+    title: string,
+    products: Product[],
+    icon: string,
+    color: string,
+  ) => {
     if (products.length === 0) return null;
     const totalCost = products.reduce((s, p) => s + (p.averageCost ?? 0), 0);
     return (
@@ -218,12 +236,7 @@ export default function KitBuilderScreen() {
       {/* Progress bar */}
       {step !== 'result' && (
         <View style={[styles.progressBar, { backgroundColor: borderColor }]}>
-          <View
-            style={[
-              styles.progressFill,
-              { width: `${((stepNumber + 1) / 4) * 100}%` },
-            ]}
-          />
+          <View style={[styles.progressFill, { width: `${((stepNumber + 1) / 4) * 100}%` }]} />
         </View>
       )}
 
@@ -238,7 +251,7 @@ export default function KitBuilderScreen() {
             </ThemedText>
             <View style={styles.optionsGrid}>
               {renderOption(DISTANCE_LABELS, input.distance, (val) =>
-                setInput({ ...input, distance: val })
+                setInput({ ...input, distance: val }),
               )}
             </View>
           </View>
@@ -254,7 +267,7 @@ export default function KitBuilderScreen() {
             </ThemedText>
             <View style={styles.optionsGrid}>
               {renderOption(CLIMATE_LABELS, input.climate, (val) =>
-                setInput({ ...input, climate: val })
+                setInput({ ...input, climate: val }),
               )}
             </View>
           </View>
@@ -270,7 +283,7 @@ export default function KitBuilderScreen() {
             </ThemedText>
             <View style={styles.optionsGrid}>
               {renderOption(BUDGET_LABELS, input.budgetLevel, (val) =>
-                setInput({ ...input, budgetLevel: val })
+                setInput({ ...input, budgetLevel: val }),
               )}
             </View>
           </View>
@@ -285,9 +298,7 @@ export default function KitBuilderScreen() {
               Equipamentos certos para o momento certo da sua evolução.
             </ThemedText>
             <View style={styles.optionsGrid}>
-              {renderOption(LEVEL_LABELS, input.level, (val) =>
-                setInput({ ...input, level: val })
-              )}
+              {renderOption(LEVEL_LABELS, input.level, (val) => setInput({ ...input, level: val }))}
             </View>
           </View>
         )}

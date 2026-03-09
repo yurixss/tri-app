@@ -31,7 +31,7 @@ export function HeroBlock({
 }: HeroBlockProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
   // Animação para feedback visual
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
@@ -117,15 +117,15 @@ export function HeroBlock({
             },
           ]}
         />
-        
+
         <ThemedText style={styles.emoji}>{emoji}</ThemedText>
-        
+
         <ThemedText style={styles.value} fontFamily="Inter-Bold">
           {value}
         </ThemedText>
-        
+
         <ThemedText style={styles.unit}>{unit}</ThemedText>
-        
+
         {/* Badge de intensidade */}
         {/* <View style={[
           styles.intensityBadge,
@@ -188,7 +188,7 @@ export function HeroCard({
   const borderColor = useThemeColor({}, 'border');
   const feedbackBg = useThemeColor({ light: '#FFFFFF', dark: '#1A1A1A' }, 'cardBackground');
   const feedbackBorder = useThemeColor({ light: '#E0E0E0', dark: '#333' }, 'border');
-  
+
   const feedbackOpacity = useRef(new Animated.Value(0)).current;
   const feedbackTranslateY = useRef(new Animated.Value(10)).current;
 
@@ -239,9 +239,9 @@ export function HeroCard({
           onLongPress={onSwimLongPress}
           isHighlighted={highlightedSport === 'swim'}
         />
-        
+
         <View style={[styles.divider, { backgroundColor: borderColor }]} />
-        
+
         <HeroBlock
           emoji="🚴"
           value={bikeValue}
@@ -251,9 +251,9 @@ export function HeroCard({
           onLongPress={onBikeLongPress}
           isHighlighted={highlightedSport === 'bike'}
         />
-        
+
         <View style={[styles.divider, { backgroundColor: borderColor }]} />
-        
+
         <HeroBlock
           emoji="🏃"
           value={runValue}
@@ -264,7 +264,7 @@ export function HeroCard({
           isHighlighted={highlightedSport === 'run'}
         />
       </View>
-      
+
       {/* Mensagem de feedback */}
       {feedbackMessage && (
         <Animated.View

@@ -20,9 +20,7 @@ function getModalityFromCategory(category: string): SportModality | null {
 
 // ─── Get products with measurable time gains ─────────────────────────
 
-export function getTimeGainItems(
-  modality?: SportModality
-): TimeGainItem[] {
+export function getTimeGainItems(modality?: SportModality): TimeGainItem[] {
   const items: TimeGainItem[] = [];
 
   for (const product of PRODUCTS) {
@@ -47,10 +45,7 @@ export function getTimeGainItems(
 
     // Determine evidence level based on category
     let evidenceLevel: TimeGainItem['evidenceLevel'] = 'medio';
-    if (
-      product.category === 'aerodinamica' ||
-      product.category === 'corrida'
-    ) {
+    if (product.category === 'aerodinamica' || product.category === 'corrida') {
       evidenceLevel = 'alto'; // Well-studied categories
     } else if (product.category === 'transicao') {
       evidenceLevel = 'alto'; // Directly measurable
@@ -85,17 +80,13 @@ export function getTimeGainSummary(modality?: SportModality) {
 
   const totalMin = items.reduce((sum, i) => sum + i.gainMinutes.min, 0);
   const totalMax = items.reduce((sum, i) => sum + i.gainMinutes.max, 0);
-  const totalCost = items.reduce(
-    (sum, i) => sum + (i.product.averageCost ?? 0),
-    0
-  );
+  const totalCost = items.reduce((sum, i) => sum + (i.product.averageCost ?? 0), 0);
 
   return {
     items,
     totalGainMinutes: { min: totalMin, max: totalMax },
     totalInvestment: totalCost,
-    avgCostPerMinute:
-      totalMax > 0 ? Math.round(totalCost / totalMax) : 0,
+    avgCostPerMinute: totalMax > 0 ? Math.round(totalCost / totalMax) : 0,
   };
 }
 
@@ -103,9 +94,7 @@ export function getTimeGainSummary(modality?: SportModality) {
  * Formats cost per minute for display.
  * e.g. "R$ 150–300 / min"
  */
-export function formatCostPerMinute(
-  cpm?: { min: number; max: number }
-): string {
+export function formatCostPerMinute(cpm?: { min: number; max: number }): string {
   if (!cpm) return '—';
   return `R$ ${cpm.min}–${cpm.max} / min`;
 }

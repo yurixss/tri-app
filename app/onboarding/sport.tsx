@@ -66,23 +66,18 @@ export default function SportSelection() {
         <ThemedText style={styles.title} fontFamily="Inter-Bold">
           Bem-vindo! Vamos começar
         </ThemedText>
-        
-        <ThemedText style={styles.subtitle}>
-          O que você é?
-        </ThemedText>
+
+        <ThemedText style={styles.subtitle}>O que você é?</ThemedText>
 
         <View style={styles.grid}>
           {sports.map((sport) => {
             const Icon = sport.icon;
             const isSelected = selectedSport === sport.id;
-            
+
             return (
               <Pressable
                 key={sport.id}
-                style={[
-                  styles.sportOption,
-                  isSelected && { borderColor: sport.color }
-                ]}
+                style={[styles.sportOption, isSelected && { borderColor: sport.color }]}
                 onPress={() => setSelectedSport(sport.id)}
               >
                 <View style={styles.sportContent}>
@@ -93,10 +88,7 @@ export default function SportSelection() {
                     style={styles.icon}
                   />
                   <ThemedText
-                    style={[
-                      styles.sportLabel,
-                      isSelected && { color: sport.color }
-                    ]}
+                    style={[styles.sportLabel, isSelected && { color: sport.color }]}
                     fontFamily="Inter-Medium"
                   >
                     {sport.label}

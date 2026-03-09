@@ -26,9 +26,7 @@ export function getTotalInvestment(items: SetupItem[]): number {
 /**
  * Investimento agrupado por modalidade.
  */
-export function getInvestmentByModality(
-  items: SetupItem[],
-): Record<SetupModality, number> {
+export function getInvestmentByModality(items: SetupItem[]): Record<SetupModality, number> {
   const result: Record<SetupModality, number> = {
     natacao: 0,
     ciclismo: 0,
@@ -47,9 +45,7 @@ export function getInvestmentByModality(
 /**
  * Investimento agrupado por categoria.
  */
-export function getInvestmentByCategory(
-  items: SetupItem[],
-): Record<SetupCategory, number> {
+export function getInvestmentByCategory(items: SetupItem[]): Record<SetupCategory, number> {
   const result: Record<SetupCategory, number> = {
     aerodinamica: 0,
     nutricao: 0,
@@ -213,11 +209,7 @@ export function generateInsights(items: SetupItem[]): InvestmentInsight[] {
 
 export type SetupSortKey = 'name' | 'pricePaid' | 'purchaseDate' | 'modality';
 
-export function sortItems(
-  items: SetupItem[],
-  sortBy: SetupSortKey,
-  ascending = true,
-): SetupItem[] {
+export function sortItems(items: SetupItem[], sortBy: SetupSortKey, ascending = true): SetupItem[] {
   const sorted = [...items].sort((a, b) => {
     switch (sortBy) {
       case 'name':

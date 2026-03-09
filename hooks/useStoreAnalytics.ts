@@ -72,7 +72,7 @@ export function useStoreAnalytics() {
         problemTag?: ProblemTag;
         athleteLevel?: AthleteLevel;
         metadata?: Record<string, string>;
-      }
+      },
     ) => {
       const entry: AnalyticsEntry = {
         event,
@@ -85,42 +85,42 @@ export function useStoreAnalytics() {
       };
       await appendEntry(entry);
     },
-    []
+    [],
   );
 
   const trackProductClick = useCallback(
     (productId: string, category: string) => {
       return trackEvent('product_click', { productId, category });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   const trackAffiliateLinkOpened = useCallback(
     (productId: string, category: string) => {
       return trackEvent('affiliate_link_opened', { productId, category });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   const trackProblemSelected = useCallback(
     (problemTag: ProblemTag) => {
       return trackEvent('problem_selected', { problemTag });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   const trackKitGenerated = useCallback(
     (metadata: Record<string, string>) => {
       return trackEvent('kit_generated', { metadata });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   const loadStats = useCallback(async () => {
     const entries = await getEntries();
 
     const productClicks = entries.filter(
-      e => e.event === 'product_click' || e.event === 'affiliate_link_opened'
+      (e) => e.event === 'product_click' || e.event === 'affiliate_link_opened',
     );
 
     // Count by product
@@ -147,7 +147,7 @@ export function useStoreAnalytics() {
       .sort((a, b) => b.count - a.count);
 
     // Count by problem
-    const problemClicks = entries.filter(e => e.event === 'problem_selected');
+    const problemClicks = entries.filter((e) => e.event === 'problem_selected');
     const problemMap = new Map<string, number>();
     for (const e of problemClicks) {
       if (e.problemTag) {

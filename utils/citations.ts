@@ -18,7 +18,8 @@ export const NUTRITION_CITATIONS = {
         url: 'https://www.acsm.org',
       },
     ],
-    description: 'Carbohydrate recommendations vary based on exercise intensity and duration. The app uses evidence-based ranges: 30-45g/hour for moderate intensity, 45-60g/hour for high intensity.',
+    description:
+      'Carbohydrate recommendations vary based on exercise intensity and duration. The app uses evidence-based ranges: 30-45g/hour for moderate intensity, 45-60g/hour for high intensity.',
   },
   sodium: {
     title: 'Sodium and Electrolyte Replacement',
@@ -34,7 +35,8 @@ export const NUTRITION_CITATIONS = {
         url: 'https://jissn.biomedcentral.com/articles/10.1186/s12970-016-0124-1',
       },
     ],
-    description: 'Sodium intake recommendations of 500-700mg/hour help maintain fluid balance and prevent hyponatremia during prolonged exercise. Temperature adjustments account for increased sweat rate in hot conditions.',
+    description:
+      'Sodium intake recommendations of 500-700mg/hour help maintain fluid balance and prevent hyponatremia during prolonged exercise. Temperature adjustments account for increased sweat rate in hot conditions.',
   },
   protein: {
     title: 'Post-Exercise Protein Requirements',
@@ -45,7 +47,8 @@ export const NUTRITION_CITATIONS = {
         url: 'https://jissn.biomedcentral.com/articles/10.1186/s12970-017-0177-9',
       },
     ],
-    description: 'Post-exercise protein of 0.3g per kg body weight (approximately 20-40g) promotes muscle protein synthesis when consumed within hours of training.',
+    description:
+      'Post-exercise protein of 0.3g per kg body weight (approximately 20-40g) promotes muscle protein synthesis when consumed within hours of training.',
   },
   hydration: {
     title: 'Hydration Guidelines',
@@ -61,7 +64,8 @@ export const NUTRITION_CITATIONS = {
         url: 'https://jissn.biomedcentral.com/articles/10.1186/s12970-016-0124-1',
       },
     ],
-    description: 'Base hydration of 500ml/hour adjusted for body weight and exercise intensity. Higher temperatures increase fluid loss through sweating, requiring additional intake.',
+    description:
+      'Base hydration of 500ml/hour adjusted for body weight and exercise intensity. Higher temperatures increase fluid loss through sweating, requiring additional intake.',
   },
 };
 
@@ -80,14 +84,15 @@ export const TRAINING_ZONES_CITATIONS = {
         url: 'https://trainingpeaks.com',
       },
     ],
-    description: 'Zones are based on Functional Threshold Power (FTP), defined as the highest sustained power effort for one hour.',
+    description:
+      'Zones are based on Functional Threshold Power (FTP), defined as the highest sustained power effort for one hour.',
   },
   running: {
     title: 'Running Pace Zones',
     sources: [
       {
         name: 'Jack Daniels',
-        detail: 'Daniels\' Running Formula (3rd Edition)',
+        detail: "Daniels' Running Formula (3rd Edition)",
         url: 'https://www.jacksonfitness.com',
       },
       {
@@ -96,7 +101,8 @@ export const TRAINING_ZONES_CITATIONS = {
         url: 'https://www.acsm.org',
       },
     ],
-    description: 'Pace zones are calculated based on recent race performance, using vVO2max (velocity at VO2max) as the reference.',
+    description:
+      'Pace zones are calculated based on recent race performance, using vVO2max (velocity at VO2max) as the reference.',
   },
   swimming: {
     title: 'Swimming Pace Zones',
@@ -112,7 +118,8 @@ export const TRAINING_ZONES_CITATIONS = {
         url: 'https://www.swimsmooth.com',
       },
     ],
-    description: 'Swimming zones are based on Critical Swim Speed (CSS), calculated from short-distance time trials.',
+    description:
+      'Swimming zones are based on Critical Swim Speed (CSS), calculated from short-distance time trials.',
   },
   heartRate: {
     title: 'Heart Rate Zones (Karvonen Method)',
@@ -133,7 +140,8 @@ export const TRAINING_ZONES_CITATIONS = {
         url: 'https://www.heart.org',
       },
     ],
-    description: 'Heart rate zones are calculated using the Karvonen formula (Heart Rate Reserve method), which takes into account both maximum heart rate and resting heart rate for more personalized training zones.',
+    description:
+      'Heart rate zones are calculated using the Karvonen formula (Heart Rate Reserve method), which takes into account both maximum heart rate and resting heart rate for more personalized training zones.',
   },
 };
 
@@ -156,7 +164,8 @@ export const PROTOCOLS_CITATIONS: Record<
     sources: [
       {
         name: 'PubMed (CWI + DOMS)',
-        detail: 'Busca por revisões sistemáticas sobre cold-water immersion e dor muscular tardia (DOMS).',
+        detail:
+          'Busca por revisões sistemáticas sobre cold-water immersion e dor muscular tardia (DOMS).',
         url: 'https://pubmed.ncbi.nlm.nih.gov/?term=cold%20water%20immersion%20delayed%20onset%20muscle%20soreness%20systematic%20review',
       },
     ],
@@ -202,7 +211,8 @@ export const PROTOCOLS_CITATIONS: Record<
 export const TRIATHLON_WIZARD_CITATIONS = {
   swimming: {
     title: 'Previsão de Tempo de Natação em Triathlon',
-    description: 'Cálculos baseados na extrapolação de tempos de teste (400m ou 1000m) para distâncias de prova, com ajustes para condições de águas abertas, uso de wetsuit e nível de marola.',
+    description:
+      'Cálculos baseados na extrapolação de tempos de teste (400m ou 1000m) para distâncias de prova, com ajustes para condições de águas abertas, uso de wetsuit e nível de marola.',
     sources: [
       {
         name: 'USA Swimming',
@@ -218,7 +228,8 @@ export const TRIATHLON_WIZARD_CITATIONS = {
   },
   cycling: {
     title: 'Modelo de Previsão de Tempo no Ciclismo',
-    description: 'Previsões baseadas em FTP (Functional Threshold Power), peso corporal, altimetria e condições ambientais. Utiliza princípios de física aplicada ao ciclismo para estimar velocidade e tempo.',
+    description:
+      'Previsões baseadas em FTP (Functional Threshold Power), peso corporal, altimetria e condições ambientais. Utiliza princípios de física aplicada ao ciclismo para estimar velocidade e tempo.',
     sources: [
       {
         name: 'Hunter Allen & Andrew Coggan',
@@ -234,7 +245,8 @@ export const TRIATHLON_WIZARD_CITATIONS = {
   },
   running: {
     title: 'Previsão de Tempo de Corrida Pós-Bike',
-    description: 'Utiliza a fórmula de Riegel para extrapolação de distâncias e aplica fatores de fadiga específicos para corrida após ciclismo em triathlon, baseados na distância da prova.',
+    description:
+      'Utiliza a fórmula de Riegel para extrapolação de distâncias e aplica fatores de fadiga específicos para corrida após ciclismo em triathlon, baseados na distância da prova.',
     sources: [
       {
         name: 'Peter Riegel',
@@ -250,7 +262,8 @@ export const TRIATHLON_WIZARD_CITATIONS = {
   },
   transitions: {
     title: 'Tempos de Transição em Triathlon',
-    description: 'Tempos padrão de transição (T1 e T2) baseados em dados estatísticos de competições e variações por distância de prova.',
+    description:
+      'Tempos padrão de transição (T1 e T2) baseados em dados estatísticos de competições e variações por distância de prova.',
     sources: [
       {
         name: 'IRONMAN',

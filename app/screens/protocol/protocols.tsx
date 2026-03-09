@@ -10,7 +10,7 @@ import { Clock } from 'phosphor-react-native';
 
 /**
  * Tela principal de Protocolos.
- * 
+ *
  * Design decisions:
  * - Cards limpos e escaneáveis
  * - Categoria com cor e emoji
@@ -32,11 +32,7 @@ export default function ProtocolsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <Header
-          title="Protocolos"
-          color="#066699"
-          onBackPress={() => router.back()}
-        />
+        <Header title="Protocolos" color="#066699" onBackPress={() => router.back()} />
 
         <ThemedText style={styles.subtitle}>
           Procedimentos testados para otimizar sua performance
@@ -74,7 +70,7 @@ function ProtocolCard({ protocol, onPress }: ProtocolCardProps) {
   const isDark = colorScheme === 'dark';
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  
+
   const categoryConfig = PROTOCOL_CATEGORY_CONFIG[protocol.category];
   const [isPressed, setIsPressed] = React.useState(false);
 
@@ -85,59 +81,41 @@ function ProtocolCard({ protocol, onPress }: ProtocolCardProps) {
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
     >
-      <View 
+      <View
         style={[
           styles.card,
           {
-            backgroundColor: isPressed 
-              ? isDark ? '#2A2A2A' : '#F5F5F5'
-              : cardBg,
+            backgroundColor: isPressed ? (isDark ? '#2A2A2A' : '#F5F5F5') : cardBg,
             borderColor: isPressed ? categoryConfig.color : borderColor,
             borderLeftColor: categoryConfig.color,
-          }
+          },
         ]}
       >
         {/* Header com categoria */}
         <View style={styles.cardHeader}>
-          <View 
-            style={[
-              styles.categoryBadge, 
-              { backgroundColor: categoryConfig.color + '15' }
-            ]}
-          >
-            <ThemedText style={styles.categoryEmoji}>
-              {categoryConfig.emoji}
-            </ThemedText>
-            <ThemedText 
+          <View style={[styles.categoryBadge, { backgroundColor: categoryConfig.color + '15' }]}>
+            <ThemedText style={styles.categoryEmoji}>{categoryConfig.emoji}</ThemedText>
+            <ThemedText
               style={[styles.categoryLabel, { color: categoryConfig.color }]}
               fontFamily="Inter-Medium"
             >
               {categoryConfig.label}
             </ThemedText>
           </View>
-          
+
           <View style={styles.duration}>
             <Clock size={12} color={isDark ? '#999' : '#666'} weight="regular" />
-            <ThemedText style={styles.durationText}>
-              {protocol.duration}
-            </ThemedText>
+            <ThemedText style={styles.durationText}>{protocol.duration}</ThemedText>
           </View>
         </View>
 
         {/* Título */}
-        <ThemedText 
-          style={styles.cardTitle}
-          fontFamily="Inter-Bold"
-          numberOfLines={2}
-        >
+        <ThemedText style={styles.cardTitle} fontFamily="Inter-Bold" numberOfLines={2}>
           {protocol.title}
         </ThemedText>
-        
+
         {/* Objetivo resumido */}
-        <ThemedText 
-          style={styles.cardObjective}
-          numberOfLines={2}
-        >
+        <ThemedText style={styles.cardObjective} numberOfLines={2}>
           {protocol.objective}
         </ThemedText>
       </View>

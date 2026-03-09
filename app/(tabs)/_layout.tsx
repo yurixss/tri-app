@@ -26,8 +26,8 @@ export default function TabLayout() {
           fontSize: 11,
           letterSpacing: 0.2,
         },
-      }}>
- 
+      }}
+    >
       <Tabs.Screen
         name="manual"
         options={{
@@ -47,7 +47,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      
+
       <Tabs.Screen
         name="profile"
         options={{
@@ -64,7 +64,6 @@ export default function TabLayout() {
           href: null,
         }}
       />
-
     </Tabs>
   );
 }

@@ -5,7 +5,7 @@ import { useTheme } from './Theme';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  colorName: keyof typeof Colors.light & keyof typeof Colors.dark,
 ) {
   // prefer app theme choice (which may be persisted) over system
   let theme = useColorScheme() ?? 'light';

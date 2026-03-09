@@ -90,47 +90,50 @@ export function TriathlonWizardProvider({ children }: WizardProviderProps) {
     setData((prev) => ({ ...prev, run: runData }));
   }, []);
 
-  const calculate = useCallback(async (runDataOverride?: RunData) => {
-    setIsCalculating(true);
-    setError(null);
+  const calculate = useCallback(
+    async (runDataOverride?: RunData) => {
+      setIsCalculating(true);
+      setError(null);
 
-    try {
-      // Pequeno delay para UX
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      try {
+        // Pequeno delay para UX
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Usar runDataOverride se fornecido, para garantir dados atualizados
-      const dataToUse: TriathlonWizardData = runDataOverride 
-        ? { ...data, run: runDataOverride }
-        : data;
+        // Usar runDataOverride se fornecido, para garantir dados atualizados
+        const dataToUse: TriathlonWizardData = runDataOverride
+          ? { ...data, run: runDataOverride }
+          : data;
 
-      const result = calculateTriathlonPrediction(dataToUse);
-      setPrediction(result);
-      setCurrentStep(4);
+        const result = calculateTriathlonPrediction(dataToUse);
+        setPrediction(result);
+        setCurrentStep(4);
 
-      // Salvar a previsão no storage
-      const raceType = dataToUse.run?.raceType || 'olympic';
-      await saveTriathlonPrediction({
-        date: new Date().toISOString(),
-        totalTimeSeconds: result.totalTimeSeconds,
-        totalTimeFormatted: result.totalTimeFormatted,
-        swimTimeSeconds: result.swim.timeSeconds,
-        swimTimeFormatted: result.swim.timeFormatted,
-        bikeTimeSeconds: result.bike.timeSeconds,
-        bikeTimeFormatted: result.bike.timeFormatted,
-        runTimeSeconds: result.run.timeSeconds,
-        runTimeFormatted: result.run.timeFormatted,
-        t1Seconds: result.t1Seconds,
-        t1Formatted: result.t1Formatted,
-        t2Seconds: result.t2Seconds,
-        t2Formatted: result.t2Formatted,
-        raceType: getRaceTypeName(raceType),
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao calcular previsão');
-    } finally {
-      setIsCalculating(false);
-    }
-  }, [data]);
+        // Salvar a previsão no storage
+        const raceType = dataToUse.run?.raceType || 'olympic';
+        await saveTriathlonPrediction({
+          date: new Date().toISOString(),
+          totalTimeSeconds: result.totalTimeSeconds,
+          totalTimeFormatted: result.totalTimeFormatted,
+          swimTimeSeconds: result.swim.timeSeconds,
+          swimTimeFormatted: result.swim.timeFormatted,
+          bikeTimeSeconds: result.bike.timeSeconds,
+          bikeTimeFormatted: result.bike.timeFormatted,
+          runTimeSeconds: result.run.timeSeconds,
+          runTimeFormatted: result.run.timeFormatted,
+          t1Seconds: result.t1Seconds,
+          t1Formatted: result.t1Formatted,
+          t2Seconds: result.t2Seconds,
+          t2Formatted: result.t2Formatted,
+          raceType: getRaceTypeName(raceType),
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro ao calcular previsão');
+      } finally {
+        setIsCalculating(false);
+      }
+    },
+    [data],
+  );
 
   const reset = useCallback(() => {
     setCurrentStep(1);
@@ -155,11 +158,7 @@ export function TriathlonWizardProvider({ children }: WizardProviderProps) {
     reset,
   };
 
-  return (
-    <WizardContext.Provider value={value}>
-      {children}
-    </WizardContext.Provider>
-  );
+  return <WizardContext.Provider value={value}>{children}</WizardContext.Provider>;
 }
 
 // ============================================================================

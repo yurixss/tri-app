@@ -12,9 +12,9 @@ export interface ThemedButtonProps {
   containerStyle?: ViewStyle;
 }
 
-export function ThemedButton({ 
-  onPress, 
-  title, 
+export function ThemedButton({
+  onPress,
+  title,
   color = Colors.shared.primary,
   isLoading = false,
   disabled = false,
@@ -34,21 +34,19 @@ export function ThemedButton({
       fontSize: 14,
       fontFamily: 'Inter-SemiBold',
       letterSpacing: 0.2,
-    }
+    },
   });
 
   return (
-    <TouchableOpacity 
-      style={[styles.button, containerStyle]} 
+    <TouchableOpacity
+      style={[styles.button, containerStyle]}
       onPress={onPress}
       disabled={disabled || isLoading}
     >
       {isLoading ? (
         <ActivityIndicator color="#FFFFFF" />
       ) : (
-        <ThemedText style={styles.buttonText}>
-          {title}
-        </ThemedText>
+        <ThemedText style={styles.buttonText}>{title}</ThemedText>
       )}
     </TouchableOpacity>
   );

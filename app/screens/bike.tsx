@@ -1,5 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent, Modal, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -10,8 +20,7 @@ import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
 import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
-import { commonStyles } from '@/constants/Styles';
-import { useThemeColor } from '@/constants/Styles';
+import { commonStyles, useThemeColor } from '@/constants/Styles';
 import { calculatePowerZones } from '@/utils/zoneCalculations';
 import { TRAINING_ZONES_CITATIONS } from '@/utils/citations';
 import { getTestResults, saveBikeTest } from '@/hooks/useStorage';
@@ -28,26 +37,32 @@ export default function BikeScreen() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showSources, setShowSources] = useState(false);
   const router = useRouter();
-  
+
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const scrollRef = useRef<ScrollView | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const cyclingCitations = [
-    { category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.cycling },
-  ];
+  const cyclingCitations = [{ category: 'Training Zones', ...TRAINING_ZONES_CITATIONS.cycling }];
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
-      case 1: return '#D1D5DB';
-      case 2: return '#3B82F6';
-      case 3: return '#10B981';
-      case 4: return '#F59E0B';
-      case 5: return '#EF4444';
-      case 6: return '#DC2626';
-      case 7: return '#111827';
-      default: return Colors.shared.bike;
+      case 1:
+        return '#D1D5DB';
+      case 2:
+        return '#3B82F6';
+      case 3:
+        return '#10B981';
+      case 4:
+        return '#F59E0B';
+      case 5:
+        return '#EF4444';
+      case 6:
+        return '#DC2626';
+      case 7:
+        return '#111827';
+      default:
+        return Colors.shared.bike;
     }
   };
 
@@ -100,9 +115,9 @@ export default function BikeScreen() {
       setError('Please enter a valid power value');
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const ftpValue = Number(ftp);
       const weightValue = weight ? Number(weight) : undefined;
@@ -127,7 +142,7 @@ export default function BikeScreen() {
       style={{ flex: 1 }}
     >
       <ThemedView style={styles.container}>
-        <ScrollView 
+        <ScrollView
           ref={scrollRef}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -135,26 +150,26 @@ export default function BikeScreen() {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-            <Header
-              title="Zonas de Potência - Ciclismo"
-              color={Colors.shared.primary}
-              onBackPress={() => router.back()} 
-            />
-          
-          <View 
+          <Header
+            title="Zonas de Potência - Ciclismo"
+            color={Colors.shared.primary}
+            onBackPress={() => router.back()}
+          />
+
+          <View
             style={[
-              styles.card, 
-              { 
+              styles.card,
+              {
                 backgroundColor: cardBg,
                 borderColor: borderColor,
                 borderWidth: 1,
-              }
+              },
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
               Insira o resultado do seu teste
             </ThemedText>
-            
+
             <RadioSelector
               label="Tipo de Teste"
               options={[
@@ -164,13 +179,13 @@ export default function BikeScreen() {
               selectedValue={testType}
               onValueChange={(value) => setTestType(value as '20min' | '60min')}
             />
-            
+
             <ThemedText style={commonStyles.infoText}>
-              {testType === '20min' 
+              {testType === '20min'
                 ? 'Pedale o mais forte que puder por 20 minutos. Seu FTP será calculado como 95% da sua potência média.'
                 : 'Pedale o mais forte que conseguir sustentar por 60 minutos. Esse é seu FTP.'}
             </ThemedText>
-            
+
             <ThemedInput
               label="Potência média (watts)"
               value={ftp}
@@ -179,7 +194,7 @@ export default function BikeScreen() {
               keyboardType="numeric"
               error={error}
             />
-            
+
             <ThemedInput
               label="Peso corporal (kg) - Opcional"
               value={weight}
@@ -187,7 +202,7 @@ export default function BikeScreen() {
               placeholder="Insira seu peso"
               keyboardType="decimal-pad"
             />
-            
+
             <ThemedButton
               title="Calcular Zonas"
               color={Colors.shared.bike}
@@ -195,27 +210,27 @@ export default function BikeScreen() {
               isLoading={isLoading}
             />
           </View>
-          
+
           {hasCalculated && zones.length > 0 && (
-            <>       
-              <View 
+            <>
+              <View
                 style={[
                   styles.card,
-                  { 
+                  {
                     backgroundColor: cardBg,
                     borderColor: borderColor,
                     borderWidth: 1,
-                  }
+                  },
                 ]}
               >
                 <View style={styles.titleContainer}>
-                  <ThemedText 
+                  <ThemedText
                     style={[styles.zonesTitle, { color: Colors.shared.bike }]}
                     fontFamily="Inter-Bold"
                   >
                     Suas Zonas de Potência
                   </ThemedText>
-                  
+
                   <ZoneActions
                     title={`Zonas de Potência - Ciclismo (${testType} Teste: ${ftp}w)`}
                     zones={zones}
@@ -224,112 +239,117 @@ export default function BikeScreen() {
                   />
                 </View>
 
-              {copySuccess && (
-                <ThemedText 
-                  style={[styles.copySuccess, { color: Colors.shared.bike }]}
-                  fontFamily="Inter-Medium"
-                >
-                  Zonas copiadas para a área de transferência!
-                </ThemedText>
-              )}
-              
-              <ThemedText style={commonStyles.infoText}>
-                {testType === '20min'
-                  ? `Baseado no teste de 20min: ${ftp}w (FTP: ${Math.round(Number(ftp) * 0.95)}w)`
-                  : `Baseado no teste de 60min: ${ftp}w`}
-              </ThemedText>
-              
-              {weight && Number(weight) > 0 && (
-                <ThemedText style={[commonStyles.infoText, { marginTop: 4 }]}>
-                  {testType === '20min'
-                    ? `W/kg: ${(Math.round(Number(ftp) * 0.95) / Number(weight)).toFixed(2)}`
-                    : `W/kg: ${(Number(ftp) / Number(weight)).toFixed(2)}`}
-                </ThemedText>
-              )}
-              
-              <View style={styles.zonesContainer}>
-                {zones.map((zone, index) => {
-                  const hasWeight = weight && Number(weight) > 0;
-                  let wkgDisplay = null;
-                  
-                  if (hasWeight) {
-                    // Handle special cases for Z1 (<X) and Z7 (>X)
-                    if (zone.range.includes('<')) {
-                      const maxWatts = parseInt(zone.range.replace('<', '').replace('w', ''));
-                      wkgDisplay = `<${(maxWatts / Number(weight)).toFixed(1)} W/kg`;
-                    } else if (zone.range.includes('>')) {
-                      const minWatts = parseInt(zone.range.replace('>', '').replace('w', ''));
-                      wkgDisplay = `>${(minWatts / Number(weight)).toFixed(1)} W/kg`;
-                    } else {
-                      // Normal range (X-Y)
-                      const [minWatts, maxWatts] = zone.range.split('-').map((w: string) => parseInt(w.replace('w', '')));
-                      const minWkg = (minWatts / Number(weight)).toFixed(1);
-                      const maxWkg = (maxWatts / Number(weight)).toFixed(1);
-                      wkgDisplay = `${minWkg}-${maxWkg} W/kg`;
-                    }
-                  }
-                  
-                  return (
-                    <View 
-                      key={index} 
-                      style={[
-                        styles.zoneRow,
-                        { borderBottomColor: borderColor }
-                      ]}
-                    >
-                      <ThemedText 
-                        style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
-                        fontFamily="Inter-SemiBold"
-                      >
-                        Z{zone.zone}
-                      </ThemedText>
-                      
-                      <View style={styles.zoneDetails}>
-                        <ThemedText style={styles.zoneName} fontFamily="Inter-Medium">
-                          {zone.name}
-                        </ThemedText>
-                        
-                        <ThemedText style={styles.zoneDescription}>
-                          {zone.description}
-                        </ThemedText>
-                      </View>
-                      
-                      <View style={styles.zoneRangeContainer}>
-                        <ThemedText 
-                          style={styles.zoneRange}
-                          fontFamily="Inter-Medium"
-                        >
-                          {zone.range}
-                        </ThemedText>
-                        {wkgDisplay && (
-                          <ThemedText 
-                            style={styles.zoneWkg}
-                            fontFamily="Inter-Regular"
-                          >
-                            {wkgDisplay}
-                          </ThemedText>
-                        )}
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
+                {copySuccess && (
+                  <ThemedText
+                    style={[styles.copySuccess, { color: Colors.shared.bike }]}
+                    fontFamily="Inter-Medium"
+                  >
+                    Zonas copiadas para a área de transferência!
+                  </ThemedText>
+                )}
 
-              <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12, marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
-                <TouchableOpacity
-                  style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
-                  onPress={() => setShowSources(true)}
+                <ThemedText style={commonStyles.infoText}>
+                  {testType === '20min'
+                    ? `Baseado no teste de 20min: ${ftp}w (FTP: ${Math.round(Number(ftp) * 0.95)}w)`
+                    : `Baseado no teste de 60min: ${ftp}w`}
+                </ThemedText>
+
+                {weight && Number(weight) > 0 && (
+                  <ThemedText style={[commonStyles.infoText, { marginTop: 4 }]}>
+                    {testType === '20min'
+                      ? `W/kg: ${(Math.round(Number(ftp) * 0.95) / Number(weight)).toFixed(2)}`
+                      : `W/kg: ${(Number(ftp) / Number(weight)).toFixed(2)}`}
+                  </ThemedText>
+                )}
+
+                <View style={styles.zonesContainer}>
+                  {zones.map((zone, index) => {
+                    const hasWeight = weight && Number(weight) > 0;
+                    let wkgDisplay = null;
+
+                    if (hasWeight) {
+                      // Handle special cases for Z1 (<X) and Z7 (>X)
+                      if (zone.range.includes('<')) {
+                        const maxWatts = parseInt(zone.range.replace('<', '').replace('w', ''));
+                        wkgDisplay = `<${(maxWatts / Number(weight)).toFixed(1)} W/kg`;
+                      } else if (zone.range.includes('>')) {
+                        const minWatts = parseInt(zone.range.replace('>', '').replace('w', ''));
+                        wkgDisplay = `>${(minWatts / Number(weight)).toFixed(1)} W/kg`;
+                      } else {
+                        // Normal range (X-Y)
+                        const [minWatts, maxWatts] = zone.range
+                          .split('-')
+                          .map((w: string) => parseInt(w.replace('w', '')));
+                        const minWkg = (minWatts / Number(weight)).toFixed(1);
+                        const maxWkg = (maxWatts / Number(weight)).toFixed(1);
+                        wkgDisplay = `${minWkg}-${maxWkg} W/kg`;
+                      }
+                    }
+
+                    return (
+                      <View
+                        key={index}
+                        style={[styles.zoneRow, { borderBottomColor: borderColor }]}
+                      >
+                        <ThemedText
+                          style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
+                          fontFamily="Inter-SemiBold"
+                        >
+                          Z{zone.zone}
+                        </ThemedText>
+
+                        <View style={styles.zoneDetails}>
+                          <ThemedText style={styles.zoneName} fontFamily="Inter-Medium">
+                            {zone.name}
+                          </ThemedText>
+
+                          <ThemedText style={styles.zoneDescription}>{zone.description}</ThemedText>
+                        </View>
+
+                        <View style={styles.zoneRangeContainer}>
+                          <ThemedText style={styles.zoneRange} fontFamily="Inter-Medium">
+                            {zone.range}
+                          </ThemedText>
+                          {wkgDisplay && (
+                            <ThemedText style={styles.zoneWkg} fontFamily="Inter-Regular">
+                              {wkgDisplay}
+                            </ThemedText>
+                          )}
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    gap: 12,
+                    marginTop: 16,
+                    paddingTop: 16,
+                    borderTopWidth: 1,
+                    borderTopColor: 'rgba(0,0,0,0.1)',
+                  }}
                 >
-                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>ℹ️ Fontes</ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
-                  onPress={() => router.push('/screens/bike-race-predictor')}
-                >
-                  <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>📊 Previsor</ThemedText>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
+                    onPress={() => setShowSources(true)}
+                  >
+                    <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>
+                      ℹ️ Fontes
+                    </ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.sourcesButton, { borderColor: Colors.shared.bike }]}
+                    onPress={() => router.push('/screens/bike-race-predictor')}
+                  >
+                    <ThemedText style={[styles.sourcesButtonText, { color: Colors.shared.bike }]}>
+                      📊 Previsor
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
             </>
           )}
         </ScrollView>
@@ -337,7 +357,7 @@ export default function BikeScreen() {
           visible={showScrollTop}
           onPress={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
         />
-        
+
         <Modal
           visible={showSources}
           animationType="slide"
@@ -418,8 +438,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 14,
   },
-  zonesContainer: {
-  },
+  zonesContainer: {},
   zoneRow: {
     flexDirection: 'row',
     paddingVertical: 12,

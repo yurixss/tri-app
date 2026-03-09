@@ -8,13 +8,7 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
-    ignores: [
-      'dist/*',
-      'node_modules/*',
-      '.expo/*',
-      'babel.config.js',
-      'metro.config.js',
-    ],
+    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'babel.config.js', 'metro.config.js'],
   },
   {
     files: ['**/*.{ts,tsx}'],

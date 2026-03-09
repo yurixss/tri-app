@@ -33,8 +33,26 @@ const LEVEL_ORDER: Record<AthleteLevel, number> = {
 const CATEGORY_PRIORITY: Record<RaceDistance, string[]> = {
   sprint: ['corrida', 'natacao', 'transicao', 'ciclismo', 'tecnologia'],
   olimpico: ['nutricao', 'corrida', 'ciclismo', 'natacao', 'transicao', 'tecnologia'],
-  '70.3': ['nutricao', 'ciclismo', 'aerodinamica', 'corrida', 'natacao', 'recuperacao', 'transicao', 'tecnologia'],
-  full: ['nutricao', 'recuperacao', 'ciclismo', 'aerodinamica', 'corrida', 'natacao', 'transicao', 'tecnologia'],
+  '70.3': [
+    'nutricao',
+    'ciclismo',
+    'aerodinamica',
+    'corrida',
+    'natacao',
+    'recuperacao',
+    'transicao',
+    'tecnologia',
+  ],
+  full: [
+    'nutricao',
+    'recuperacao',
+    'ciclismo',
+    'aerodinamica',
+    'corrida',
+    'natacao',
+    'transicao',
+    'tecnologia',
+  ],
 };
 
 // ─── Climate boosts ──────────────────────────────────────────────────
@@ -59,7 +77,11 @@ export function buildKit(input: KitBuilderInput): KitRecommendation {
   const categoryPriority = CATEGORY_PRIORITY[distance];
 
   // Score each product
-  const scored: { product: Product; score: number; tier: 'essential' | 'recommended' | 'upgrade' }[] = [];
+  const scored: {
+    product: Product;
+    score: number;
+    tier: 'essential' | 'recommended' | 'upgrade';
+  }[] = [];
 
   for (const product of PRODUCTS) {
     let score = 0;
@@ -77,9 +99,7 @@ export function buildKit(input: KitBuilderInput): KitRecommendation {
     }
 
     // Climate bonus
-    const climateMatch = product.problemTags.filter(t =>
-      climateTags.includes(t)
-    ).length;
+    const climateMatch = product.problemTags.filter((t) => climateTags.includes(t)).length;
     score += climateMatch * 10;
 
     // Budget fit (products within budget score higher)
@@ -118,19 +138,19 @@ export function buildKit(input: KitBuilderInput): KitRecommendation {
   scored.sort((a, b) => b.score - a.score);
 
   const essential = scored
-    .filter(s => s.tier === 'essential')
+    .filter((s) => s.tier === 'essential')
     .slice(0, 8)
-    .map(s => s.product);
+    .map((s) => s.product);
 
   const recommended = scored
-    .filter(s => s.tier === 'recommended')
+    .filter((s) => s.tier === 'recommended')
     .slice(0, 6)
-    .map(s => s.product);
+    .map((s) => s.product);
 
   const upgrades = scored
-    .filter(s => s.tier === 'upgrade')
+    .filter((s) => s.tier === 'upgrade')
     .slice(0, 4)
-    .map(s => s.product);
+    .map((s) => s.product);
 
   // Calculate totals
   const sumCost = (products: Product[]) =>

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Modal, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,8 +17,7 @@ import { Header } from '@/components/Header';
 import { ZoneActions } from '@/components/ZoneActions';
 import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
-import { commonStyles } from '@/constants/Styles';
-import { useThemeColor } from '@/constants/Styles';
+import { commonStyles, useThemeColor } from '@/constants/Styles';
 import { calculateHeartRateZones } from '@/utils/zoneCalculations';
 import { TRAINING_ZONES_CITATIONS } from '@/utils/citations';
 import { getTestResults, saveHeartRateTest, TestResults } from '@/hooks/useStorage';
@@ -25,7 +32,7 @@ export default function HeartRateScreen() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showSources, setShowSources] = useState(false);
   const router = useRouter();
-  
+
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
 
@@ -35,12 +42,18 @@ export default function HeartRateScreen() {
 
   const getZoneColor = (zone: number) => {
     switch (zone) {
-      case 1: return '#D1D5DB';
-      case 2: return '#3B82F6';
-      case 3: return '#10B981';
-      case 4: return '#F59E0B';
-      case 5: return '#EF4444';
-      default: return Colors.shared.profile;
+      case 1:
+        return '#D1D5DB';
+      case 2:
+        return '#3B82F6';
+      case 3:
+        return '#10B981';
+      case 4:
+        return '#F59E0B';
+      case 5:
+        return '#EF4444';
+      default:
+        return Colors.shared.profile;
     }
   };
 
@@ -127,7 +140,7 @@ export default function HeartRateScreen() {
       style={{ flex: 1 }}
     >
       <ThemedView style={styles.container}>
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -135,27 +148,28 @@ export default function HeartRateScreen() {
           <Header
             title="Zonas de Frequência Cardíaca"
             color={Colors.shared.primary}
-            onBackPress={() => router.back()} 
+            onBackPress={() => router.back()}
           />
-          
-          <View 
+
+          <View
             style={[
-              styles.card, 
-              { 
+              styles.card,
+              {
                 backgroundColor: cardBg,
                 borderColor: borderColor,
                 borderWidth: 1,
-              }
+              },
             ]}
           >
             <ThemedText style={styles.inputTitle} fontFamily="Inter-Medium">
               Insira seus dados cardíacos
             </ThemedText>
-            
+
             <ThemedText style={commonStyles.infoText}>
-              Use o método de Karvonen para calcular zonas de treinamento baseadas em frequência cardíaca.
+              Use o método de Karvonen para calcular zonas de treinamento baseadas em frequência
+              cardíaca.
             </ThemedText>
-            
+
             <ThemedInput
               label="Frequência Cardíaca Máxima (bpm)"
               value={maxHR}
@@ -175,11 +189,9 @@ export default function HeartRateScreen() {
             />
 
             {error && !error.includes('máxima') && !error.includes('repouso') && (
-              <ThemedText style={commonStyles.errorText}>
-                {error}
-              </ThemedText>
+              <ThemedText style={commonStyles.errorText}>{error}</ThemedText>
             )}
-            
+
             <ThemedButton
               title="Calcular Zonas"
               color="#E74C3C"
@@ -187,26 +199,26 @@ export default function HeartRateScreen() {
               isLoading={isLoading}
             />
           </View>
-          
+
           {hasCalculated && zones.length > 0 && (
-            <View 
+            <View
               style={[
                 styles.card,
-                { 
+                {
                   backgroundColor: cardBg,
                   borderColor: borderColor,
                   borderWidth: 1,
-                }
+                },
               ]}
             >
               <View style={styles.titleContainer}>
-                <ThemedText 
+                <ThemedText
                   style={[styles.zonesTitle, { color: '#E74C3C' }]}
                   fontFamily="Inter-Bold"
                 >
                   Suas Zonas de FC
                 </ThemedText>
-                
+
                 <ZoneActions
                   title={`Zonas de Frequência Cardíaca (FC máx: ${maxHR} bpm, FC repouso: ${restingHR} bpm)`}
                   zones={zones}
@@ -216,70 +228,69 @@ export default function HeartRateScreen() {
               </View>
 
               {copySuccess && (
-                <ThemedText 
+                <ThemedText
                   style={[styles.copySuccess, { color: '#E74C3C' }]}
                   fontFamily="Inter-Medium"
                 >
                   Zonas copiadas para a área de transferência!
                 </ThemedText>
               )}
-              
+
               <ThemedText style={commonStyles.infoText}>
                 Método de Karvonen - FC máx: {maxHR} bpm | FC repouso: {restingHR} bpm
               </ThemedText>
-              
+
               <View style={styles.zonesContainer}>
                 {zones.map((zone, index) => (
-                  <View 
-                    key={index} 
-                    style={[
-                      styles.zoneRow,
-                      { borderBottomColor: borderColor }
-                    ]}
-                  >
-                    <ThemedText 
+                  <View key={index} style={[styles.zoneRow, { borderBottomColor: borderColor }]}>
+                    <ThemedText
                       style={[styles.zoneNumber, { color: getZoneColor(zone.zone) }]}
                       fontFamily="Inter-SemiBold"
                     >
                       Z{zone.zone}
                     </ThemedText>
-                    
+
                     <View style={styles.zoneDetails}>
                       <ThemedText style={styles.zoneName} fontFamily="Inter-Medium">
                         {zone.name}
                       </ThemedText>
-                      
-                      <ThemedText style={styles.zoneDescription}>
-                        {zone.description}
-                      </ThemedText>
+
+                      <ThemedText style={styles.zoneDescription}>{zone.description}</ThemedText>
 
                       <ThemedText style={styles.percentageRange} fontFamily="Inter-Regular">
                         {zone.percentageRange}
                       </ThemedText>
                     </View>
-                    
-                    <ThemedText 
-                      style={styles.zoneRange}
-                      fontFamily="Inter-Medium"
-                    >
+
+                    <ThemedText style={styles.zoneRange} fontFamily="Inter-Medium">
                       {zone.range}
                     </ThemedText>
                   </View>
                 ))}
               </View>
 
-              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginTop: 16,
+                  paddingTop: 16,
+                  borderTopWidth: 1,
+                  borderTopColor: 'rgba(0,0,0,0.1)',
+                }}
+              >
                 <TouchableOpacity
                   style={[styles.sourcesButton, { borderColor: '#E74C3C' }]}
                   onPress={() => setShowSources(true)}
                 >
-                  <ThemedText style={[styles.sourcesButtonText, { color: '#E74C3C' }]}>ℹ️ Fontes</ThemedText>
+                  <ThemedText style={[styles.sourcesButtonText, { color: '#E74C3C' }]}>
+                    ℹ️ Fontes
+                  </ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
           )}
         </ScrollView>
-        
+
         <Modal
           visible={showSources}
           animationType="slide"
@@ -287,19 +298,14 @@ export default function HeartRateScreen() {
         >
           <ThemedView style={styles.modalContainer}>
             <View style={styles.modalHeader}>
-              <ThemedText
-                style={[styles.modalTitle, { color: '#E74C3C' }]}
-                fontFamily="Inter-Bold"
-              >
+              <ThemedText style={[styles.modalTitle, { color: '#E74C3C' }]} fontFamily="Inter-Bold">
                 Fontes Científicas
               </ThemedText>
               <TouchableOpacity
                 style={[styles.closeButton, { borderColor: '#E74C3C' }]}
                 onPress={() => setShowSources(false)}
               >
-                <ThemedText style={[styles.closeButtonText, { color: '#E74C3C' }]}>
-                  ✕
-                </ThemedText>
+                <ThemedText style={[styles.closeButtonText, { color: '#E74C3C' }]}>✕</ThemedText>
               </TouchableOpacity>
             </View>
             <ScrollView
@@ -360,8 +366,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 14,
   },
-  zonesContainer: {
-  },
+  zonesContainer: {},
   zoneRow: {
     flexDirection: 'row',
     paddingVertical: 12,

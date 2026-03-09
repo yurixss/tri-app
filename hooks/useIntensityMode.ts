@@ -37,20 +37,20 @@ const RUN_CYCLE: RunIntensity[] = ['leve', 'forte'];
 // Fatores de ajuste de pace/potência por intensidade
 // Natação: pace base é o teste, ajustamos para diferentes intensidades
 export const SWIM_PACE_FACTORS = {
-  leve: 1.15,    // 15% mais lento que forte
-  forte: 1.0,    // Pace de forte (base)
+  leve: 1.15, // 15% mais lento que forte
+  forte: 1.0, // Pace de forte (base)
 };
 
 // Ciclismo: percentual do FTP
 export const BIKE_FTP_PERCENTAGES = {
-  leve: 0.70,    // 70% do FTP (Z2 Endurance)
-  forte: 0.85,   // 85% do FTP (Tempo/Threshold)
+  leve: 0.7, // 70% do FTP (Z2 Endurance)
+  forte: 0.85, // 85% do FTP (Tempo/Threshold)
 };
 
 // Corrida: pace base é o teste, ajustamos para diferentes intensidades
 export const RUN_PACE_FACTORS = {
-  leve: 1.20,    // 20% mais lento que forte
-  forte: 1.0,    // Pace de forte (base)
+  leve: 1.2, // 20% mais lento que forte
+  forte: 1.0, // Pace de forte (base)
 };
 
 const STORAGE_KEY = 'intensity_modes';
@@ -94,7 +94,7 @@ export function useIntensityMode() {
         const saved = await getValue(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved) as Partial<IntensityModes>;
-          setModes(prev => ({ ...prev, ...parsed }));
+          setModes((prev) => ({ ...prev, ...parsed }));
         }
       } catch (e) {
         console.error('Error loading intensity modes:', e);
@@ -116,7 +116,7 @@ export function useIntensityMode() {
 
   // Ciclar para próximo modo de natação
   const cycleSwim = useCallback(() => {
-    setModes(prev => {
+    setModes((prev) => {
       const currentIndex = SWIM_CYCLE.indexOf(prev.swim);
       const nextIndex = (currentIndex + 1) % SWIM_CYCLE.length;
       const newMode = SWIM_CYCLE[nextIndex];
@@ -129,7 +129,7 @@ export function useIntensityMode() {
 
   // Ciclar para próximo modo de ciclismo
   const cycleBike = useCallback(() => {
-    setModes(prev => {
+    setModes((prev) => {
       const currentIndex = BIKE_CYCLE.indexOf(prev.bike);
       const nextIndex = (currentIndex + 1) % BIKE_CYCLE.length;
       const newMode = BIKE_CYCLE[nextIndex];
@@ -142,7 +142,7 @@ export function useIntensityMode() {
 
   // Ciclar para próximo modo de corrida
   const cycleRun = useCallback(() => {
-    setModes(prev => {
+    setModes((prev) => {
       const currentIndex = RUN_CYCLE.indexOf(prev.run);
       const nextIndex = (currentIndex + 1) % RUN_CYCLE.length;
       const newMode = RUN_CYCLE[nextIndex];
@@ -185,7 +185,7 @@ export function useIntensityMode() {
 export function calculateSwimPace(
   baseTimeSeconds: number,
   testDistance: 200 | 400,
-  intensity: SwimIntensity
+  intensity: SwimIntensity,
 ): number {
   const basePacePer100m = (baseTimeSeconds / testDistance) * 100;
   return basePacePer100m * SWIM_PACE_FACTORS[intensity];
@@ -197,10 +197,7 @@ export function calculateSwimPace(
  * @param intensity Modo de intensidade
  * @returns Potência em watts
  */
-export function calculateBikePower(
-  ftp: number,
-  intensity: BikeIntensity
-): number {
+export function calculateBikePower(ftp: number, intensity: BikeIntensity): number {
   return Math.round(ftp * BIKE_FTP_PERCENTAGES[intensity]);
 }
 
@@ -214,7 +211,7 @@ export function calculateBikePower(
 export function calculateRunPace(
   baseTimeSeconds: number,
   testDistance: 3 | 5,
-  intensity: RunIntensity
+  intensity: RunIntensity,
 ): number {
   const basePacePerKm = baseTimeSeconds / testDistance;
   return basePacePerKm * RUN_PACE_FACTORS[intensity];

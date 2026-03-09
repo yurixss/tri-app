@@ -23,16 +23,11 @@ export function ContentBlockRenderer({ block }: ContentBlockRendererProps) {
       return (
         <View style={styles.block}>
           {block.title && (
-            <ThemedText 
-              style={styles.blockTitle}
-              fontFamily="Inter-Bold"
-            >
+            <ThemedText style={styles.blockTitle} fontFamily="Inter-Bold">
               {block.title}
             </ThemedText>
           )}
-          <ThemedText style={styles.paragraph}>
-            {block.content}
-          </ThemedText>
+          <ThemedText style={styles.paragraph}>{block.content}</ThemedText>
         </View>
       );
 
@@ -40,10 +35,7 @@ export function ContentBlockRenderer({ block }: ContentBlockRendererProps) {
       return (
         <View style={styles.block}>
           {block.title && (
-            <ThemedText 
-              style={styles.blockTitle}
-              fontFamily="Inter-Bold"
-            >
+            <ThemedText style={styles.blockTitle} fontFamily="Inter-Bold">
               {block.title}
             </ThemedText>
           )}
@@ -60,21 +52,11 @@ export function ContentBlockRenderer({ block }: ContentBlockRendererProps) {
 
     case 'callout':
       return (
-        <View 
-          style={[
-            styles.callout,
-            { backgroundColor: isDark ? '#1A2A1A' : '#F0FDF4' }
-          ]}
-        >
-          <ThemedText 
-            style={[styles.calloutLabel, { color: '#10B981' }]}
-            fontFamily="Inter-Bold"
-          >
+        <View style={[styles.callout, { backgroundColor: isDark ? '#1A2A1A' : '#F0FDF4' }]}>
+          <ThemedText style={[styles.calloutLabel, { color: '#10B981' }]} fontFamily="Inter-Bold">
             💡 Na prática
           </ThemedText>
-          <ThemedText style={styles.calloutContent}>
-            {block.content}
-          </ThemedText>
+          <ThemedText style={styles.calloutContent}>{block.content}</ThemedText>
         </View>
       );
 

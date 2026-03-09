@@ -12,7 +12,17 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { CaretLeft, Lightbulb, ArrowSquareOut, Sun, BatteryLow, Lightning, Armchair, ArrowsLeftRight, Bandaids } from 'phosphor-react-native';
+import {
+  CaretLeft,
+  Lightbulb,
+  ArrowSquareOut,
+  Sun,
+  BatteryLow,
+  Lightning,
+  Armchair,
+  ArrowsLeftRight,
+  Bandaids,
+} from 'phosphor-react-native';
 import { getAllProblems, getSolutionsForProblem } from '@/data/store/problemSolver';
 import { useStoreAnalytics } from '@/hooks/useStoreAnalytics';
 import type { ProblemTag, ProblemSolution, Product } from '@/types/store';
@@ -25,7 +35,7 @@ const PROBLEM_ICON_MAP: Record<string, React.ComponentType<any>> = {
   'lightning-bolt': Lightning,
   'seat-recline-extra': Armchair,
   'swap-horizontal': ArrowsLeftRight,
-  'bandage': Bandaids,
+  bandage: Bandaids,
 };
 
 export default function ProblemSolverScreen() {
@@ -100,7 +110,9 @@ export default function ProblemSolverScreen() {
                 onPress={() => handleProblemSelect(problem.id)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.problemIconContainer, { backgroundColor: `${problem.color}15` }]}>
+                <View
+                  style={[styles.problemIconContainer, { backgroundColor: `${problem.color}15` }]}
+                >
                   {(() => {
                     const IconComp = PROBLEM_ICON_MAP[problem.icon] || Lightning;
                     return <IconComp size={28} color={problem.color} weight="bold" />;
@@ -110,7 +122,10 @@ export default function ProblemSolverScreen() {
                   <ThemedText style={styles.problemTitle} fontFamily="Inter-SemiBold">
                     {problem.title}
                   </ThemedText>
-                  <ThemedText style={[styles.problemDescription, { color: secondaryText }]} numberOfLines={2}>
+                  <ThemedText
+                    style={[styles.problemDescription, { color: secondaryText }]}
+                    numberOfLines={2}
+                  >
                     {problem.description}
                   </ThemedText>
                 </View>
@@ -135,9 +150,7 @@ export default function ProblemSolverScreen() {
                       {index + 1}
                     </ThemedText>
                   </View>
-                  <ThemedText style={[styles.tipText, { color: textColor }]}>
-                    {tip}
-                  </ThemedText>
+                  <ThemedText style={[styles.tipText, { color: textColor }]}>{tip}</ThemedText>
                 </View>
               ))}
             </View>
@@ -164,15 +177,24 @@ export default function ProblemSolverScreen() {
                       <Image source={{ uri: product.image }} style={styles.productImage} />
                       <View style={styles.productInfo}>
                         <View style={styles.productHeader}>
-                          <View style={[styles.catDot, { backgroundColor: catConfig?.color ?? '#999' }]} />
+                          <View
+                            style={[styles.catDot, { backgroundColor: catConfig?.color ?? '#999' }]}
+                          />
                           <ThemedText style={[styles.productCategory, { color: secondaryText }]}>
                             {catConfig?.label ?? product.category}
                           </ThemedText>
                         </View>
-                        <ThemedText style={styles.productName} fontFamily="Inter-SemiBold" numberOfLines={2}>
+                        <ThemedText
+                          style={styles.productName}
+                          fontFamily="Inter-SemiBold"
+                          numberOfLines={2}
+                        >
                           {product.name}
                         </ThemedText>
-                        <ThemedText style={[styles.productReason, { color: secondaryText }]} numberOfLines={3}>
+                        <ThemedText
+                          style={[styles.productReason, { color: secondaryText }]}
+                          numberOfLines={3}
+                        >
                           {product.technicalJustification}
                         </ThemedText>
                         <View style={styles.productFooter}>

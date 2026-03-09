@@ -40,10 +40,7 @@ const TriathlonSplitShareCard = React.forwardRef(
     } = props;
     const cardWidth = width ?? DEFAULT_CARD_WIDTH;
     const cardHeight = height ?? DEFAULT_CARD_HEIGHT;
-    const scale = Math.min(
-      cardWidth / DEFAULT_CARD_WIDTH,
-      cardHeight / DEFAULT_CARD_HEIGHT,
-    );
+    const scale = Math.min(cardWidth / DEFAULT_CARD_WIDTH, cardHeight / DEFAULT_CARD_HEIGHT);
 
     const iconSize = Math.round(24 * scale);
     // decrease modality time size
@@ -57,32 +54,18 @@ const TriathlonSplitShareCard = React.forwardRef(
     return (
       <View
         ref={ref}
-        style={[
-          styles.card,
-          { width: cardWidth, borderRadius, backgroundColor: cardBgColor },
-        ]}
+        style={[styles.card, { width: cardWidth, borderRadius, backgroundColor: cardBgColor }]}
         collapsable={false}
         pointerEvents="none"
       >
         <View style={styles.topRow}>
-          <Text
-            style={[styles.date, { fontSize: smallSize, color: textColor }]}
-          >
-            {date}
-          </Text>
-          <Text
-            style={[styles.title, { fontSize: smallSize, color: textColor }]}
-          >
-            TRIATHLON
-          </Text>
+          <Text style={[styles.date, { fontSize: smallSize, color: textColor }]}>{date}</Text>
+          <Text style={[styles.title, { fontSize: smallSize, color: textColor }]}>TRIATHLON</Text>
         </View>
 
         <View style={[styles.totalContainer, { width: '100%' }]}>
           <Text
-            style={[
-              styles.total,
-              { fontSize: totalSize, fontWeight: '800', color: textColor },
-            ]}
+            style={[styles.total, { fontSize: totalSize, fontWeight: '800', color: textColor }]}
           >
             {totalTime}
           </Text>
@@ -91,32 +74,19 @@ const TriathlonSplitShareCard = React.forwardRef(
         <View style={styles.splitRow}>
           <View style={styles.splitCol}>
             <Waves size={iconSize} color={textColor} weight="regular" />
-            <Text
-              style={[styles.time, { fontSize: timeSize, color: textColor }]}
-            >
+            <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>
               {swim.distance}
             </Text>
-            <Text
-              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
-            >
+            <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>
               {swim.pace}
             </Text>
-            <Text
-              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
-            >
-              {swim.time}
-            </Text>
+            <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{swim.time}</Text>
           </View>
 
           {showTransitions && (
             <View style={styles.splitColMiddle}>
               <Text style={[styles.iconSmall, { color: textColor }]}>T1</Text>
-              <Text
-                style={[
-                  styles.smallTime,
-                  { fontSize: smallSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>
                 {t1?.time ?? '-'}
               </Text>
             </View>
@@ -124,32 +94,19 @@ const TriathlonSplitShareCard = React.forwardRef(
 
           <View style={styles.splitCol}>
             <Bicycle size={iconSize} color={textColor} weight="regular" />
-            <Text
-              style={[styles.time, { fontSize: timeSize, color: textColor }]}
-            >
+            <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>
               {bike.distance}
             </Text>
-            <Text
-              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
-            >
+            <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>
               {bike.speed}
             </Text>
-            <Text
-              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
-            >
-              {bike.time}
-            </Text>
+            <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{bike.time}</Text>
           </View>
 
           {showTransitions && (
             <View style={styles.splitColMiddle}>
               <Text style={[styles.iconSmall, { color: textColor }]}>T2</Text>
-              <Text
-                style={[
-                  styles.smallTime,
-                  { fontSize: smallSize, color: textColor },
-                ]}
-              >
+              <Text style={[styles.smallTime, { fontSize: smallSize, color: textColor }]}>
                 {t2?.time ?? '-'}
               </Text>
             </View>
@@ -157,31 +114,16 @@ const TriathlonSplitShareCard = React.forwardRef(
 
           <View style={styles.splitCol}>
             <SneakerMove size={iconSize} color={textColor} weight="regular" />
-            <Text
-              style={[styles.time, { fontSize: timeSize, color: textColor }]}
-            >
+            <Text style={[styles.time, { fontSize: timeSize, color: textColor }]}>
               {run.distance}
             </Text>
-            <Text
-              style={[styles.pace, { fontSize: smallSize, color: textColor }]}
-            >
-              {run.pace}
-            </Text>
-            <Text
-              style={[styles.sub, { fontSize: smallSize, color: textColor }]}
-            >
-              {run.time}
-            </Text>
+            <Text style={[styles.pace, { fontSize: smallSize, color: textColor }]}>{run.pace}</Text>
+            <Text style={[styles.sub, { fontSize: smallSize, color: textColor }]}>{run.time}</Text>
           </View>
         </View>
 
         <View style={styles.footerRow}>
-          <Text
-            style={[
-              styles.watermark,
-              { fontSize: footerSize, color: textColor },
-            ]}
-          >
+          <Text style={[styles.watermark, { fontSize: footerSize, color: textColor }]}>
             Koa Endurance
           </Text>
         </View>

@@ -1,61 +1,61 @@
 // Cycling power zones based on FTP
 export function calculatePowerZones(ftp: number) {
   return [
-    { 
-      zone: 1, 
+    {
+      zone: 1,
       name: 'Active Recovery',
       description: 'Very easy, gentle effort',
       range: `< ${Math.round(0.55 * ftp)} watts`,
       min: 0,
-      max: Math.round(0.55 * ftp)
+      max: Math.round(0.55 * ftp),
     },
-    { 
-      zone: 2, 
+    {
+      zone: 2,
       name: 'Endurance',
       description: 'All day pace, conversational',
       range: `${Math.round(0.56 * ftp)} - ${Math.round(0.75 * ftp)} watts`,
       min: Math.round(0.56 * ftp),
-      max: Math.round(0.75 * ftp)
+      max: Math.round(0.75 * ftp),
     },
-    { 
-      zone: 3, 
-      name: 'Tempo', 
+    {
+      zone: 3,
+      name: 'Tempo',
       description: 'Moderate effort, slightly challenging',
-      range: `${Math.round(0.76 * ftp)} - ${Math.round(0.90 * ftp)} watts`,
+      range: `${Math.round(0.76 * ftp)} - ${Math.round(0.9 * ftp)} watts`,
       min: Math.round(0.76 * ftp),
-      max: Math.round(0.90 * ftp) 
+      max: Math.round(0.9 * ftp),
     },
-    { 
-      zone: 4, 
+    {
+      zone: 4,
       name: 'Threshold',
       description: 'Challenging, race pace effort',
       range: `${Math.round(0.91 * ftp)} - ${Math.round(1.05 * ftp)} watts`,
       min: Math.round(0.91 * ftp),
-      max: Math.round(1.05 * ftp)
+      max: Math.round(1.05 * ftp),
     },
-    { 
-      zone: 5, 
+    {
+      zone: 5,
       name: 'VO2 Max',
       description: 'Very hard, 3-8 minute intervals',
-      range: `${Math.round(1.06 * ftp)} - ${Math.round(1.20 * ftp)} watts`,
+      range: `${Math.round(1.06 * ftp)} - ${Math.round(1.2 * ftp)} watts`,
       min: Math.round(1.06 * ftp),
-      max: Math.round(1.20 * ftp)
+      max: Math.round(1.2 * ftp),
     },
-    { 
-      zone: 6, 
-      name: 'Anaerobic', 
+    {
+      zone: 6,
+      name: 'Anaerobic',
       description: 'Short, high-intensity efforts',
-      range: `${Math.round(1.21 * ftp)} - ${Math.round(1.50 * ftp)} watts`,
+      range: `${Math.round(1.21 * ftp)} - ${Math.round(1.5 * ftp)} watts`,
       min: Math.round(1.21 * ftp),
-      max: Math.round(1.50 * ftp)
+      max: Math.round(1.5 * ftp),
     },
-    { 
-      zone: 7, 
-      name: 'Neuromuscular', 
+    {
+      zone: 7,
+      name: 'Neuromuscular',
       description: 'All-out sprints',
-      range: `> ${Math.round(1.50 * ftp)} watts`,
-      min: Math.round(1.50 * ftp),
-      max: 9999
+      range: `> ${Math.round(1.5 * ftp)} watts`,
+      min: Math.round(1.5 * ftp),
+      max: 9999,
     },
   ];
 }
@@ -63,14 +63,15 @@ export function calculatePowerZones(ftp: number) {
 // Running pace zones based on test distance and time
 export function calculateRunningPaceZones(testType: '3km' | '5km', testTimeSeconds: number) {
   let threshold: number;
-  
+
   // Calculate threshold pace in seconds per km
   if (testType === '3km') {
     threshold = testTimeSeconds / 3; // seconds per km
-  } else { // 5km
+  } else {
+    // 5km
     threshold = testTimeSeconds / 5; // seconds per km
   }
-  
+
   return [
     {
       zone: 1,
@@ -78,7 +79,7 @@ export function calculateRunningPaceZones(testType: '3km' | '5km', testTimeSecon
       description: 'Very easy, recovery runs',
       range: `${formatRunPace(Math.round(threshold * 1.25))} - ${formatRunPace(Math.round(threshold * 1.45))}`,
       min: Math.round(threshold * 1.25),
-      max: Math.round(threshold * 1.45)
+      max: Math.round(threshold * 1.45),
     },
     {
       zone: 2,
@@ -86,7 +87,7 @@ export function calculateRunningPaceZones(testType: '3km' | '5km', testTimeSecon
       description: 'Long runs, base building',
       range: `${formatRunPace(Math.round(threshold * 1.15))} - ${formatRunPace(Math.round(threshold * 1.25))}`,
       min: Math.round(threshold * 1.15),
-      max: Math.round(threshold * 1.25)
+      max: Math.round(threshold * 1.25),
     },
     {
       zone: 3,
@@ -94,7 +95,7 @@ export function calculateRunningPaceZones(testType: '3km' | '5km', testTimeSecon
       description: 'Slightly faster than easy pace',
       range: `${formatRunPace(Math.round(threshold * 1.08))} - ${formatRunPace(Math.round(threshold * 1.15))}`,
       min: Math.round(threshold * 1.08),
-      max: Math.round(threshold * 1.15)
+      max: Math.round(threshold * 1.15),
     },
     {
       zone: 4,
@@ -102,15 +103,15 @@ export function calculateRunningPaceZones(testType: '3km' | '5km', testTimeSecon
       description: 'Comfortably hard pace',
       range: `${formatRunPace(Math.round(threshold * 0.98))} - ${formatRunPace(Math.round(threshold * 1.08))}`,
       min: Math.round(threshold * 0.98),
-      max: Math.round(threshold * 1.08)
+      max: Math.round(threshold * 1.08),
     },
     {
       zone: 5,
       name: 'VO2 Max',
       description: 'Hard effort, 3-5 minute repeats',
-      range: `${formatRunPace(Math.round(threshold * 0.90))} - ${formatRunPace(Math.round(threshold * 0.98))}`,
-      min: Math.round(threshold * 0.90),
-      max: Math.round(threshold * 0.98)
+      range: `${formatRunPace(Math.round(threshold * 0.9))} - ${formatRunPace(Math.round(threshold * 0.98))}`,
+      min: Math.round(threshold * 0.9),
+      max: Math.round(threshold * 0.98),
     },
   ];
 }
@@ -126,34 +127,34 @@ function formatRunPace(secondsPerKm: number): string {
 export function calculateSwimPaceZones(testType: '200m' | '400m', testTimeSeconds: number) {
   // Base pace per 100m
   const basePace = testType === '200m' ? testTimeSeconds / 2 : testTimeSeconds / 4; // seconds per 100m
-  
+
   // Adjustment factor for 200m test (slightly different zones due to shorter distance)
   const adjustmentFactor = testType === '200m' ? 0.98 : 1;
-  
+
   return [
     {
       zone: 1,
       name: 'Easy/Recovery',
       description: 'Very easy, technical focus',
-      range: `${formatSwimPace(Math.round(basePace * 1.20 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.30 * adjustmentFactor))}`,
-      min: Math.round(basePace * 1.20 * adjustmentFactor),
-      max: Math.round(basePace * 1.30 * adjustmentFactor)
+      range: `${formatSwimPace(Math.round(basePace * 1.2 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.3 * adjustmentFactor))}`,
+      min: Math.round(basePace * 1.2 * adjustmentFactor),
+      max: Math.round(basePace * 1.3 * adjustmentFactor),
     },
     {
       zone: 2,
       name: 'Endurance',
       description: 'Aerobic development',
-      range: `${formatSwimPace(Math.round(basePace * 1.10 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.20 * adjustmentFactor))}`,
-      min: Math.round(basePace * 1.10 * adjustmentFactor),
-      max: Math.round(basePace * 1.20 * adjustmentFactor)
+      range: `${formatSwimPace(Math.round(basePace * 1.1 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.2 * adjustmentFactor))}`,
+      min: Math.round(basePace * 1.1 * adjustmentFactor),
+      max: Math.round(basePace * 1.2 * adjustmentFactor),
     },
     {
       zone: 3,
       name: 'Moderate',
       description: 'Sustained effort',
-      range: `${formatSwimPace(Math.round(basePace * 1.05 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.10 * adjustmentFactor))}`,
+      range: `${formatSwimPace(Math.round(basePace * 1.05 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.1 * adjustmentFactor))}`,
       min: Math.round(basePace * 1.05 * adjustmentFactor),
-      max: Math.round(basePace * 1.10 * adjustmentFactor)
+      max: Math.round(basePace * 1.1 * adjustmentFactor),
     },
     {
       zone: 4,
@@ -161,7 +162,7 @@ export function calculateSwimPaceZones(testType: '200m' | '400m', testTimeSecond
       description: 'Race-pace for longer distances',
       range: `${formatSwimPace(Math.round(basePace * 0.95 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 1.05 * adjustmentFactor))}`,
       min: Math.round(basePace * 0.95 * adjustmentFactor),
-      max: Math.round(basePace * 1.05 * adjustmentFactor)
+      max: Math.round(basePace * 1.05 * adjustmentFactor),
     },
     {
       zone: 5,
@@ -169,7 +170,7 @@ export function calculateSwimPaceZones(testType: '200m' | '400m', testTimeSecond
       description: 'High-intensity intervals',
       range: `${formatSwimPace(Math.round(basePace * 0.85 * adjustmentFactor))} - ${formatSwimPace(Math.round(basePace * 0.95 * adjustmentFactor))}`,
       min: Math.round(basePace * 0.85 * adjustmentFactor),
-      max: Math.round(basePace * 0.95 * adjustmentFactor)
+      max: Math.round(basePace * 0.95 * adjustmentFactor),
     },
   ];
 }

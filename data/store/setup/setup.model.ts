@@ -55,12 +55,15 @@ export interface InvestmentInsight {
 
 // ─── UI Config ───────────────────────────────────────────────────────
 
-export const MODALITY_CONFIG: Record<SetupModality, {
-  label: string;
-  emoji: string;
-  color: string;
-  icon: string;
-}> = {
+export const MODALITY_CONFIG: Record<
+  SetupModality,
+  {
+    label: string;
+    emoji: string;
+    color: string;
+    icon: string;
+  }
+> = {
   natacao: { label: 'Natação', emoji: '🏊', color: '#0EA5E9', icon: 'swim' },
   ciclismo: { label: 'Ciclismo', emoji: '🚴', color: '#F97316', icon: 'bike' },
   corrida: { label: 'Corrida', emoji: '🏃', color: '#EF4444', icon: 'run-fast' },
@@ -68,10 +71,13 @@ export const MODALITY_CONFIG: Record<SetupModality, {
   outros: { label: 'Outros', emoji: '📦', color: '#6B7280', icon: 'package-variant' },
 };
 
-export const CATEGORY_SETUP_CONFIG: Record<SetupCategory, {
-  label: string;
-  emoji: string;
-}> = {
+export const CATEGORY_SETUP_CONFIG: Record<
+  SetupCategory,
+  {
+    label: string;
+    emoji: string;
+  }
+> = {
   nutricao: { label: 'Nutrição', emoji: '🍎' },
   eletronicos: { label: 'Eletrônicos', emoji: '⌚' },
   vestuario: { label: 'Vestuário', emoji: '👕' },

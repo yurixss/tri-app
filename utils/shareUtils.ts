@@ -2,7 +2,12 @@ import { Share, Platform, Alert } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
-import { TriathlonPrediction, RaceType, getRaceTypeName, getRaceDistances } from './triathlonPredictor';
+import {
+  TriathlonPrediction,
+  RaceType,
+  getRaceTypeName,
+  getRaceDistances,
+} from './triathlonPredictor';
 
 // ============================================================================
 // TRIATHLON PREDICTION PDF SHARE
@@ -255,14 +260,18 @@ function generateTriathlonPdfHtml(data: TriathlonPredictionShareData): string {
               <div class="name">Natação</div>
               <div class="time">${prediction.swim.timeFormatted}</div>
               <div class="distance">${raceDistances.swim}m</div>
-              ${prediction.swim.factors.length > 0 ? `
+              ${
+                prediction.swim.factors.length > 0
+                  ? `
                 <div class="factors">
                   <div class="title">Fatores aplicados:</div>
                   <ul>
-                    ${prediction.swim.factors.map(f => `<li>${f}</li>`).join('')}
+                    ${prediction.swim.factors.map((f) => `<li>${f}</li>`).join('')}
                   </ul>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
           </div>
 
@@ -277,14 +286,18 @@ function generateTriathlonPdfHtml(data: TriathlonPredictionShareData): string {
               <div class="name">Ciclismo</div>
               <div class="time">${prediction.bike.timeFormatted}</div>
               <div class="distance">${raceDistances.bike}km</div>
-              ${prediction.bike.factors.length > 0 ? `
+              ${
+                prediction.bike.factors.length > 0
+                  ? `
                 <div class="factors">
                   <div class="title">Fatores aplicados:</div>
                   <ul>
-                    ${prediction.bike.factors.map(f => `<li>${f}</li>`).join('')}
+                    ${prediction.bike.factors.map((f) => `<li>${f}</li>`).join('')}
                   </ul>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
           </div>
 
@@ -299,14 +312,18 @@ function generateTriathlonPdfHtml(data: TriathlonPredictionShareData): string {
               <div class="name">Corrida</div>
               <div class="time">${prediction.run.timeFormatted}</div>
               <div class="distance">${raceDistances.run}km</div>
-              ${prediction.run.factors.length > 0 ? `
+              ${
+                prediction.run.factors.length > 0
+                  ? `
                 <div class="factors">
                   <div class="title">Fatores aplicados:</div>
                   <ul>
-                    ${prediction.run.factors.map(f => `<li>${f}</li>`).join('')}
+                    ${prediction.run.factors.map((f) => `<li>${f}</li>`).join('')}
                   </ul>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
           </div>
 
@@ -353,10 +370,12 @@ function generateTriathlonPdfHtml(data: TriathlonPredictionShareData): string {
   `;
 }
 
-export async function shareTriathlonPredictionAsPdf(data: TriathlonPredictionShareData): Promise<boolean> {
+export async function shareTriathlonPredictionAsPdf(
+  data: TriathlonPredictionShareData,
+): Promise<boolean> {
   try {
     const html = generateTriathlonPdfHtml(data);
-    
+
     // Gerar PDF
     const { uri } = await Print.printToFileAsync({
       html,
@@ -388,7 +407,7 @@ export async function shareTriathlonPredictionAsPdf(data: TriathlonPredictionSha
 
 export async function shareZones(title: string, zones: any[]) {
   const formattedZones = formatZonesForSharing(title, zones);
-  
+
   try {
     await Share.share({
       message: formattedZones,
@@ -401,7 +420,7 @@ export async function shareZones(title: string, zones: any[]) {
 
 export async function copyZonesToClipboard(title: string, zones: any[]) {
   const formattedZones = formatZonesForSharing(title, zones);
-  
+
   try {
     await Clipboard.setStringAsync(formattedZones);
     return true;
@@ -414,7 +433,7 @@ export async function copyZonesToClipboard(title: string, zones: any[]) {
 function formatZonesForSharing(title: string, zones: any[]): string {
   let text = `${title}\n\n`;
 
-  zones.forEach(zone => {
+  zones.forEach((zone) => {
     text += `Zona ${zone.zone}: ${zone.name}\n`;
     text += `${zone.range}\n`;
     text += `${zone.description}\n\n`;
@@ -451,7 +470,7 @@ export interface RaceTimeData {
 
 export async function shareRaceTime(data: RaceTimeData) {
   const formattedText = formatRaceTimeForSharing(data);
-  
+
   try {
     await Share.share({
       message: formattedText,
@@ -464,7 +483,7 @@ export async function shareRaceTime(data: RaceTimeData) {
 
 export async function copyRaceTimeToClipboard(data: RaceTimeData) {
   const formattedText = formatRaceTimeForSharing(data);
-  
+
   try {
     await Clipboard.setStringAsync(formattedText);
     return true;
@@ -517,7 +536,7 @@ export async function copySwimTimeToClipboard(data: RaceTimeData) {
   if (data.swim.pace) {
     text += `Ritmo: ${data.swim.pace}\n`;
   }
-  
+
   try {
     await Clipboard.setStringAsync(text);
     return true;
@@ -533,7 +552,7 @@ export async function copyBikeTimeToClipboard(data: RaceTimeData) {
   if (data.bike.pace) {
     text += `Ritmo: ${data.bike.pace}\n`;
   }
-  
+
   try {
     await Clipboard.setStringAsync(text);
     return true;
@@ -549,7 +568,7 @@ export async function copyRunTimeToClipboard(data: RaceTimeData) {
   if (data.run.pace) {
     text += `Ritmo: ${data.run.pace}\n`;
   }
-  
+
   try {
     await Clipboard.setStringAsync(text);
     return true;

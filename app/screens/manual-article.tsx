@@ -10,7 +10,7 @@ import { Clock } from 'phosphor-react-native';
 
 /**
  * Tela de leitura de artigo do Manual do Triatleta.
- * 
+ *
  * Design decisions:
  * - Layout focado em leitura, sem distrações
  * - Tipografia otimizada para legibilidade
@@ -28,14 +28,9 @@ export default function ManualArticleScreen() {
   if (!article) {
     return (
       <ThemedView style={styles.container}>
-        <Header 
-          title="Artigo"
-          onBackPress={() => router.back()}
-        />
+        <Header title="Artigo" onBackPress={() => router.back()} />
         <View style={styles.errorContainer}>
-          <ThemedText style={styles.errorText}>
-            Artigo não encontrado
-          </ThemedText>
+          <ThemedText style={styles.errorText}>Artigo não encontrado</ThemedText>
         </View>
       </ThemedView>
     );
@@ -45,11 +40,8 @@ export default function ManualArticleScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Manual"
-        onBackPress={() => router.back()}
-      />
-      
+      <Header title="Manual" onBackPress={() => router.back()} />
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -57,23 +49,16 @@ export default function ManualArticleScreen() {
       >
         {/* Meta info */}
         <View style={styles.metaRow}>
-          <View 
-            style={[
-              styles.categoryBadge, 
-              { backgroundColor: categoryConfig.color + '15' }
-            ]}
-          >
-            <ThemedText style={styles.categoryEmoji}>
-              {categoryConfig.emoji}
-            </ThemedText>
-            <ThemedText 
+          <View style={[styles.categoryBadge, { backgroundColor: categoryConfig.color + '15' }]}>
+            <ThemedText style={styles.categoryEmoji}>{categoryConfig.emoji}</ThemedText>
+            <ThemedText
               style={[styles.categoryLabel, { color: categoryConfig.color }]}
               fontFamily="Inter-Medium"
             >
               {categoryConfig.label}
             </ThemedText>
           </View>
-          
+
           <View style={styles.readingTime}>
             <Clock size={14} color={isDark ? '#999' : '#666'} weight="regular" />
             <ThemedText style={styles.readingTimeText}>
@@ -88,9 +73,7 @@ export default function ManualArticleScreen() {
         </ThemedText>
 
         {/* Introdução */}
-        <ThemedText style={styles.introduction}>
-          {article.introduction}
-        </ThemedText>
+        <ThemedText style={styles.introduction}>{article.introduction}</ThemedText>
 
         {/* Separador visual */}
         <View style={[styles.separator, { backgroundColor: isDark ? '#333' : '#E5E5E5' }]} />
@@ -104,9 +87,7 @@ export default function ManualArticleScreen() {
 
         {/* Footer */}
         <View style={[styles.footer, { borderTopColor: isDark ? '#333' : '#E5E5E5' }]}>
-          <ThemedText style={styles.footerText}>
-            Manual do Triatleta
-          </ThemedText>
+          <ThemedText style={styles.footerText}>Manual do Triatleta</ThemedText>
         </View>
       </ScrollView>
     </ThemedView>

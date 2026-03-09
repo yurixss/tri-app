@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter, Href } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -88,7 +95,7 @@ export default function RunStep() {
       const secs = data.run.baseTimeSeconds % 60;
       setBaseTime(`${mins}:${secs.toString().padStart(2, '0')}`);
       setBaseDistance(data.run.baseDistance.toString());
-      
+
       if (data.run.t1Seconds) {
         setT1Time(formatTimeFromSeconds(data.run.t1Seconds));
       }
@@ -111,7 +118,7 @@ export default function RunStep() {
     if (!validate()) return;
 
     const timeSeconds = parseTimeString(baseTime);
-    
+
     const runData = {
       baseTimeSeconds: timeSeconds,
       baseDistance: parseFloat(baseDistance),
@@ -146,21 +153,21 @@ export default function RunStep() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Previsão de Triathlon"
-        onBackPress={handleBack}
-      />
+      <Header title="Previsão de Triathlon" onBackPress={handleBack} />
 
       <WizardStepper currentStep={3} />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
-            <ThemedText style={[styles.cardTitle, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
+            <ThemedText
+              style={[styles.cardTitle, { color: Colors.shared.primary }]}
+              fontFamily="Inter-Bold"
+            >
               🏃 Corrida
             </ThemedText>
           </View>
@@ -177,14 +184,15 @@ export default function RunStep() {
               {getRaceTypeName(raceType)}
             </ThemedText>
             <ThemedText style={styles.raceSummaryText}>
-              Natação: {data.swim?.raceDistance}m • Bike: {raceDistances.bike}km • Corrida: {raceDistances.run}km
+              Natação: {data.swim?.raceDistance}m • Bike: {raceDistances.bike}km • Corrida:{' '}
+              {raceDistances.run}km
             </ThemedText>
           </View>
 
           <ThemedText style={styles.sectionTitle} fontFamily="Inter-Medium">
             Seu Tempo Recente
           </ThemedText>
-          
+
           <RadioSelector
             options={BASE_DISTANCE_OPTIONS}
             selectedValue={baseDistance}
@@ -264,8 +272,8 @@ export default function RunStep() {
               ℹ️ Sobre o cálculo
             </ThemedText>
             <ThemedText style={styles.infoText}>
-              O tempo da corrida será ajustado usando a fórmula de Riegel e incluirá 
-              um fator de fadiga pós-bike de acordo com a distância da prova.
+              O tempo da corrida será ajustado usando a fórmula de Riegel e incluirá um fator de
+              fadiga pós-bike de acordo com a distância da prova.
             </ThemedText>
           </View>
         </View>
@@ -289,11 +297,7 @@ export default function RunStep() {
           />
         </View>
         {isCalculating && (
-          <ActivityIndicator 
-            size="small" 
-            color={Colors.shared.primary} 
-            style={styles.loader} 
-          />
+          <ActivityIndicator size="small" color={Colors.shared.primary} style={styles.loader} />
         )}
       </View>
     </ThemedView>

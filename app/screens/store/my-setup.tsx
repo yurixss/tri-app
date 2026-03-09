@@ -14,7 +14,15 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/constants/Styles';
-import { CaretLeft, Plus, ChartPieSlice, ChartPie, PencilSimple, Trash, Note } from 'phosphor-react-native';
+import {
+  CaretLeft,
+  Plus,
+  ChartPieSlice,
+  ChartPie,
+  PencilSimple,
+  Trash,
+  Note,
+} from 'phosphor-react-native';
 
 import type {
   SetupItem,
@@ -22,10 +30,7 @@ import type {
   SetupCategory,
   InvestmentInsight,
 } from '@/data/store/setup/setup.model';
-import {
-  MODALITY_CONFIG,
-  CATEGORY_SETUP_CONFIG,
-} from '@/data/store/setup/setup.model';
+import { MODALITY_CONFIG, CATEGORY_SETUP_CONFIG } from '@/data/store/setup/setup.model';
 import {
   getInvestmentSummary,
   generateInsights,
@@ -134,7 +139,7 @@ export default function MySetupScreen() {
       purchaseDate,
       pricePaid,
       addedAt: editingId
-        ? items.find((i) => i.id === editingId)?.addedAt ?? new Date().toISOString()
+        ? (items.find((i) => i.id === editingId)?.addedAt ?? new Date().toISOString())
         : new Date().toISOString(),
     };
 
@@ -161,8 +166,6 @@ export default function MySetupScreen() {
     }
     setFormDate(formatted);
   };
-
-  
 
   const handleEdit = (item: SetupItem) => {
     setFormName(item.name);
@@ -250,7 +253,10 @@ export default function MySetupScreen() {
               <View style={styles.formGroup}>
                 <TextInput
                   accessibilityLabel="Equipamento"
-                  style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
+                  style={[
+                    styles.input,
+                    { borderColor, color: textColor, backgroundColor: bgColor },
+                  ]}
                   value={formName}
                   onChangeText={setFormName}
                   placeholder="Ex: Garmin Forerunner 965"
@@ -264,28 +270,28 @@ export default function MySetupScreen() {
                   Modalidade
                 </ThemedText>
                 <View style={styles.chipRow}>
-                    {modalityEntries.map(([key, config]) => (
-                      <TouchableOpacity
-                        key={key}
+                  {modalityEntries.map(([key, config]) => (
+                    <TouchableOpacity
+                      key={key}
+                      style={[
+                        styles.chip,
+                        formModality === key
+                          ? { backgroundColor: config.color, borderColor: config.color }
+                          : { borderColor },
+                      ]}
+                      onPress={() => setFormModality(key)}
+                    >
+                      <ThemedText
                         style={[
-                          styles.chip,
-                          formModality === key
-                            ? { backgroundColor: config.color, borderColor: config.color }
-                            : { borderColor },
+                          styles.chipText,
+                          { color: formModality === key ? '#FFF' : textColor },
                         ]}
-                        onPress={() => setFormModality(key)}
                       >
-                        <ThemedText
-                          style={[
-                            styles.chipText,
-                            { color: formModality === key ? '#FFF' : textColor },
-                          ]}
-                        >
-                          {config.label}
-                        </ThemedText>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                        {config.label}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               {/* Category */}
@@ -294,38 +300,44 @@ export default function MySetupScreen() {
                   Categoria
                 </ThemedText>
                 <View style={styles.chipRow}>
-                    {categoryEntries.map(([key, config]) => (
-                      <TouchableOpacity
-                        key={key}
+                  {categoryEntries.map(([key, config]) => (
+                    <TouchableOpacity
+                      key={key}
+                      style={[
+                        styles.chip,
+                        formCategory === key
+                          ? {
+                              backgroundColor: Colors.shared.primary,
+                              borderColor: Colors.shared.primary,
+                            }
+                          : { borderColor },
+                      ]}
+                      onPress={() => setFormCategory(key)}
+                    >
+                      <ThemedText
                         style={[
-                          styles.chip,
-                          formCategory === key
-                            ? { backgroundColor: Colors.shared.primary, borderColor: Colors.shared.primary }
-                            : { borderColor },
+                          styles.chipText,
+                          { color: formCategory === key ? '#FFF' : textColor },
                         ]}
-                        onPress={() => setFormCategory(key)}
                       >
-                        <ThemedText
-                          style={[
-                            styles.chipText,
-                            { color: formCategory === key ? '#FFF' : textColor },
-                          ]}
-                        >
-                          {config.label}
-                        </ThemedText>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                        {config.label}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               {/* Price + Purchase Date (side by side) */}
               <View style={styles.formRow}>
-                <View style={[styles.formGroup, styles.formHalf, { marginRight: 8 }]}> 
-                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}> 
+                <View style={[styles.formGroup, styles.formHalf, { marginRight: 8 }]}>
+                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
                     Valor pago (R$) *
                   </ThemedText>
                   <TextInput
-                    style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
+                    style={[
+                      styles.input,
+                      { borderColor, color: textColor, backgroundColor: bgColor },
+                    ]}
                     value={formPrice}
                     onChangeText={setFormPrice}
                     placeholder="Ex: 3899"
@@ -334,12 +346,15 @@ export default function MySetupScreen() {
                   />
                 </View>
 
-                <View style={[styles.formGroup, styles.formHalf]}> 
-                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}> 
+                <View style={[styles.formGroup, styles.formHalf]}>
+                  <ThemedText style={[styles.formLabel, { color: secondaryText }]}>
                     Data da compra
                   </ThemedText>
                   <TextInput
-                    style={[styles.input, { borderColor, color: textColor, backgroundColor: bgColor }]}
+                    style={[
+                      styles.input,
+                      { borderColor, color: textColor, backgroundColor: bgColor },
+                    ]}
                     value={formDate}
                     onChangeText={handleDateChange}
                     placeholder="DD/MM/AAAA"
@@ -429,12 +444,7 @@ export default function MySetupScreen() {
                         style={[styles.modalityCard, { backgroundColor: cardBg, borderColor }]}
                       >
                         <View style={styles.modalityCardHeader}>
-                          <View
-                            style={[
-                              styles.modalityDot,
-                              { backgroundColor: config.color },
-                            ]}
-                          />
+                          <View style={[styles.modalityDot, { backgroundColor: config.color }]} />
                           <ThemedText style={[styles.modalityLabel, { color: secondaryText }]}>
                             {config.emoji} {config.label}
                           </ThemedText>
@@ -496,10 +506,7 @@ export default function MySetupScreen() {
                               </ThemedText>
                             </View>
                             <View
-                              style={[
-                                styles.catBar,
-                                { backgroundColor: `${secondaryText}20` },
-                              ]}
+                              style={[styles.catBar, { backgroundColor: `${secondaryText}20` }]}
                             >
                               <View
                                 style={[
@@ -538,8 +545,8 @@ export default function MySetupScreen() {
                             insight.type === 'highlight'
                               ? 'rgba(6,102,153,0.06)'
                               : insight.type === 'suggestion'
-                              ? 'rgba(245,158,11,0.06)'
-                              : 'rgba(107,114,128,0.06)',
+                                ? 'rgba(245,158,11,0.06)'
+                                : 'rgba(107,114,128,0.06)',
                         },
                       ]}
                     >
@@ -560,7 +567,7 @@ export default function MySetupScreen() {
                 <ThemedText style={styles.listTitle} fontFamily="Inter-Bold">
                   Equipamentos
                 </ThemedText>
-                <ThemedText style={[styles.listCount, { color: secondaryText }]}> 
+                <ThemedText style={[styles.listCount, { color: secondaryText }]}>
                   {items.length} {items.length === 1 ? 'item' : 'itens'}
                 </ThemedText>
               </View>
@@ -579,93 +586,78 @@ export default function MySetupScreen() {
                       key={item.id}
                       style={[styles.itemCard, { backgroundColor: cardBg, borderColor }]}
                     >
-                    {/* Item Header */}
-                    <View style={styles.itemHeader}>
-                      <View
-                        style={[
-                          styles.itemBadge,
-                          { backgroundColor: `${modConfig.color}15` },
-                        ]}
-                      >
-                        <ThemedText style={styles.itemBadgeEmoji}>
-                          {modConfig.emoji}
-                        </ThemedText>
-                      </View>
-                      <View style={{ flex: 1 }}>
-                        <ThemedText style={styles.itemName} fontFamily="Inter-SemiBold">
-                          {item.name}
-                        </ThemedText>
-                        <View style={styles.itemMetaRow}>
-                          <ThemedText style={[styles.itemMeta, { color: secondaryText }]}>
-                            {modConfig.label}
+                      {/* Item Header */}
+                      <View style={styles.itemHeader}>
+                        <View
+                          style={[styles.itemBadge, { backgroundColor: `${modConfig.color}15` }]}
+                        >
+                          <ThemedText style={styles.itemBadgeEmoji}>{modConfig.emoji}</ThemedText>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <ThemedText style={styles.itemName} fontFamily="Inter-SemiBold">
+                            {item.name}
                           </ThemedText>
-                          <View style={[styles.itemMetaDot, { backgroundColor: secondaryText }]} />
-                          <ThemedText style={[styles.itemMeta, { color: secondaryText }]}>
-                            {catConfig.emoji} {catConfig.label}
+                          <View style={styles.itemMetaRow}>
+                            <ThemedText style={[styles.itemMeta, { color: secondaryText }]}>
+                              {modConfig.label}
+                            </ThemedText>
+                            <View
+                              style={[styles.itemMetaDot, { backgroundColor: secondaryText }]}
+                            />
+                            <ThemedText style={[styles.itemMeta, { color: secondaryText }]}>
+                              {catConfig.emoji} {catConfig.label}
+                            </ThemedText>
+                          </View>
+                        </View>
+                        <View style={styles.itemActions}>
+                          <TouchableOpacity
+                            onPress={() => handleEdit(item)}
+                            style={styles.actionBtn}
+                          >
+                            <PencilSimple size={18} color={secondaryText} weight="regular" />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => handleDelete(item.id)}
+                            style={styles.actionBtn}
+                          >
+                            <Trash size={18} color="#EF4444" weight="regular" />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      {/* Price + Date row */}
+                      <View style={styles.itemDataRow}>
+                        <View style={styles.itemDataBlock}>
+                          <ThemedText style={[styles.itemDataLabel, { color: secondaryText }]}>
+                            Valor pago
+                          </ThemedText>
+                          <ThemedText style={styles.itemDataValue} fontFamily="Inter-Bold">
+                            {item.pricePaid > 0 ? formatCurrency(item.pricePaid) : '—'}
+                          </ThemedText>
+                        </View>
+                        <View style={[styles.itemDataDivider, { backgroundColor: borderColor }]} />
+                        <View style={styles.itemDataBlock}>
+                          <ThemedText style={[styles.itemDataLabel, { color: secondaryText }]}>
+                            Compra
+                          </ThemedText>
+                          <ThemedText style={styles.itemDataValue} fontFamily="Inter-SemiBold">
+                            {formatDate(item.purchaseDate)}
                           </ThemedText>
                         </View>
                       </View>
-                      <View style={styles.itemActions}>
-                        <TouchableOpacity
-                          onPress={() => handleEdit(item)}
-                          style={styles.actionBtn}
-                        >
-                          <PencilSimple
-                            size={18}
-                            color={secondaryText}
-                            weight="regular"
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() => handleDelete(item.id)}
-                          style={styles.actionBtn}
-                        >
-                          <Trash
-                            size={18}
-                            color="#EF4444"
-                            weight="regular"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
 
-                    {/* Price + Date row */}
-                    <View style={styles.itemDataRow}>
-                      <View style={styles.itemDataBlock}>
-                        <ThemedText style={[styles.itemDataLabel, { color: secondaryText }]}>
-                          Valor pago
-                        </ThemedText>
-                        <ThemedText style={styles.itemDataValue} fontFamily="Inter-Bold">
-                          {item.pricePaid > 0 ? formatCurrency(item.pricePaid) : '—'}
-                        </ThemedText>
-                      </View>
-                      <View style={[styles.itemDataDivider, { backgroundColor: borderColor }]} />
-                      <View style={styles.itemDataBlock}>
-                        <ThemedText style={[styles.itemDataLabel, { color: secondaryText }]}>
-                          Compra
-                        </ThemedText>
-                        <ThemedText style={styles.itemDataValue} fontFamily="Inter-SemiBold">
-                          {formatDate(item.purchaseDate)}
-                        </ThemedText>
-                      </View>
+                      {/* Notes */}
+                      {item.notes ? (
+                        <View style={styles.itemNotes}>
+                          <Note size={14} color={secondaryText} weight="regular" />
+                          <ThemedText style={[styles.itemNotesText, { color: secondaryText }]}>
+                            {item.notes}
+                          </ThemedText>
+                        </View>
+                      ) : null}
                     </View>
-
-                    {/* Notes */}
-                    {item.notes ? (
-                      <View style={styles.itemNotes}>
-                        <Note
-                          size={14}
-                          color={secondaryText}
-                          weight="regular"
-                        />
-                        <ThemedText style={[styles.itemNotesText, { color: secondaryText }]}>
-                          {item.notes}
-                        </ThemedText>
-                      </View>
-                    ) : null}
-                  </View>
-                );
-              })}
+                  );
+                })}
               </ScrollView>
             </>
           )}

@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Image,
-  TouchableOpacity,
-  Switch,
-  Alert,
-} from 'react-native';
+import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Switch, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -139,7 +131,7 @@ export default function ProfileScreen() {
   const textColor = useThemeColor({}, 'text');
   const mutedColor = useThemeColor(
     { light: Colors.shared.neutrals.gray500, dark: Colors.shared.neutrals.gray400 },
-    'text'
+    'text',
   );
   const theme = useTheme();
   const { t } = useTranslation();
@@ -153,7 +145,7 @@ export default function ProfileScreen() {
     } else {
       const onboardingData = await getOnboardingData();
       if (onboardingData) {
-        setProfile(prev => ({
+        setProfile((prev) => ({
           ...prev,
           weight: onboardingData.weight || prev.weight,
           height: onboardingData.height || prev.height,
@@ -168,7 +160,7 @@ export default function ProfileScreen() {
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [loadData])
+    }, [loadData]),
   );
 
   const handlePhotoSelect = async () => {
@@ -228,7 +220,7 @@ export default function ProfileScreen() {
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -283,10 +275,14 @@ export default function ProfileScreen() {
             <div class="row"><span class="label">Nível</span><span class="value">${EXPERIENCE_LABELS[profile.experience] || 'Iniciante'}</span></div>
           </div>
 
-          ${testResults.swim || testResults.run || testResults.bike ? `
+          ${
+            testResults.swim || testResults.run || testResults.bike
+              ? `
           <div class="section">
             <div class="section-title">Performance</div>
-            ${testResults.swim ? `
+            ${
+              testResults.swim
+                ? `
             <div class="card">
               <div class="card-title" style="color:#0EA5E9">🏊 Natação</div>
               <div class="metrics">
@@ -294,8 +290,12 @@ export default function ProfileScreen() {
                 <div class="metric swim"><div class="val">${formatTime(testResults.swim.testTime)}</div><div class="lbl">Tempo</div></div>
                 <div class="metric swim"><div class="val">${formatSwimPace(testResults.swim.testTime, testResults.swim.testType)}</div><div class="lbl">Pace</div></div>
               </div>
-            </div>` : ''}
-            ${testResults.run ? `
+            </div>`
+                : ''
+            }
+            ${
+              testResults.run
+                ? `
             <div class="card">
               <div class="card-title" style="color:#F97316">🏃 Corrida</div>
               <div class="metrics">
@@ -303,36 +303,56 @@ export default function ProfileScreen() {
                 <div class="metric run"><div class="val">${formatTime(testResults.run.testTime)}</div><div class="lbl">Tempo</div></div>
                 <div class="metric run"><div class="val">${formatRunPace(testResults.run.testTime, testResults.run.testType)}</div><div class="lbl">Pace</div></div>
               </div>
-            </div>` : ''}
-            ${testResults.bike ? `
+            </div>`
+                : ''
+            }
+            ${
+              testResults.bike
+                ? `
             <div class="card">
               <div class="card-title" style="color:#10B981">🚴 Ciclismo</div>
               <div class="metrics">
                 <div class="metric bike"><div class="val">${testResults.bike.testType}</div><div class="lbl">Teste</div></div>
                 <div class="metric bike"><div class="val">${testResults.bike.ftp}W</div><div class="lbl">FTP</div></div>
               </div>
-            </div>` : ''}
-          </div>` : ''}
+            </div>`
+                : ''
+            }
+          </div>`
+              : ''
+          }
 
-          ${profile.bikeModel || profile.bikeWeight ? `
+          ${
+            profile.bikeModel || profile.bikeWeight
+              ? `
           <div class="section">
             <div class="section-title">Equipamento</div>
             ${profile.bikeModel ? `<div class="row"><span class="label">Bicicleta</span><span class="value">${profile.bikeModel}</span></div>` : ''}
             ${profile.bikeWeight ? `<div class="row"><span class="label">Peso da Bike</span><span class="value">${profile.bikeWeight} kg</span></div>` : ''}
-          </div>` : ''}
+          </div>`
+              : ''
+          }
 
-          ${profile.trainingGoal ? `
+          ${
+            profile.trainingGoal
+              ? `
           <div class="section">
             <div class="section-title">Prova Alvo</div>
-            ${profile.raceDate ? `
+            ${
+              profile.raceDate
+                ? `
             <div class="race-highlight">
               <h3>Distância</h3>
               <div class="big">${getGoalShortName(profile.trainingGoal)}</div>
               <div class="countdown">${profile.raceDate}${daysLeft !== null && daysLeft > 0 ? ` • Faltam ${daysLeft} dias` : ''}</div>
-            </div>` : `
+            </div>`
+                : `
             <div class="row"><span class="label">Objetivo</span><span class="value">${getGoalShortName(profile.trainingGoal)}</span></div>
-            `}
-          </div>` : ''}
+            `
+            }
+          </div>`
+              : ''
+          }
 
           <div class="footer">Tri App • Relatório do Atleta</div>
         </body>
@@ -360,21 +380,28 @@ export default function ProfileScreen() {
     icon: React.ReactNode,
     label: string,
     color: string,
-    metrics: { label: string; value: string }[]
+    metrics: { label: string; value: string }[],
   ) => (
     <View style={[styles.perfBlock, { borderColor }]} key={label}>
       <View style={styles.perfBlockHeader}>
-        <View style={[styles.statIconCircle, { backgroundColor: color + '15' }]}>
-          {icon}
-        </View>
+        <View style={[styles.statIconCircle, { backgroundColor: color + '15' }]}>{icon}</View>
         <ThemedText style={styles.perfBlockTitle} fontFamily="Inter-SemiBold">
           {label}
         </ThemedText>
       </View>
       <View style={styles.perfMetricsRow}>
         {metrics.map((m, i) => (
-          <View key={m.label} style={[styles.perfMetricItem, i < metrics.length - 1 && { borderRightWidth: 1, borderRightColor: borderColor }]}>
-            <ThemedText style={[styles.perfMetricLabel, { color: mutedColor }]} fontFamily="Inter-Regular">
+          <View
+            key={m.label}
+            style={[
+              styles.perfMetricItem,
+              i < metrics.length - 1 && { borderRightWidth: 1, borderRightColor: borderColor },
+            ]}
+          >
+            <ThemedText
+              style={[styles.perfMetricLabel, { color: mutedColor }]}
+              fontFamily="Inter-Regular"
+            >
               {m.label}
             </ThemedText>
             <ThemedText style={[styles.perfMetricValue, { color }]} fontFamily="Inter-Bold">
@@ -416,7 +443,10 @@ export default function ProfileScreen() {
                 {profile.name}
               </ThemedText>
             ) : (
-              <ThemedText style={[styles.userName, { color: mutedColor }]} fontFamily="Inter-Medium">
+              <ThemedText
+                style={[styles.userName, { color: mutedColor }]}
+                fontFamily="Inter-Medium"
+              >
                 Seu Nome
               </ThemedText>
             )}
@@ -425,7 +455,10 @@ export default function ProfileScreen() {
               {profile.isPremium && (
                 <View style={[styles.badge, { backgroundColor: '#FBBF24' + '25' }]}>
                   <Crown size={12} color="#FBBF24" weight="fill" />
-                  <ThemedText style={[styles.badgeText, { color: '#FBBF24' }]} fontFamily="Inter-SemiBold">
+                  <ThemedText
+                    style={[styles.badgeText, { color: '#FBBF24' }]}
+                    fontFamily="Inter-SemiBold"
+                  >
                     Premium
                   </ThemedText>
                 </View>
@@ -449,7 +482,10 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
               >
                 <PencilSimple size={12} color="#fff" weight="bold" />
-                <ThemedText style={[styles.badgeText, { color: '#fff' }]} fontFamily="Inter-SemiBold">
+                <ThemedText
+                  style={[styles.badgeText, { color: '#fff' }]}
+                  fontFamily="Inter-SemiBold"
+                >
                   Editar
                 </ThemedText>
               </TouchableOpacity>
@@ -459,7 +495,10 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
               >
                 <Export size={12} color="#fff" weight="bold" />
-                <ThemedText style={[styles.badgeText, { color: '#fff' }]} fontFamily="Inter-SemiBold">
+                <ThemedText
+                  style={[styles.badgeText, { color: '#fff' }]}
+                  fontFamily="Inter-SemiBold"
+                >
                   Exportar
                 </ThemedText>
               </TouchableOpacity>
@@ -467,7 +506,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-                {/* ─── PERFORMANCE CARD ─── */}
+        {/* ─── PERFORMANCE CARD ─── */}
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <View style={styles.cardHeader}>
             <Lightning size={20} color={Colors.shared.primary} weight="fill" />
@@ -486,8 +525,11 @@ export default function ProfileScreen() {
                   [
                     { label: 'Distância', value: testResults.swim.testType },
                     { label: 'Tempo', value: formatTime(testResults.swim.testTime) },
-                    { label: 'Pace', value: formatSwimPace(testResults.swim.testTime, testResults.swim.testType) },
-                  ]
+                    {
+                      label: 'Pace',
+                      value: formatSwimPace(testResults.swim.testTime, testResults.swim.testType),
+                    },
+                  ],
                 )}
               {testResults.run &&
                 renderPerformanceBlock(
@@ -497,8 +539,11 @@ export default function ProfileScreen() {
                   [
                     { label: 'Distância', value: testResults.run.testType },
                     { label: 'Tempo', value: formatTime(testResults.run.testTime) },
-                    { label: 'Pace', value: formatRunPace(testResults.run.testTime, testResults.run.testType) },
-                  ]
+                    {
+                      label: 'Pace',
+                      value: formatRunPace(testResults.run.testTime, testResults.run.testType),
+                    },
+                  ],
                 )}
               {testResults.bike &&
                 renderPerformanceBlock(
@@ -508,25 +553,28 @@ export default function ProfileScreen() {
                   [
                     { label: 'Teste', value: testResults.bike.testType },
                     { label: 'FTP', value: `${testResults.bike.ftp}W` },
-                  ]
+                  ],
                 )}
             </View>
           ) : (
             <View style={styles.emptyState}>
-              <ThemedText style={[styles.emptyText, { color: mutedColor }]} fontFamily="Inter-Regular">
-                Nenhum teste realizado ainda. Faça testes de natação, corrida ou ciclismo para ver seus dados aqui.
+              <ThemedText
+                style={[styles.emptyText, { color: mutedColor }]}
+                fontFamily="Inter-Regular"
+              >
+                Nenhum teste realizado ainda. Faça testes de natação, corrida ou ciclismo para ver
+                seus dados aqui.
               </ThemedText>
             </View>
           )}
         </View>
-
 
         {/* ─── SETTINGS CARD ─── */}
         <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
           <ThemedText style={styles.settingsTitle} fontFamily="Inter-SemiBold">
             {t('settings.title')}
           </ThemedText>
-          
+
           <View style={styles.themeRow}>
             <ThemedText style={{ fontSize: 15 }} fontFamily="Inter-Medium">
               {t('settings.appTheme')}
@@ -559,10 +607,7 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
               >
                 <ThemedText
-                  style={[
-                    styles.languageButtonText,
-                    language === 'pt-BR' && { color: '#fff' },
-                  ]}
+                  style={[styles.languageButtonText, language === 'pt-BR' && { color: '#fff' }]}
                   fontFamily="Inter-Medium"
                 >
                   {t('settings.portuguese')}
@@ -582,33 +627,21 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
               >
                 <ThemedText
-                  style={[
-                    styles.languageButtonText,
-                    language === 'en' && { color: '#fff' },
-                  ]}
+                  style={[styles.languageButtonText, language === 'en' && { color: '#fff' }]}
                   fontFamily="Inter-Medium"
                 >
                   {t('settings.english')}
                 </ThemedText>
               </TouchableOpacity>
 
-              <View
-                style={[
-                  styles.languageButton,
-                  { borderColor, opacity: 0.5 },
-                ]}
-              >
-                <ThemedText
-                  style={styles.languageButtonText}
-                  fontFamily="Inter-Medium"
-                >
+              <View style={[styles.languageButton, { borderColor, opacity: 0.5 }]}>
+                <ThemedText style={styles.languageButtonText} fontFamily="Inter-Medium">
                   {t('settings.spanish')}
                 </ThemedText>
               </View>
             </View>
           </View>
         </View>
-
 
         {/* ─── TARGET RACE CARD ─── */}
         <View
@@ -660,14 +693,17 @@ export default function ProfileScreen() {
                   {daysUntilRace !== null && daysUntilRace > 0
                     ? `Prova em ${daysUntilRace} dias`
                     : daysUntilRace === 0
-                    ? 'A prova é hoje! 🎉'
-                    : 'Prova já realizada'}
+                      ? 'A prova é hoje! 🎉'
+                      : 'Prova já realizada'}
                 </ThemedText>
               </View>
             </View>
           ) : (
             <View style={styles.emptyState}>
-              <ThemedText style={[styles.emptyText, { color: mutedColor }]} fontFamily="Inter-Regular">
+              <ThemedText
+                style={[styles.emptyText, { color: mutedColor }]}
+                fontFamily="Inter-Regular"
+              >
                 Defina uma prova alvo para acompanhar a contagem regressiva.
               </ThemedText>
               <ThemedButton
@@ -693,7 +729,10 @@ export default function ProfileScreen() {
             <View style={styles.equipmentRow}>
               {profile.bikeModel ? (
                 <View style={styles.equipmentItem}>
-                  <ThemedText style={[styles.equipmentLabel, { color: mutedColor }]} fontFamily="Inter-Regular">
+                  <ThemedText
+                    style={[styles.equipmentLabel, { color: mutedColor }]}
+                    fontFamily="Inter-Regular"
+                  >
                     Bicicleta
                   </ThemedText>
                   <ThemedText style={styles.equipmentValue} fontFamily="Inter-SemiBold">
@@ -703,7 +742,10 @@ export default function ProfileScreen() {
               ) : null}
               {profile.bikeWeight ? (
                 <View style={styles.equipmentItem}>
-                  <ThemedText style={[styles.equipmentLabel, { color: mutedColor }]} fontFamily="Inter-Regular">
+                  <ThemedText
+                    style={[styles.equipmentLabel, { color: mutedColor }]}
+                    fontFamily="Inter-Regular"
+                  >
                     Peso
                   </ThemedText>
                   <ThemedText style={styles.equipmentValue} fontFamily="Inter-SemiBold">

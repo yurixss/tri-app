@@ -118,12 +118,12 @@ const TIPS: Record<ProblemTag, string[]> = {
 // ─── Main function ───────────────────────────────────────────────────
 
 export function getSolutionsForProblem(problemId: ProblemTag): ProblemSolution {
-  const problem = PROBLEM_CATEGORIES.find(p => p.id === problemId);
+  const problem = PROBLEM_CATEGORIES.find((p) => p.id === problemId);
   if (!problem) {
     throw new Error(`Problem not found: ${problemId}`);
   }
 
-  const products = PRODUCTS.filter(p => p.problemTags.includes(problemId));
+  const products = PRODUCTS.filter((p) => p.problemTags.includes(problemId));
   const tips = TIPS[problemId] ?? [];
 
   return { problem, products, tips };

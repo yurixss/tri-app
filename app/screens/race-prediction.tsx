@@ -8,14 +8,21 @@ import { Header } from '@/components/Header';
 import Colors from '@/constants/Colors';
 import { useThemeColor } from '@/constants/Styles';
 import { Trophy, Bicycle, Clock, Calendar } from 'phosphor-react-native';
-import { getTriathlonPrediction, SavedTriathlonPrediction, getBikePrediction, SavedBikePrediction } from '@/hooks/useStorage';
+import {
+  getTriathlonPrediction,
+  SavedTriathlonPrediction,
+  getBikePrediction,
+  SavedBikePrediction,
+} from '@/hooks/useStorage';
 
 export default function RacePredictionScreen() {
   const router = useRouter();
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
   const [lastPrediction, setLastPrediction] = React.useState<SavedTriathlonPrediction | null>(null);
-  const [lastBikePrediction, setLastBikePrediction] = React.useState<SavedBikePrediction | null>(null);
+  const [lastBikePrediction, setLastBikePrediction] = React.useState<SavedBikePrediction | null>(
+    null,
+  );
 
   // Carregar última previsão ao montar o componente
   React.useEffect(() => {
@@ -42,16 +49,13 @@ export default function RacePredictionScreen() {
   useFocusEffect(
     React.useCallback(() => {
       loadLastPredictions();
-    }, [])
+    }, []),
   );
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Previsão de Prova"
-        onBackPress={handleBack}
-      />
-      <ScrollView 
+      <Header title="Previsão de Prova" onBackPress={handleBack} />
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -94,16 +98,16 @@ interface PredictionCardProps {
   lastBikePrediction?: SavedBikePrediction | null;
 }
 
-function PredictionCard({ 
-  title, 
+function PredictionCard({
+  title,
   icon,
-  color, 
-  description, 
+  color,
+  description,
   onPress,
   backgroundColor,
   borderColor,
   lastPrediction,
-  lastBikePrediction
+  lastBikePrediction,
 }: PredictionCardProps) {
   const [isPressed, setIsPressed] = React.useState(false);
   const colorScheme = useColorScheme();
@@ -112,10 +116,10 @@ function PredictionCard({
   // Formatar data
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
-    return date.toLocaleDateString('pt-BR', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
   };
 
@@ -126,36 +130,27 @@ function PredictionCard({
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
     >
-      <View 
+      <View
         style={[
-          styles.card, 
-          { 
-            backgroundColor: isPressed 
-              ? isDark ? '#2A2A2A' : '#F5F5F5'
-              : backgroundColor,
+          styles.card,
+          {
+            backgroundColor: isPressed ? (isDark ? '#2A2A2A' : '#F5F5F5') : backgroundColor,
             borderLeftColor: color,
             borderLeftWidth: 5,
             borderColor: isPressed ? color : borderColor,
             borderWidth: 1,
             opacity: isPressed ? 0.9 : 1,
-          }
+          },
         ]}
       >
         <View style={styles.cardHeader}>
-          <View style={styles.iconWrapper}>
-            {icon}
-          </View>
+          <View style={styles.iconWrapper}>{icon}</View>
           <View style={styles.cardContent}>
-            <ThemedText 
-              style={[styles.cardTitle, { color }]}
-              fontFamily="Inter-Bold"
-            >
+            <ThemedText style={[styles.cardTitle, { color }]} fontFamily="Inter-Bold">
               {title}
             </ThemedText>
-            
-            <ThemedText style={styles.cardDescription}>
-              {description}
-            </ThemedText>
+
+            <ThemedText style={styles.cardDescription}>{description}</ThemedText>
 
             {lastPrediction && (
               <View style={styles.predictionInfo}>
@@ -165,7 +160,7 @@ function PredictionCard({
                     {formatDate(lastPrediction.date)} • {lastPrediction.raceType}
                   </ThemedText>
                 </View>
-                
+
                 <View style={styles.predictionRow}>
                   <Clock size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText} fontFamily="Inter-Medium">
@@ -176,15 +171,21 @@ function PredictionCard({
                 <View style={styles.modalitiesContainer}>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>🏊</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{lastPrediction.swimTimeFormatted}</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {lastPrediction.swimTimeFormatted}
+                    </ThemedText>
                   </View>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>🚴</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{lastPrediction.bikeTimeFormatted}</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {lastPrediction.bikeTimeFormatted}
+                    </ThemedText>
                   </View>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>🏃</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{lastPrediction.runTimeFormatted}</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {lastPrediction.runTimeFormatted}
+                    </ThemedText>
                   </View>
                 </View>
               </View>
@@ -198,7 +199,7 @@ function PredictionCard({
                     {formatDate(lastBikePrediction.date)}
                   </ThemedText>
                 </View>
-                
+
                 <View style={styles.predictionRow}>
                   <Clock size={14} color={color} weight="regular" />
                   <ThemedText style={styles.predictionText} fontFamily="Inter-Medium">
@@ -209,15 +210,21 @@ function PredictionCard({
                 <View style={styles.modalitiesContainer}>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>📏</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{lastBikePrediction.totalDistance.toFixed(1)} km</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {lastBikePrediction.totalDistance.toFixed(1)} km
+                    </ThemedText>
                   </View>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>⚡</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{Math.round(lastBikePrediction.avgPower)} W</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {Math.round(lastBikePrediction.avgPower)} W
+                    </ThemedText>
                   </View>
                   <View style={styles.modalityChip}>
                     <ThemedText style={styles.modalityLabel}>🚴</ThemedText>
-                    <ThemedText style={styles.modalityTime}>{lastBikePrediction.avgSpeedKmh.toFixed(1)} km/h</ThemedText>
+                    <ThemedText style={styles.modalityTime}>
+                      {lastBikePrediction.avgSpeedKmh.toFixed(1)} km/h
+                    </ThemedText>
                   </View>
                 </View>
               </View>

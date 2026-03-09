@@ -1,12 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Linking,
-  Alert,
-} from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -90,9 +83,7 @@ export default function TimeGainsScreen() {
               key={key}
               style={[
                 styles.filterChip,
-                selectedModality === key
-                  ? styles.filterChipActive
-                  : { borderColor },
+                selectedModality === key ? styles.filterChipActive : { borderColor },
               ]}
               onPress={() => setSelectedModality(key)}
             >
@@ -160,7 +151,12 @@ export default function TimeGainsScreen() {
               activeOpacity={0.7}
             >
               {/* Rank badge */}
-              <View style={[styles.rankBadge, { backgroundColor: index < 3 ? Colors.shared.primary : secondaryText }]}>
+              <View
+                style={[
+                  styles.rankBadge,
+                  { backgroundColor: index < 3 ? Colors.shared.primary : secondaryText },
+                ]}
+              >
                 <ThemedText style={styles.rankNumber} fontFamily="Inter-Bold">
                   #{index + 1}
                 </ThemedText>
@@ -222,7 +218,9 @@ export default function TimeGainsScreen() {
                   <ThemedText style={[styles.contextText, { color: secondaryText }]}>
                     {item.context}
                   </ThemedText>
-                  <View style={[styles.evidenceBadge, { backgroundColor: `${evidenceInfo.color}15` }]}>
+                  <View
+                    style={[styles.evidenceBadge, { backgroundColor: `${evidenceInfo.color}15` }]}
+                  >
                     <View style={[styles.evidenceDot, { backgroundColor: evidenceInfo.color }]} />
                     <ThemedText style={[styles.evidenceText, { color: evidenceInfo.color }]}>
                       {evidenceInfo.label}

@@ -1,6 +1,6 @@
 /**
  * Modelagem de dados do Manual do Triatleta
- * 
+ *
  * Estrutura preparada para futura migração para backend.
  * Cada artigo possui blocos de conteúdo que suportam diferentes tipos:
  * - paragraph: texto corrido
@@ -9,13 +9,7 @@
  * - action: botão de ação que abre outra tela do app
  */
 
-export type ContentCategory = 
-  | 'natacao' 
-  | 'ciclismo' 
-  | 'corrida' 
-  | 'prova' 
-  | 'nutricao' 
-  | 'mental';
+export type ContentCategory = 'natacao' | 'ciclismo' | 'corrida' | 'prova' | 'nutricao' | 'mental';
 
 export type ContentBlockType = 'paragraph' | 'list' | 'callout' | 'action';
 
@@ -40,7 +34,10 @@ export interface Article {
 }
 
 // Labels e cores das categorias
-export const CATEGORY_CONFIG: Record<ContentCategory, { label: string; color: string; emoji: string }> = {
+export const CATEGORY_CONFIG: Record<
+  ContentCategory,
+  { label: string; color: string; emoji: string }
+> = {
   natacao: { label: 'Natação', color: '#0EA5E9', emoji: '🏊' },
   ciclismo: { label: 'Ciclismo', color: '#10B981', emoji: '🚴' },
   corrida: { label: 'Corrida', color: '#F97316', emoji: '🏃' },
@@ -230,10 +227,10 @@ export const ARTICLES: Article[] = [
 
 // Função para buscar artigo por ID (preparada para migração para API)
 export function getArticleById(id: string): Article | undefined {
-  return ARTICLES.find(article => article.id === id);
+  return ARTICLES.find((article) => article.id === id);
 }
 
 // Função para filtrar por categoria (preparada para migração para API)
 export function getArticlesByCategory(category: ContentCategory): Article[] {
-  return ARTICLES.filter(article => article.category === category);
+  return ARTICLES.filter((article) => article.category === category);
 }

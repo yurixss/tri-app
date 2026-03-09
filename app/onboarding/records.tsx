@@ -7,7 +7,13 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { Check, CaretLeft } from 'phosphor-react-native';
 import Colors from '@/constants/Colors';
-import { saveOnboardingData, getOnboardingData, saveBikeTest, saveRunTest, saveSwimTest } from '@/hooks/useStorage';
+import {
+  saveOnboardingData,
+  getOnboardingData,
+  saveBikeTest,
+  saveRunTest,
+  saveSwimTest,
+} from '@/hooks/useStorage';
 import { formatTimeFromSeconds, parseTimeString, isValidTimeFormat } from '@/utils/timeUtils';
 
 interface Record {
@@ -48,7 +54,7 @@ export default function PersonalRecords() {
 
   const getAvailableCategories = (): SportCategory[] => {
     const categories: SportCategory[] = [];
-    
+
     if (sport === 'triathlete') {
       categories.push({
         label: 'FTP Bike',
@@ -114,50 +120,50 @@ export default function PersonalRecords() {
         inputType: 'time',
       });
     }
-    
+
     return categories;
   };
 
   const handleOptionSelect = (category: 'bike' | 'swim' | 'run', option: string) => {
-    setRecords(prev => {
-      const existing = prev.find(r => r.category === category);
+    setRecords((prev) => {
+      const existing = prev.find((r) => r.category === category);
       if (existing) {
-        return prev.map(r => r.category === category ? { ...r, selectedOption: option } : r);
+        return prev.map((r) => (r.category === category ? { ...r, selectedOption: option } : r));
       }
       return [...prev, { category, selectedOption: option, time: '' }];
     });
-    
+
     // Clear error when changing option
     if (errors[category]) {
-      setErrors(prev => ({ ...prev, [category]: '' }));
+      setErrors((prev) => ({ ...prev, [category]: '' }));
     }
   };
 
   const handleTimeChange = (category: 'bike' | 'swim' | 'run', time: string) => {
-    setRecords(prev => {
-      const existing = prev.find(r => r.category === category);
+    setRecords((prev) => {
+      const existing = prev.find((r) => r.category === category);
       if (existing) {
         if (time.trim() === '') {
-          return prev.map(r => r.category === category ? { ...r, time: '' } : r);
+          return prev.map((r) => (r.category === category ? { ...r, time: '' } : r));
         }
-        return prev.map(r => r.category === category ? { ...r, time } : r);
+        return prev.map((r) => (r.category === category ? { ...r, time } : r));
       }
       if (time.trim() !== '') {
         return [...prev, { category, selectedOption: '', time }];
       }
       return prev;
     });
-    
+
     // Clear error when user starts typing
     if (errors[category]) {
-      setErrors(prev => ({ ...prev, [category]: '' }));
+      setErrors((prev) => ({ ...prev, [category]: '' }));
     }
   };
 
   const validateRecords = () => {
     const newErrors: { [key: string]: string } = {};
-    
-    records.forEach(record => {
+
+    records.forEach((record) => {
       if (record.time && record.time.trim() !== '') {
         if (record.category === 'bike') {
           // Validate FTP as number
@@ -172,19 +178,17 @@ export default function PersonalRecords() {
         }
       }
     });
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleComplete = async () => {
     // Filter out empty records before saving
-    const validRecords = records.filter(record => 
-      record.time && 
-      record.time.trim() !== '' && 
-      record.selectedOption
+    const validRecords = records.filter(
+      (record) => record.time && record.time.trim() !== '' && record.selectedOption,
     );
-    
+
     // Save onboarding data
     await saveOnboardingData({
       records: validRecords,
@@ -231,21 +235,21 @@ export default function PersonalRecords() {
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
             Recordes Pessoais
           </ThemedText>
-          
+
           <ThemedText style={styles.subtitle}>
             Adicione seus melhores tempos e FTP (opcional)
           </ThemedText>
 
           <View style={styles.recordsContainer}>
             {getAvailableCategories().map((category) => {
-              const record = records.find(r => r.category === category.type);
-              
+              const record = records.find((r) => r.category === category.type);
+
               return (
                 <View key={category.type} style={styles.recordItem}>
                   <ThemedText style={styles.categoryLabel} fontFamily="Inter-Bold">
                     {category.label}
                   </ThemedText>
-                  
+
                   {/* Option selector */}
                   <View style={styles.optionsContainer}>
                     {category.options.map((option) => (
@@ -253,48 +257,54 @@ export default function PersonalRecords() {
                         key={option.value}
                         style={[
                           styles.optionButton,
-                          record?.selectedOption === option.value && styles.optionButtonSelected
+                          record?.selectedOption === option.value && styles.optionButtonSelected,
                         ]}
                         onPress={() => handleOptionSelect(category.type, option.value)}
                       >
                         <ThemedText
                           style={[
                             styles.optionText,
-                            record?.selectedOption === option.value && styles.optionTextSelected
+                            record?.selectedOption === option.value && styles.optionTextSelected,
                           ]}
-                          fontFamily={record?.selectedOption === option.value ? "Inter-SemiBold" : "Inter-Medium"}
+                          fontFamily={
+                            record?.selectedOption === option.value
+                              ? 'Inter-SemiBold'
+                              : 'Inter-Medium'
+                          }
                         >
                           {option.label}
                         </ThemedText>
                       </Pressable>
                     ))}
                   </View>
-                  
+
                   {/* Time input - only show if option is selected */}
                   {record?.selectedOption && (
                     <View style={styles.inputContainer}>
                       <ThemedInput
-                        label={category.inputType === 'ftp' ? "FTP (watts)" : "Tempo (MM:SS)"}
+                        label={category.inputType === 'ftp' ? 'FTP (watts)' : 'Tempo (MM:SS)'}
                         value={record?.time || ''}
                         onChangeText={(time) => handleTimeChange(category.type, time)}
                         placeholder={category.placeholder}
-                        keyboardType={category.inputType === 'ftp' ? "numeric" : "default"}
+                        keyboardType={category.inputType === 'ftp' ? 'numeric' : 'default'}
                         error={errors[category.type]}
                       />
-                      
-                      {record?.time && (
-                        category.inputType === 'ftp'
-                          ? !errors[category.type] && !isNaN(Number(record.time)) && Number(record.time) > 0 && (
+
+                      {record?.time &&
+                        (category.inputType === 'ftp'
+                          ? !errors[category.type] &&
+                            !isNaN(Number(record.time)) &&
+                            Number(record.time) > 0 && (
                               <View style={styles.checkmark}>
                                 <Check size={20} color={Colors.light.success} weight="regular" />
                               </View>
                             )
-                          : isValidTimeFormat(record.time) && !errors[category.type] && (
+                          : isValidTimeFormat(record.time) &&
+                            !errors[category.type] && (
                               <View style={styles.checkmark}>
                                 <Check size={20} color={Colors.light.success} weight="regular" />
                               </View>
-                            )
-                      )}
+                            ))}
                     </View>
                   )}
                 </View>
@@ -305,11 +315,7 @@ export default function PersonalRecords() {
       </ScrollView>
 
       <View style={styles.buttonsContainer}>
-        <ThemedButton
-          title="Continuar"
-          color={Colors.shared.primary}
-          onPress={handleComplete}
-        />
+        <ThemedButton title="Continuar" color={Colors.shared.primary} onPress={handleComplete} />
 
         <Pressable style={styles.skipButton} onPress={handleSkip}>
           <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>

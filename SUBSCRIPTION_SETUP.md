@@ -2,7 +2,7 @@
 
 ## ✅ Implementação Concluída
 
-O sistema de assinatura mensal com 14 dias grátis foi implementado com sucesso! 
+O sistema de assinatura mensal com 14 dias grátis foi implementado com sucesso!
 
 ### 📋 Funcionalidades Implementadas:
 
@@ -29,6 +29,7 @@ O sistema de assinatura mensal com 14 dias grátis foi implementado com sucesso!
 ### 🛠 Para Produção:
 
 #### 1. Configurar RevenueCat (Recomendado)
+
 ```bash
 # Instalar SDK do RevenueCat
 npm install react-native-purchases
@@ -39,19 +40,19 @@ npm install react-native-purchases
 ```
 
 #### 2. Configurar App Store Connect / Google Play Console
+
 - Criar produtos de assinatura (monthly_premium, yearly_premium)
 - Configurar preços regionais
 - Definir grupos de assinatura
 
 #### 3. Adicionar Mais Funcionalidades Premium
+
 Para tornar qualquer tela premium, basta envolver com `PremiumGate`:
 
 ```jsx
 import PremiumGate from '@/components/PremiumGate';
 
-<PremiumGate feature="nome da funcionalidade">
-  {/* Conteúdo premium aqui */}
-</PremiumGate>
+<PremiumGate feature="nome da funcionalidade">{/* Conteúdo premium aqui */}</PremiumGate>;
 ```
 
 ### 🎯 Funcionalidades Ativas:

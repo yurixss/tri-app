@@ -9,7 +9,12 @@ type Props = {
   accessibilityLabel?: string;
 };
 
-export const ScrollToTopButton: React.FC<Props> = ({ visible, onPress, style, accessibilityLabel }) => {
+export const ScrollToTopButton: React.FC<Props> = ({
+  visible,
+  onPress,
+  style,
+  accessibilityLabel,
+}) => {
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

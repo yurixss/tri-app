@@ -8,7 +8,7 @@ interface HeaderProps {
   title: string;
   subtitle?: string;
   color?: string;
-  onBackPress?: () => void; 
+  onBackPress?: () => void;
 }
 
 export function Header({ title, subtitle, color, onBackPress }: HeaderProps) {
@@ -22,21 +22,15 @@ export function Header({ title, subtitle, color, onBackPress }: HeaderProps) {
           </TouchableOpacity>
         )}
         <View style={styles.titleContainer}>
-          <ThemedText 
-            style={[
-              styles.title, 
-              subtitle ? { marginBottom: 8 } : null,  
-            ]}
+          <ThemedText
+            style={[styles.title, subtitle ? { marginBottom: 8 } : null]}
             fontFamily="Inter-Bold"
           >
             {title}
           </ThemedText>
-          
+
           {subtitle && (
-            <ThemedText 
-              style={styles.subtitle}
-              fontFamily="Inter-Regular"
-            >
+            <ThemedText style={styles.subtitle} fontFamily="Inter-Regular">
               {subtitle}
             </ThemedText>
           )}

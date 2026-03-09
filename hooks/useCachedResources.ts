@@ -25,7 +25,7 @@ export default function useCachedResources() {
     async function loadResourcesAndDataAsync() {
       try {
         // Load resources, API calls, etc. here
-        
+
         // Keep the splash screen visible until fonts are loaded
         if (fontsLoaded || fontError) {
           SplashScreen.hideAsync();

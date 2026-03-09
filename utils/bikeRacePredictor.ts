@@ -1,10 +1,10 @@
 /**
  * Módulo de Previsão de Tempo de Prova de Ciclismo
  * Baseado em modelo físico de potência vs resistências
- * 
+ *
  * Equação fundamental:
  * P_disponível = P_ar + P_rolagem + P_gravidade
- * 
+ *
  * Onde:
  * - P_ar: potência contra resistência do ar
  * - P_rolagem: potência contra resistência de rolagem
@@ -105,7 +105,7 @@ const PHYSICAL_CONSTANTS = {
 // ============================================================================
 
 export const DEFAULT_CONDITIONS: EnvironmentConditions = {
-  cda: 0.30,
+  cda: 0.3,
   crr: 0.004,
   temperature: 20,
   altitude: 0,
@@ -119,20 +119,15 @@ export const DEFAULT_CONDITIONS: EnvironmentConditions = {
 
 /**
  * Calcula a densidade do ar ajustada por temperatura e altitude
- * 
+ *
  * @param temperature Temperatura em °C
  * @param altitude Altitude em metros
  * @returns Densidade do ar em kg/m³
  */
-function calculateAirDensity(
-  temperature: number,
-  altitude: number
-): number {
+function calculateAirDensity(temperature: number, altitude: number): number {
   // Ajuste por temperatura: rho = rho_base * (T_ref / T)
   const tempKelvin = temperature + PHYSICAL_CONSTANTS.TEMP_REFERENCE;
-  const rhoTemp =
-    PHYSICAL_CONSTANTS.RHO_BASE *
-    (PHYSICAL_CONSTANTS.TEMP_REFERENCE / tempKelvin);
+  const rhoTemp = PHYSICAL_CONSTANTS.RHO_BASE * (PHYSICAL_CONSTANTS.TEMP_REFERENCE / tempKelvin);
 
   // Ajuste por altitude: rho = rho * exp(-altitude / 8435)
   // (8435m é a altura de escala da atmosfera)
@@ -144,7 +139,7 @@ function calculateAirDensity(
 /**
  * Calcula a potência contra resistência do ar
  * P_ar = 0.5 * rho * CdA * (v + vento)³
- * 
+ *
  * @param velocity Velocidade em m/s
  * @param airDensity Densidade do ar em kg/m³
  * @param cda Coeficiente aerodinâmico em m²
@@ -155,7 +150,7 @@ function calculateAirResistancePower(
   velocity: number,
   airDensity: number,
   cda: number,
-  wind: number
+  wind: number,
 ): number {
   const vAir = velocity + wind;
   // Evitar valores negativos
@@ -166,40 +161,32 @@ function calculateAirResistancePower(
 /**
  * Calcula a potência contra resistência de rolagem
  * P_rolagem = Crr * massa_total * g * v
- * 
+ *
  * @param velocity Velocidade em m/s
  * @param mass Massa total em kg
  * @param crr Coeficiente de rolagem
  * @returns Potência em watts
  */
-function calculateRollingResistancePower(
-  velocity: number,
-  mass: number,
-  crr: number
-): number {
+function calculateRollingResistancePower(velocity: number, mass: number, crr: number): number {
   return crr * mass * PHYSICAL_CONSTANTS.GRAVITY * velocity;
 }
 
 /**
  * Calcula a potência contra gravidade em subidas/descidas
  * P_gravidade = massa_total * g * v * (gradiente / 100)
- * 
+ *
  * @param velocity Velocidade em m/s
  * @param mass Massa total em kg
  * @param gradient Inclinação em porcentagem
  * @returns Potência em watts
  */
-function calculateGravityPower(
-  velocity: number,
-  mass: number,
-  gradient: number
-): number {
+function calculateGravityPower(velocity: number, mass: number, gradient: number): number {
   return mass * PHYSICAL_CONSTANTS.GRAVITY * velocity * (gradient / 100);
 }
 
 /**
  * Calcula a potência total necessária para uma dada velocidade
- * 
+ *
  * @param velocity Velocidade em m/s
  * @param mass Massa total em kg
  * @param gradient Inclinação em %
@@ -216,7 +203,7 @@ function calculateTotalPower(
   airDensity: number,
   cda: number,
   crr: number,
-  wind: number
+  wind: number,
 ): number {
   const pAir = calculateAirResistancePower(velocity, airDensity, cda, wind);
   const pRolling = calculateRollingResistancePower(velocity, mass, crr);
@@ -227,7 +214,7 @@ function calculateTotalPower(
 /**
  * Resolve a velocidade usando método de busca binária
  * Encontra a velocidade v tal que totalPower(v) = availablePower
- * 
+ *
  * @param availablePower Potência disponível em watts
  * @param mass Massa total em kg
  * @param gradient Inclinação em %
@@ -244,7 +231,7 @@ function solveVelocityBinarySearch(
   airDensity: number,
   cda: number,
   crr: number,
-  wind: number
+  wind: number,
 ): number {
   // Limites de busca
   // Mínimo: muito lento (0.1 m/s ≈ 0.36 km/h)
@@ -258,15 +245,7 @@ function solveVelocityBinarySearch(
 
   for (let i = 0; i < MAX_ITERATIONS; i++) {
     const vMid = (vMin + vMax) / 2;
-    const powerMid = calculateTotalPower(
-      vMid,
-      mass,
-      gradient,
-      airDensity,
-      cda,
-      crr,
-      wind
-    );
+    const powerMid = calculateTotalPower(vMid, mass, gradient, airDensity, cda, crr, wind);
 
     const error = powerMid - availablePower;
 
@@ -297,7 +276,7 @@ function solveVelocityBinarySearch(
 
 /**
  * Prediz o tempo de prova de ciclismo baseado em modelo físico
- * 
+ *
  * @param athlete Perfil do atleta
  * @param race Perfil da prova
  * @param conditions Condições ambientais (opcional, usa padrões)
@@ -306,7 +285,7 @@ function solveVelocityBinarySearch(
 export function predictRaceTime(
   athlete: AthleteProfile,
   race: RaceProfile,
-  conditions: Partial<EnvironmentConditions> = {}
+  conditions: Partial<EnvironmentConditions> = {},
 ): RacePrediction {
   // Mesclar condições com padrões
   const env: EnvironmentConditions = {
@@ -329,8 +308,7 @@ export function predictRaceTime(
   }
 
   // Calcular potência disponível
-  const availablePower =
-    (athlete.ftp * athlete.ftpPercentage * env.transmissionEfficiency) / 100;
+  const availablePower = (athlete.ftp * athlete.ftpPercentage * env.transmissionEfficiency) / 100;
 
   // Massa total
   const totalMass = athlete.athleteWeight + athlete.bikeWeight;
@@ -354,7 +332,7 @@ export function predictRaceTime(
       airDensity,
       env.cda,
       env.crr,
-      env.wind
+      env.wind,
     );
 
     // Calcular tempo do segmento
@@ -369,7 +347,7 @@ export function predictRaceTime(
       airDensity,
       env.cda,
       env.crr,
-      env.wind
+      env.wind,
     );
 
     segmentResults.push({
@@ -408,9 +386,7 @@ export function formatRaceTime(seconds: number): string {
   const secs = Math.floor(seconds % 60);
 
   if (hours > 0) {
-    return `${hours}h ${minutes.toString().padStart(2, '0')}m ${secs
-      .toString()
-      .padStart(2, '0')}s`;
+    return `${hours}h ${minutes.toString().padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
   }
   return `${minutes}m ${secs.toString().padStart(2, '0')}s`;
 }
@@ -420,9 +396,7 @@ export function formatRaceTime(seconds: number): string {
  */
 export function validateRaceProfile(race: Partial<RaceProfile>): boolean {
   if (!race.segments || race.segments.length === 0) return false;
-  return race.segments.every(
-    (s) => s.distance > 0 && typeof s.gradient === 'number'
-  );
+  return race.segments.every((s) => s.distance > 0 && typeof s.gradient === 'number');
 }
 
 /**

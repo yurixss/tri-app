@@ -58,10 +58,10 @@ const TOOLS = [
 ] as const;
 
 const TOOL_ICONS: Record<string, React.ComponentType<any>> = {
-  'package': Package,
-  'wrench': Wrench,
-  'timer': Timer,
-  'toolbox': Toolbox,
+  package: Package,
+  wrench: Wrench,
+  timer: Timer,
+  toolbox: Toolbox,
 };
 
 /**
@@ -103,8 +103,8 @@ export default function ManualScreen() {
             profile?.experience === 'advanced'
               ? 'elite'
               : profile?.experience === 'intermediate'
-              ? 'competitivo'
-              : 'iniciante',
+                ? 'competitivo'
+                : 'iniciante',
         });
         setSmartPicks(result.essential.slice(0, 4));
       } else {
@@ -158,8 +158,12 @@ export default function ManualScreen() {
                 onPress={() => router.push(tool.route as any)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.toolIconBox, { backgroundColor: `${Colors.shared.primary}10` }]}>
-                  {IconComponent && <IconComponent size={26} color={Colors.shared.primary} weight="bold" />}
+                <View
+                  style={[styles.toolIconBox, { backgroundColor: `${Colors.shared.primary}10` }]}
+                >
+                  {IconComponent && (
+                    <IconComponent size={26} color={Colors.shared.primary} weight="bold" />
+                  )}
                 </View>
                 <ThemedText style={styles.toolTitle} fontFamily="Inter-SemiBold">
                   {tool.title}
@@ -218,11 +222,7 @@ export default function ManualScreen() {
                       {catConfig?.label}
                     </ThemedText>
                   </View>
-                  <ThemedText
-                    style={styles.pickName}
-                    fontFamily="Inter-SemiBold"
-                    numberOfLines={2}
-                  >
+                  <ThemedText style={styles.pickName} fontFamily="Inter-SemiBold" numberOfLines={2}>
                     {product.name}
                   </ThemedText>
                   {product.performanceGainEstimate && (

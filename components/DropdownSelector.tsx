@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Modal, FlatList } from 'react-native';
 import { ThemedText } from './ThemedText';
-import { useThemeColor } from '../constants/Styles';
-import { commonStyles } from '../constants/Styles';
+import { useThemeColor, commonStyles } from '../constants/Styles';
 import { CaretDown } from 'phosphor-react-native';
 
 interface DropdownOption {
@@ -31,7 +30,7 @@ export function DropdownSelector({
   const borderColor = useThemeColor({}, 'border');
   const tintColor = useThemeColor({}, 'tint');
 
-  const selectedOption = options.find(opt => opt.value === selectedValue);
+  const selectedOption = options.find((opt) => opt.value === selectedValue);
 
   const handleSelect = (value: string) => {
     onValueChange(value);
@@ -40,30 +39,24 @@ export function DropdownSelector({
 
   return (
     <View style={styles.container}>
-      <ThemedText 
-        style={commonStyles.inputLabel}
-        fontFamily="Inter-Medium"
-      >
+      <ThemedText style={commonStyles.inputLabel} fontFamily="Inter-Medium">
         {label}
       </ThemedText>
-      
+
       <TouchableOpacity
         style={[
           commonStyles.input,
           styles.dropdown,
-          { 
-            backgroundColor, 
+          {
+            backgroundColor,
             borderColor,
-          }
+          },
         ]}
         onPress={() => setIsOpen(true)}
         activeOpacity={0.7}
       >
-        <ThemedText 
-          style={[
-            styles.dropdownText,
-            { color: selectedOption ? textColor : '#9CA3AF' }
-          ]}
+        <ThemedText
+          style={[styles.dropdownText, { color: selectedOption ? textColor : '#9CA3AF' }]}
         >
           {selectedOption ? selectedOption.label : placeholder}
         </ThemedText>
@@ -81,11 +74,8 @@ export function DropdownSelector({
           activeOpacity={1}
           onPress={() => setIsOpen(false)}
         >
-          <View 
-            style={[
-              styles.modalContent,
-              { backgroundColor, borderColor }
-            ]}
+          <View
+            style={[styles.modalContent, { backgroundColor, borderColor }]}
             onStartShouldSetResponder={() => true}
           >
             <FlatList
@@ -97,7 +87,7 @@ export function DropdownSelector({
                     styles.option,
                     selectedValue === item.value && {
                       backgroundColor: tintColor + '20',
-                    }
+                    },
                   ]}
                   onPress={() => handleSelect(item.value)}
                   activeOpacity={0.7}
@@ -108,7 +98,7 @@ export function DropdownSelector({
                       selectedValue === item.value && {
                         color: tintColor,
                         fontFamily: 'Inter-SemiBold',
-                      }
+                      },
                     ]}
                   >
                     {item.label}
@@ -127,8 +117,7 @@ export function DropdownSelector({
 }
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   dropdown: {
     flexDirection: 'row',
     alignItems: 'center',

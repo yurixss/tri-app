@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { ThemedText } from './ThemedText';
-import { useThemeColor } from '../constants/Styles';
-import { commonStyles } from '../constants/Styles';
+import { useThemeColor, commonStyles } from '../constants/Styles';
 
 interface RadioOption {
   label: string;
@@ -33,14 +32,11 @@ export function RadioSelector({
   return (
     <View style={styles.container}>
       {label && (
-        <ThemedText 
-          style={commonStyles.inputLabel}
-          fontFamily="Inter-Medium"
-        >
+        <ThemedText style={commonStyles.inputLabel} fontFamily="Inter-Medium">
           {label}
         </ThemedText>
       )}
-      
+
       <View style={[commonStyles.radioGroup, horizontal && styles.horizontalGroup]}>
         {options.map((option) => (
           <TouchableOpacity
@@ -48,19 +44,14 @@ export function RadioSelector({
             style={[commonStyles.radioButton, horizontal && styles.horizontalButton]}
             onPress={() => onValueChange(option.value)}
           >
-            <View 
+            <View
               style={[
-                commonStyles.radioCircle, 
-                { borderColor: selectedValue === option.value ? tintColor : borderColor }
+                commonStyles.radioCircle,
+                { borderColor: selectedValue === option.value ? tintColor : borderColor },
               ]}
             >
               {selectedValue === option.value && (
-                <View 
-                  style={[
-                    commonStyles.selectedRadioCircle, 
-                    { backgroundColor: tintColor }
-                  ]} 
-                />
+                <View style={[commonStyles.selectedRadioCircle, { backgroundColor: tintColor }]} />
               )}
             </View>
             <ThemedText>{option.label}</ThemedText>

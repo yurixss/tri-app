@@ -2,34 +2,34 @@
 // Primary blue dominates. Sport-specific colors used only where
 // differentiation is essential (zone screens).
 
-const primary = '#2563EB';       // Vibrant blue (main brand color)
-const primaryDark = '#1D4ED8';   // Darker variant for pressed states
-const primaryLight = '#3B82F6';  // Lighter variant for dark-mode tint
+const primary = '#2563EB'; // Vibrant blue (main brand color)
+const primaryDark = '#1D4ED8'; // Darker variant for pressed states
+const primaryLight = '#3B82F6'; // Lighter variant for dark-mode tint
 
-const blackCarbon = '#0F172A';   // Slate 900 – deep dark background
-const graphiteDark = '#1E293B';  // Slate 800 – dark card surface
-const slateGray = '#334155';     // Slate 700 – dark borders
+const blackCarbon = '#0F172A'; // Slate 900 – deep dark background
+const graphiteDark = '#1E293B'; // Slate 800 – dark card surface
+const slateGray = '#334155'; // Slate 700 – dark borders
 
 const pureWhite = '#FFFFFF';
 
-const gray500 = '#64748B';       // Slate 500 – secondary text
-const gray400 = '#94A3B8';       // Slate 400 – muted/placeholder
-const gray300 = '#CBD5E1';       // Slate 300 – light borders
-const gray100 = '#F1F5F9';       // Slate 100 – subtle background
+const gray500 = '#64748B'; // Slate 500 – secondary text
+const gray400 = '#94A3B8'; // Slate 400 – muted/placeholder
+const gray300 = '#CBD5E1'; // Slate 300 – light borders
+const gray100 = '#F1F5F9'; // Slate 100 – subtle background
 
 // Accent
-const accent = '#06B6D4';        // Cyan 500
-const accentLight = '#22D3EE';   // Cyan 400
+const accent = '#06B6D4'; // Cyan 500
+const accentLight = '#22D3EE'; // Cyan 400
 
 export default {
   light: {
     text: '#0F172A',
-    background: '#F8FAFC',          // Slate 50
+    background: '#F8FAFC', // Slate 50
     tint: primary,
     tabIconDefault: gray400,
     tabIconSelected: primary,
     cardBackground: pureWhite,
-    border: '#E2E8F0',              // Slate 200
+    border: '#E2E8F0', // Slate 200
     notification: accent,
     error: '#EF4444',
     success: '#10B981',

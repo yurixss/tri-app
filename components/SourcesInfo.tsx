@@ -8,11 +8,11 @@ interface Citation {
   category: string;
   title: string;
   description: string;
-  sources: Array<{
+  sources: {
     name: string;
     detail: string;
     url: string;
-  }>;
+  }[];
 }
 
 interface SourcesInfoProps {
@@ -34,8 +34,9 @@ export function SourcesInfo({ citations }: SourcesInfoProps) {
   return (
     <ThemedView>
       <ThemedText style={styles.disclaimer}>
-        Todas as recomendações neste aplicativo são baseadas em diretrizes estabelecidas de ciência do esporte e saúde.
-        Consulte um profissional de saúde antes de fazer mudanças significativas em seu treinamento ou nutrição.
+        Todas as recomendações neste aplicativo são baseadas em diretrizes estabelecidas de ciência
+        do esporte e saúde. Consulte um profissional de saúde antes de fazer mudanças significativas
+        em seu treinamento ou nutrição.
       </ThemedText>
 
       {citations.map((citation, index) => (
@@ -54,9 +55,7 @@ export function SourcesInfo({ citations }: SourcesInfoProps) {
             {citation.title}
           </ThemedText>
 
-          <ThemedText style={styles.description}>
-            {citation.description}
-          </ThemedText>
+          <ThemedText style={styles.description}>{citation.description}</ThemedText>
 
           <ThemedText
             style={[styles.sourcesLabel, { color: Colors.shared.primary }]}
@@ -70,19 +69,12 @@ export function SourcesInfo({ citations }: SourcesInfoProps) {
               <ThemedText style={styles.sourceName} fontFamily="Inter-Bold">
                 • {source.name}
               </ThemedText>
-              <ThemedText style={styles.sourceDetail}>
-                {source.detail}
-              </ThemedText>
+              <ThemedText style={styles.sourceDetail}>{source.detail}</ThemedText>
               <TouchableOpacity
                 onPress={() => handleOpenUrl(source.url)}
-                style={[
-                  styles.linkButton,
-                  { borderColor: Colors.shared.primary },
-                ]}
+                style={[styles.linkButton, { borderColor: Colors.shared.primary }]}
               >
-                <ThemedText
-                  style={[styles.linkText, { color: Colors.shared.primary }]}
-                >
+                <ThemedText style={[styles.linkText, { color: Colors.shared.primary }]}>
                   Abrir fonte →
                 </ThemedText>
               </TouchableOpacity>
@@ -92,7 +84,8 @@ export function SourcesInfo({ citations }: SourcesInfoProps) {
       ))}
 
       <ThemedText style={styles.footer}>
-        As informações fornecidas por este aplicativo são apenas para fins educacionais e não substituem o conselho médico profissional.
+        As informações fornecidas por este aplicativo são apenas para fins educacionais e não
+        substituem o conselho médico profissional.
       </ThemedText>
     </ThemedView>
   );

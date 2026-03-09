@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, ScrollView, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -31,7 +25,17 @@ import {
   SegmentEditor,
   AdvancedSettings,
 } from '@/components/BikeRaceInputs';
-import { Lightning, PencilSimple, WarningCircle, Lightbulb, Timer, Gauge, MapPin, CaretDown, CaretUp } from 'phosphor-react-native';
+import {
+  Lightning,
+  PencilSimple,
+  WarningCircle,
+  Lightbulb,
+  Timer,
+  Gauge,
+  MapPin,
+  CaretDown,
+  CaretUp,
+} from 'phosphor-react-native';
 
 interface RaceInput {
   athleteWeight: string;
@@ -79,9 +83,7 @@ export default function BikeRacePredictorScreen() {
     athleteWeight: '70',
     bikeWeight: '7',
     ftpPercentage: '85',
-    segments: [
-      { distance: 20, gradient: 0 },
-    ],
+    segments: [{ distance: 20, gradient: 0 }],
   });
 
   // Estado das condições ambientais
@@ -124,12 +126,7 @@ export default function BikeRacePredictorScreen() {
       const bikeWeight = parseFloat(input.bikeWeight);
       const ftpPercentage = parseFloat(input.ftpPercentage);
 
-      if (
-        !athleteWeight ||
-        athleteWeight <= 0 ||
-        !bikeWeight ||
-        bikeWeight <= 0
-      ) {
+      if (!athleteWeight || athleteWeight <= 0 || !bikeWeight || bikeWeight <= 0) {
         setError('Peso do atleta e da bicicleta devem ser positivos');
         return;
       }
@@ -145,8 +142,7 @@ export default function BikeRacePredictorScreen() {
       }
 
       // Calcular estatísticas da prova
-      const { totalDistance, totalElevation } =
-        calculateRaceProfileStats(input.segments);
+      const { totalDistance, totalElevation } = calculateRaceProfileStats(input.segments);
 
       if (totalDistance <= 0) {
         setError('Distância total deve ser maior que 0');
@@ -169,7 +165,7 @@ export default function BikeRacePredictorScreen() {
           totalDistance,
           totalElevation,
         },
-        conditions
+        conditions,
       );
 
       setResult({
@@ -189,11 +185,7 @@ export default function BikeRacePredictorScreen() {
         ftpPercentage,
       });
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Erro ao calcular previsão'
-      );
+      setError(err instanceof Error ? err.message : 'Erro ao calcular previsão');
       console.error('Erro na previsão:', err);
     } finally {
       setIsCalculating(false);
@@ -210,10 +202,7 @@ export default function BikeRacePredictorScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header
-        title="Previsão de Tempo de Prova"
-        onBackPress={() => router.back()}
-      />
+      <Header title="Previsão de Tempo de Prova" onBackPress={() => router.back()} />
 
       <ScrollView
         style={styles.scrollView}
@@ -224,35 +213,18 @@ export default function BikeRacePredictorScreen() {
         {testResults.bike?.ftp && (
           <View style={[styles.infoCard, { backgroundColor: cardBg, borderColor }]}>
             <View style={styles.infoHeader}>
-              <Lightning
-                size={20}
-                color={Colors.shared.primary}
-                weight="bold"
-              />
+              <Lightning size={20} color={Colors.shared.primary} weight="bold" />
               <ThemedText style={styles.infoTitle}>Seu FTP</ThemedText>
             </View>
-            <ThemedText style={styles.ftpValue}>
-              {testResults.bike.ftp} W
-            </ThemedText>
+            <ThemedText style={styles.ftpValue}>{testResults.bike.ftp} W</ThemedText>
             {testResults.bike.date && (
               <ThemedText style={styles.infoDate}>
-                Testado em {new Date(testResults.bike.date).toLocaleDateString(
-                  'pt-BR'
-                )}
+                Testado em {new Date(testResults.bike.date).toLocaleDateString('pt-BR')}
               </ThemedText>
             )}
-            <TouchableOpacity
-              onPress={handleUpdateFTP}
-              style={styles.updateFTPButton}
-            >
-              <PencilSimple
-                size={16}
-                color={Colors.shared.primary}
-                weight="regular"
-              />
-              <ThemedText style={styles.updateFTPButtonText}>
-                Atualizar FTP
-              </ThemedText>
+            <TouchableOpacity onPress={handleUpdateFTP} style={styles.updateFTPButton}>
+              <PencilSimple size={16} color={Colors.shared.primary} weight="regular" />
+              <ThemedText style={styles.updateFTPButtonText}>Atualizar FTP</ThemedText>
             </TouchableOpacity>
           </View>
         )}
@@ -266,9 +238,7 @@ export default function BikeRacePredictorScreen() {
               <NumericInput
                 label="Peso do Atleta"
                 value={input.athleteWeight}
-                onChangeText={(text) =>
-                  setInput({ ...input, athleteWeight: text })
-                }
+                onChangeText={(text) => setInput({ ...input, athleteWeight: text })}
                 suffix="kg"
                 description="Seu peso corporal"
               />
@@ -278,9 +248,7 @@ export default function BikeRacePredictorScreen() {
               <NumericInput
                 label="Peso da Bicicleta"
                 value={input.bikeWeight}
-                onChangeText={(text) =>
-                  setInput({ ...input, bikeWeight: text })
-                }
+                onChangeText={(text) => setInput({ ...input, bikeWeight: text })}
                 suffix="kg"
                 description="Peso total da bicicleta"
               />
@@ -290,9 +258,7 @@ export default function BikeRacePredictorScreen() {
           <SliderInput
             label="Percentual do FTP"
             value={parseFloat(input.ftpPercentage) || 85}
-            onChangeValue={(value) =>
-              setInput({ ...input, ftpPercentage: value.toString() })
-            }
+            onChangeValue={(value) => setInput({ ...input, ftpPercentage: value.toString() })}
             min={50}
             max={150}
             step={1}
@@ -307,9 +273,7 @@ export default function BikeRacePredictorScreen() {
         <View style={styles.section}>
           <SegmentEditor
             segments={input.segments}
-            onSegmentsChange={(segments) =>
-              setInput({ ...input, segments })
-            }
+            onSegmentsChange={(segments) => setInput({ ...input, segments })}
           />
         </View>
 
@@ -319,20 +283,14 @@ export default function BikeRacePredictorScreen() {
             conditions={conditions}
             onConditionsChange={setConditions}
             isExpanded={isAdvancedExpanded}
-            onToggleExpanded={() =>
-              setIsAdvancedExpanded(!isAdvancedExpanded)
-            }
+            onToggleExpanded={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
           />
         </View>
 
         {/* Mensagens de erro */}
         {error && (
           <View style={[styles.errorCard, { borderColor: Colors.shared.run }]}>
-            <WarningCircle
-              size={20}
-              color={Colors.shared.run}
-              weight="regular"
-            />
+            <WarningCircle size={20} color={Colors.shared.run} weight="regular" />
             <ThemedText style={styles.errorText}>{error}</ThemedText>
           </View>
         )}
@@ -393,7 +351,7 @@ function PredictionResultView({
     });
 
     if (Math.abs(maxGradient) > 2) {
-      return maxGradient > 0 
+      return maxGradient > 0
         ? `Subidas acentuadas (até +${maxGradient.toFixed(1)}%) foram o fator mais impactante`
         : `Descidas acentuadas (até ${maxGradient.toFixed(1)}%) reduziram significativamente o esforço`;
     } else if (result.avgPower > 300) {
@@ -415,9 +373,7 @@ function PredictionResultView({
           weight="bold"
           style={{ marginRight: 8 }}
         />
-        <ThemedText style={styles.impactingFactorText}>
-          {getImpactingFactor()}
-        </ThemedText>
+        <ThemedText style={styles.impactingFactorText}>{getImpactingFactor()}</ThemedText>
       </View>
 
       {/* Cards de resultados principais */}
@@ -463,17 +419,11 @@ function PredictionResultView({
         {result.segments.map((segment, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() =>
-              setExpandedSegment(
-                expandedSegment === index ? null : index
-              )
-            }
+            onPress={() => setExpandedSegment(expandedSegment === index ? null : index)}
             style={[styles.segmentRow, { borderColor }]}
           >
             <View style={styles.segmentMainInfo}>
-              <ThemedText style={styles.segmentNumber}>
-                Seg. {segment.index + 1}
-              </ThemedText>
+              <ThemedText style={styles.segmentNumber}>Seg. {segment.index + 1}</ThemedText>
               <View style={styles.segmentQuickStats}>
                 <View style={styles.statBadge}>
                   <ThemedText style={styles.statBadgeLabel}>
@@ -524,24 +474,13 @@ interface ResultCardProps {
   borderColor: string;
 }
 
-function ResultCard({
-  label,
-  value,
-  subValue,
-  icon,
-  cardBg,
-  borderColor,
-}: ResultCardProps) {
+function ResultCard({ label, value, subValue, icon, cardBg, borderColor }: ResultCardProps) {
   return (
     <View style={[styles.resultCard, { backgroundColor: cardBg, borderColor }]}>
-      <View style={styles.resultCardIcon}>
-        {icon}
-      </View>
+      <View style={styles.resultCardIcon}>{icon}</View>
       <ThemedText style={styles.resultCardLabel}>{label}</ThemedText>
       <ThemedText style={styles.resultCardValue}>{value}</ThemedText>
-      {subValue && (
-        <ThemedText style={styles.resultCardSubValue}>{subValue}</ThemedText>
-      )}
+      {subValue && <ThemedText style={styles.resultCardSubValue}>{subValue}</ThemedText>}
     </View>
   );
 }
@@ -566,14 +505,9 @@ function SegmentDetailCard({ segment }: SegmentDetailCardProps) {
       />
       <DetailRow
         label="Tempo"
-        value={`${Math.floor(segment.timeSeconds / 60)}m ${Math.round(
-          segment.timeSeconds % 60
-        )}s`}
+        value={`${Math.floor(segment.timeSeconds / 60)}m ${Math.round(segment.timeSeconds % 60)}s`}
       />
-      <DetailRow
-        label="Potência Necessária"
-        value={`${Math.round(segment.power)} W`}
-      />
+      <DetailRow label="Potência Necessária" value={`${Math.round(segment.power)} W`} />
       <DetailRow
         label="Inclinação"
         value={
@@ -598,9 +532,7 @@ function DetailRow({ label, value, subValue }: DetailRowProps) {
       <ThemedText style={styles.detailLabel}>{label}</ThemedText>
       <View>
         <ThemedText style={styles.detailValue}>{value}</ThemedText>
-        {subValue && (
-          <ThemedText style={styles.detailSubValue}>{subValue}</ThemedText>
-        )}
+        {subValue && <ThemedText style={styles.detailSubValue}>{subValue}</ThemedText>}
       </View>
     </View>
   );

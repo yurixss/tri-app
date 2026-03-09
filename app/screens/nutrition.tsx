@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Modal, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedInput } from '@/components/ThemedInput';
@@ -8,9 +16,12 @@ import { RadioSelector } from '@/components/RadioSelector';
 import { Header } from '@/components/Header';
 import { SourcesInfo } from '@/components/SourcesInfo';
 import Colors from '@/constants/Colors';
-import { commonStyles } from '@/constants/Styles';
-import { useThemeColor } from '@/constants/Styles';
-import { formatTimeFromSeconds, parseTimeStringWithoutSeconds, isValidTimeFormatWithoutSeconds } from '@/utils/timeUtils';
+import { commonStyles, useThemeColor } from '@/constants/Styles';
+import {
+  formatTimeFromSeconds,
+  parseTimeStringWithoutSeconds,
+  isValidTimeFormatWithoutSeconds,
+} from '@/utils/timeUtils';
 import { NUTRITION_CITATIONS } from '@/utils/citations';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -22,12 +33,15 @@ interface NutritionProfile {
   gender: 'male' | 'female';
 }
 
-
 export default function NutritionScreen() {
   const [trainingTime, setTrainingTime] = useState('');
   const [temperature, setTemperature] = useState('');
   const [intensity, setIntensity] = useState<'low' | 'moderate' | 'high'>('moderate');
-  const [profile, setProfile] = useState<NutritionProfile>({ weight: '', height: '', gender: 'male' });
+  const [profile, setProfile] = useState<NutritionProfile>({
+    weight: '',
+    height: '',
+    gender: 'male',
+  });
   const [error, setError] = useState('');
   const [calculatedValues, setCalculatedValues] = useState<{
     carbs: number;
@@ -39,7 +53,7 @@ export default function NutritionScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [showSources, setShowSources] = useState(false);
-  
+
   const accentColor = Colors.shared.primary;
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
@@ -56,13 +70,12 @@ export default function NutritionScreen() {
     { category: 'Nutrition', ...NUTRITION_CITATIONS.hydration },
   ];
 
-
   // Reload profile when the tab/screen is focused so changes from the Profile screen
   // are reflected without requiring a full remount (Tabs keep screens mounted).
   useFocusEffect(
     useCallback(() => {
       loadProfile();
-    }, [])
+    }, []),
   );
 
   const loadProfile = async () => {
@@ -141,7 +154,8 @@ export default function NutritionScreen() {
         moderate: 1.2,
         high: 1.5,
       };
-      let hydration = baseHydration * timeInHours * intensityHydrationFactor[intensity] * weightFactor;
+      let hydration =
+        baseHydration * timeInHours * intensityHydrationFactor[intensity] * weightFactor;
       // Ajuste por temperatura: acima de 25°C, aumenta 10% a cada 5°C
       const temp = parseFloat(temperature);
       if (!isNaN(temp) && temp > 25) {
@@ -150,7 +164,8 @@ export default function NutritionScreen() {
       }
       const recommendedHydration = Math.round(hydration);
       // Carbs per hour suggestion (avoid divide by zero)
-      const carbsPerHour = timeInHours > 0 ? Math.round(recommendedCarbs / timeInHours) : recommendedCarbs;
+      const carbsPerHour =
+        timeInHours > 0 ? Math.round(recommendedCarbs / timeInHours) : recommendedCarbs;
       setCalculatedValues({
         carbs: recommendedCarbs,
         carbsPerHour,
@@ -175,9 +190,7 @@ export default function NutritionScreen() {
           color={accentColor}
           onBackPress={handleBack}
         />
-        <ThemedText style={styles.noProfileText}>
-          Por favor, aguarde...
-        </ThemedText>
+        <ThemedText style={styles.noProfileText}>Por favor, aguarde...</ThemedText>
       </ThemedView>
     );
   }
@@ -186,7 +199,7 @@ export default function NutritionScreen() {
     console.log('Profile check failed:', {
       weight: profile.weight,
       height: profile.height,
-      gender: profile.gender
+      gender: profile.gender,
     });
     return (
       <ThemedView style={styles.container}>
@@ -197,7 +210,8 @@ export default function NutritionScreen() {
           onBackPress={handleBack}
         />
         <ThemedText style={styles.noProfileText}>
-          Para obter recomendações de nutrição precisas, preencha seu perfil com peso, altura e gênero.
+          Para obter recomendações de nutrição precisas, preencha seu perfil com peso, altura e
+          gênero.
         </ThemedText>
         <ThemedButton
           title="Ir para Perfil"
@@ -214,25 +228,21 @@ export default function NutritionScreen() {
       style={{ flex: 1 }}
     >
       <ThemedView style={styles.container}>
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <Header
-            title="Calculadora de Nutrição"
-            color={accentColor}
-            onBackPress={handleBack}
-          />
-          
-          <View 
+          <Header title="Calculadora de Nutrição" color={accentColor} onBackPress={handleBack} />
+
+          <View
             style={[
-              styles.card, 
-              { 
+              styles.card,
+              {
                 backgroundColor: cardBg,
                 borderColor: borderColor,
                 borderWidth: 1,
-              }
+              },
             ]}
           >
             <ThemedInput
@@ -263,7 +273,7 @@ export default function NutritionScreen() {
               selectedValue={intensity}
               onValueChange={(value) => setIntensity(value as 'low' | 'moderate' | 'high')}
             />
-            
+
             <ThemedButton
               title="Calcular"
               color={accentColor}
@@ -271,108 +281,136 @@ export default function NutritionScreen() {
               isLoading={isLoading}
             />
           </View>
-          
+
           {calculatedValues && (
-            <View 
+            <View
               style={[
                 styles.card,
-                { 
+                {
                   backgroundColor: cardBg,
                   borderColor: borderColor,
                   borderWidth: 1,
-                }
+                },
               ]}
             >
-              <ThemedText 
+              <ThemedText
                 style={[styles.resultsTitle, { color: accentColor }]}
                 fontFamily="Inter-Bold"
               >
                 Ingestão Recomendada
               </ThemedText>
 
-              <ThemedText style={{textAlign: 'center', marginBottom: 8, fontSize: 16, color: accentColor}}>
+              <ThemedText
+                style={{ textAlign: 'center', marginBottom: 8, fontSize: 16, color: accentColor }}
+              >
                 Temperatura considerada: {temperature ? `${temperature}°C` : 'não informada'}
               </ThemedText>
-              
+
               <View style={styles.resultGrid}>
-                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
-                  <ThemedText 
+                <View
+                  style={[
+                    styles.resultItem,
+                    { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg },
+                  ]}
+                >
+                  <ThemedText
                     style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.carbs}g
                   </ThemedText>
-                  <ThemedText style={[styles.resultPerHour, { color: accentColor }]}>~{calculatedValues.carbsPerHour} g/h</ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
+                  <ThemedText style={[styles.resultPerHour, { color: accentColor }]}>
+                    ~{calculatedValues.carbsPerHour} g/h
+                  </ThemedText>
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}>
                     Carboidratos
                   </ThemedText>
-                  <ThemedText style={styles.resultDescription}>
-                    Durante o treino
-                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>Durante o treino</ThemedText>
                 </View>
-                
-                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
-                  <ThemedText 
+
+                <View
+                  style={[
+                    styles.resultItem,
+                    { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg },
+                  ]}
+                >
+                  <ThemedText
                     style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.sodium}mg
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}>
                     Sódio
                   </ThemedText>
-                  <ThemedText style={styles.resultDescription}>
-                    Eletrólitos
-                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>Eletrólitos</ThemedText>
                 </View>
 
-                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
-                  <ThemedText 
+                <View
+                  style={[
+                    styles.resultItem,
+                    { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg },
+                  ]}
+                >
+                  <ThemedText
                     style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.protein}g
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}>
                     Proteína
                   </ThemedText>
-                  <ThemedText style={styles.resultDescription}>
-                    Pós-treino
-                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>Pós-treino</ThemedText>
                 </View>
 
-                <View style={[styles.resultItem, { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg }]}> 
-                  <ThemedText 
+                <View
+                  style={[
+                    styles.resultItem,
+                    { borderColor: accentColor, borderWidth: 1, backgroundColor: cardBg },
+                  ]}
+                >
+                  <ThemedText
                     style={[styles.resultValue, { color: accentColor }]}
                     fontFamily="Inter-Bold"
                   >
                     {calculatedValues.hydration}ml
                   </ThemedText>
-                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}> 
+                  <ThemedText style={[styles.resultLabel, { color: accentColor }]}>
                     Hidratação
                   </ThemedText>
-                  <ThemedText style={styles.resultDescription}>
-                    Durante o treino
-                  </ThemedText>
+                  <ThemedText style={styles.resultDescription}>Durante o treino</ThemedText>
                 </View>
               </View>
-              
-              <ThemedText style={[styles.note, { color: accentColor }]}> 
-                Estas recomendações são baseadas no seu peso ({profile.weight}kg), gênero, duração, intensidade do treino e temperatura ambiente. Ajuste conforme suas necessidades pessoais.
+
+              <ThemedText style={[styles.note, { color: accentColor }]}>
+                Estas recomendações são baseadas no seu peso ({profile.weight}kg), gênero, duração,
+                intensidade do treino e temperatura ambiente. Ajuste conforme suas necessidades
+                pessoais.
               </ThemedText>
 
-              <View style={{ alignItems: 'center', marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.1)' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginTop: 16,
+                  paddingTop: 16,
+                  borderTopWidth: 1,
+                  borderTopColor: 'rgba(0,0,0,0.1)',
+                }}
+              >
                 <TouchableOpacity
                   style={[styles.sourcesButton, { borderColor: accentColor }]}
                   onPress={() => setShowSources(true)}
                 >
-                  <ThemedText style={[styles.sourcesButtonText, { color: accentColor }]}>ℹ️ Fontes</ThemedText>
+                  <ThemedText style={[styles.sourcesButtonText, { color: accentColor }]}>
+                    ℹ️ Fontes
+                  </ThemedText>
                 </TouchableOpacity>
               </View>
             </View>
           )}
         </ScrollView>
-        
+
         <Modal
           visible={showSources}
           animationType="slide"
@@ -390,9 +428,7 @@ export default function NutritionScreen() {
                 style={[styles.closeButton, { borderColor: accentColor }]}
                 onPress={() => setShowSources(false)}
               >
-                <ThemedText style={[styles.closeButtonText, { color: accentColor }]}>
-                  ✕
-                </ThemedText>
+                <ThemedText style={[styles.closeButtonText, { color: accentColor }]}>✕</ThemedText>
               </TouchableOpacity>
             </View>
             <ScrollView

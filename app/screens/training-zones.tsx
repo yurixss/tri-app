@@ -28,7 +28,7 @@ export default function TrainingZonesScreen() {
   useFocusEffect(
     React.useCallback(() => {
       loadTestResults();
-    }, [])
+    }, []),
   );
 
   const loadTestResults = async () => {
@@ -48,74 +48,76 @@ export default function TrainingZonesScreen() {
     setTestResults({});
   };
 
-  const navigateToTest = (screen: '/bike' | '/run' | '/swim' | '/heart-rate' | '/bike-race-predictor') => {
+  const navigateToTest = (
+    screen: '/bike' | '/run' | '/swim' | '/heart-rate' | '/bike-race-predictor',
+  ) => {
     router.push(`/screens${screen}`);
   };
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Zonas de Treino"
-        onBackPress={handleBack}
-      />
-      
-      <ScrollView 
+      <Header title="Zonas de Treino" onBackPress={handleBack} />
+
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <SportCard
-            title="Ciclismo"
-            color={Colors.shared.bike}
-            description="Calcular zonas de potência com base no seu FTP"
-            testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
-            testDate={testResults.bike?.date}
-            onPress={() => navigateToTest('/bike')}
-            backgroundColor={cardBg}
-            borderColor={borderColor}
-          />
-          
-          <SportCard
-            title="Corrida"
-            color={Colors.shared.run}
-            description="Calcular zonas de ritmo com base no teste de 3km ou 5km"
-            testData={testResults.run 
+          title="Ciclismo"
+          color={Colors.shared.bike}
+          description="Calcular zonas de potência com base no seu FTP"
+          testData={testResults.bike ? `FTP: ${testResults.bike.ftp} watts` : undefined}
+          testDate={testResults.bike?.date}
+          onPress={() => navigateToTest('/bike')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
+
+        <SportCard
+          title="Corrida"
+          color={Colors.shared.run}
+          description="Calcular zonas de ritmo com base no teste de 3km ou 5km"
+          testData={
+            testResults.run
               ? `${testResults.run.testType}: ${formatTimeFromSeconds(testResults.run.testTime)}`
               : undefined
-            }
-            testDate={testResults.run?.date}
-            onPress={() => navigateToTest('/run')}
-            backgroundColor={cardBg}
-            borderColor={borderColor}
-          />
-          
-          <SportCard
-            title="Natação"
-            color={Colors.shared.swim}
-            description="Calcular zonas de ritmo com base no teste de 400m"
-            testData={testResults.swim 
-              ? `${testResults.swim.testType}: ${formatTimeFromSeconds(testResults.swim.testTime)}` 
-              : undefined
-            }
-            testDate={testResults.swim?.date}
-            onPress={() => navigateToTest('/swim')}
-            backgroundColor={cardBg}
-            borderColor={borderColor}
-          />
+          }
+          testDate={testResults.run?.date}
+          onPress={() => navigateToTest('/run')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
 
-          <SportCard
-            title="Frequência Cardíaca"
-            color="#EF4444"
-            description="Calcular zonas de frequência cardíaca (Karvonen)"
-            testData={testResults.heartRate 
+        <SportCard
+          title="Natação"
+          color={Colors.shared.swim}
+          description="Calcular zonas de ritmo com base no teste de 400m"
+          testData={
+            testResults.swim
+              ? `${testResults.swim.testType}: ${formatTimeFromSeconds(testResults.swim.testTime)}`
+              : undefined
+          }
+          testDate={testResults.swim?.date}
+          onPress={() => navigateToTest('/swim')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
+
+        <SportCard
+          title="Frequência Cardíaca"
+          color="#EF4444"
+          description="Calcular zonas de frequência cardíaca (Karvonen)"
+          testData={
+            testResults.heartRate
               ? `FC Máx: ${testResults.heartRate.maxHR} bpm | Repouso: ${testResults.heartRate.restingHR} bpm`
               : undefined
-            }
-            testDate={testResults.heartRate?.date}
-            onPress={() => navigateToTest('/heart-rate')}
-            backgroundColor={cardBg}
-            borderColor={borderColor}
-          />
+          }
+          testDate={testResults.heartRate?.date}
+          onPress={() => navigateToTest('/heart-rate')}
+          backgroundColor={cardBg}
+          borderColor={borderColor}
+        />
       </ScrollView>
     </ThemedView>
   );
@@ -132,72 +134,58 @@ interface SportCardProps {
   borderColor: string;
 }
 
-function SportCard({ 
-  title, 
-  color, 
-  description, 
-  testData, 
+function SportCard({
+  title,
+  color,
+  description,
+  testData,
   testDate,
   onPress,
   backgroundColor,
-  borderColor
+  borderColor,
 }: SportCardProps) {
-  const formattedDate = testDate 
-    ? new Date(testDate).toLocaleDateString(undefined, { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+  const formattedDate = testDate
+    ? new Date(testDate).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
       })
     : null;
 
   return (
-    <View 
+    <View
       style={[
-        styles.card, 
-        { 
+        styles.card,
+        {
           backgroundColor,
           borderLeftColor: color,
           borderLeftWidth: 4,
           borderColor: borderColor,
           borderWidth: 1,
-        }
+        },
       ]}
     >
       <View style={styles.cardContent}>
-        <ThemedText 
-          style={[styles.cardTitle, { color }]}
-          fontFamily="Inter-Bold"
-        >
+        <ThemedText style={[styles.cardTitle, { color }]} fontFamily="Inter-Bold">
           {title}
         </ThemedText>
-        
-        <ThemedText style={styles.cardDescription}>
-          {description}
-        </ThemedText>
-        
+
+        <ThemedText style={styles.cardDescription}>{description}</ThemedText>
+
         {testData && (
           <View style={styles.testDataContainer}>
-            <ThemedText 
-              style={styles.testData}
-              fontFamily="Inter-Medium"
-            >
+            <ThemedText style={styles.testData} fontFamily="Inter-Medium">
               {testData}
             </ThemedText>
-            
+
             {formattedDate && (
-              <ThemedText style={styles.testDate}>
-                Última atualização: {formattedDate}
-              </ThemedText>
+              <ThemedText style={styles.testDate}>Última atualização: {formattedDate}</ThemedText>
             )}
           </View>
         )}
       </View>
-      
-      <ThemedButton 
-        title={testData ? "Atualizar" : "Calcular"}
-        color={color}
-        onPress={onPress}
-      />
+
+      <ThemedButton title={testData ? 'Atualizar' : 'Calcular'} color={color} onPress={onPress} />
     </View>
   );
 }

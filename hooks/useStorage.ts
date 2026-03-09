@@ -10,7 +10,9 @@ export async function saveTestResults(results: TestResults): Promise<void> {
   // directly from the user's profile object used by the app.
   const existingProfile = await getProfile();
   if (existingProfile) {
-    const updatedProfile = { ...existingProfile, tests: results } as Profile & { tests?: TestResults };
+    const updatedProfile = { ...existingProfile, tests: results } as Profile & {
+      tests?: TestResults;
+    };
     try {
       await saveProfile(updatedProfile);
     } catch (e) {
@@ -22,7 +24,7 @@ export async function saveTestResults(results: TestResults): Promise<void> {
 export async function getTestResults(): Promise<TestResults> {
   const data = await getValue('testResults');
   if (!data) return {};
-  
+
   try {
     return JSON.parse(data) as TestResults;
   } catch (e) {
@@ -39,9 +41,9 @@ export async function saveBikeTest(testType: '20min' | '60min', ftp: number): Pr
       testType,
       ftp,
       date: new Date().toISOString(),
-    }
+    },
   };
-  
+
   await saveTestResults(updatedData);
 }
 
@@ -53,9 +55,9 @@ export async function saveRunTest(testType: '3km' | '5km', testTime: number): Pr
       testType,
       testTime,
       date: new Date().toISOString(),
-    }
+    },
   };
-  
+
   await saveTestResults(updatedData);
 }
 
@@ -67,9 +69,9 @@ export async function saveSwimTest(testType: '200m' | '400m', testTime: number):
       testType,
       testTime,
       date: new Date().toISOString(),
-    }
+    },
   };
-  
+
   await saveTestResults(updatedData);
 }
 
@@ -81,9 +83,9 @@ export async function saveHeartRateTest(maxHR: number, restingHR: number): Promi
       maxHR,
       restingHR,
       date: new Date().toISOString(),
-    }
+    },
   };
-  
+
   await saveTestResults(updatedData);
 }
 
@@ -92,7 +94,7 @@ async function saveValue(key: string, value: string): Promise<void> {
     webStorage.set(key, value);
     return;
   }
-  
+
   await SecureStore.setItemAsync(key, value);
 }
 
@@ -101,7 +103,7 @@ async function getValue(key: string): Promise<string | null> {
     const value = webStorage.get(key);
     return value || null;
   }
-  
+
   return await SecureStore.getItemAsync(key);
 }
 
@@ -110,7 +112,7 @@ async function deleteValue(key: string): Promise<void> {
     webStorage.delete(key);
     return;
   }
-  
+
   await SecureStore.deleteItemAsync(key);
 }
 
@@ -152,7 +154,7 @@ export async function saveOnboardingData(data: Partial<OnboardingData>): Promise
 export async function getOnboardingData(): Promise<OnboardingData | null> {
   const data = await getValue('onboardingData');
   if (!data) return null;
-  
+
   try {
     return JSON.parse(data) as OnboardingData;
   } catch (e) {
@@ -168,7 +170,7 @@ export async function saveProfile(profile: Profile): Promise<void> {
 export async function getProfile(): Promise<Profile | null> {
   const data = await getValue('userProfile');
   if (!data) return null;
-  
+
   try {
     return JSON.parse(data) as Profile;
   } catch (e) {
@@ -243,7 +245,7 @@ export async function saveTriathlonPrediction(prediction: SavedTriathlonPredicti
 export async function getTriathlonPrediction(): Promise<SavedTriathlonPrediction | null> {
   const data = await getValue('lastTriathlonPrediction');
   if (!data) return null;
-  
+
   try {
     return JSON.parse(data) as SavedTriathlonPrediction;
   } catch (e) {
@@ -259,7 +261,7 @@ export async function saveBikePrediction(prediction: SavedBikePrediction): Promi
 export async function getBikePrediction(): Promise<SavedBikePrediction | null> {
   const data = await getValue('lastBikePrediction');
   if (!data) return null;
-  
+
   try {
     return JSON.parse(data) as SavedBikePrediction;
   } catch (e) {
@@ -278,7 +280,7 @@ export default {
   getProfile,
   getTestResults,
   saveTestResults,
-  saveBikeTest, 
+  saveBikeTest,
   saveRunTest,
   saveSwimTest,
   saveHeartRateTest,
@@ -286,5 +288,5 @@ export default {
   getTriathlonPrediction,
   saveBikePrediction,
   getBikePrediction,
-  deleteAllData
+  deleteAllData,
 };

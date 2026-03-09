@@ -1,12 +1,12 @@
 /**
  * Catálogo de Produtos de Triathlon (Afiliados)
- * 
+ *
  * Produtos recomendados com links de afiliado para plataformas externas
  */
 
-export type ProductCategory = 
+export type ProductCategory =
   | 'natacao'
-  | 'ciclismo' 
+  | 'ciclismo'
   | 'corrida'
   | 'nutricao'
   | 'recuperacao'
@@ -28,48 +28,54 @@ export interface Product {
   whenToUse?: string;
 }
 
-export const PRODUCT_CATEGORY_CONFIG: Record<ProductCategory, { 
-  label: string; 
-  color: string; 
-  emoji: string;
-}> = {
-  natacao: { 
-    label: 'Natação', 
-    color: '#0EA5E9', 
+export const PRODUCT_CATEGORY_CONFIG: Record<
+  ProductCategory,
+  {
+    label: string;
+    color: string;
+    emoji: string;
+  }
+> = {
+  natacao: {
+    label: 'Natação',
+    color: '#0EA5E9',
     emoji: '🏊',
   },
-  ciclismo: { 
-    label: 'Ciclismo', 
-    color: '#F97316', 
+  ciclismo: {
+    label: 'Ciclismo',
+    color: '#F97316',
     emoji: '🚴',
   },
-  corrida: { 
-    label: 'Corrida', 
-    color: '#EF4444', 
+  corrida: {
+    label: 'Corrida',
+    color: '#EF4444',
     emoji: '🏃',
   },
-  nutricao: { 
-    label: 'Nutrição', 
-    color: '#10B981', 
+  nutricao: {
+    label: 'Nutrição',
+    color: '#10B981',
     emoji: '🍎',
   },
-  recuperacao: { 
-    label: 'Recuperação', 
-    color: '#8B5CF6', 
+  recuperacao: {
+    label: 'Recuperação',
+    color: '#8B5CF6',
     emoji: '💆',
   },
-  tecnologia: { 
-    label: 'Tecnologia', 
-    color: '#6B7280', 
+  tecnologia: {
+    label: 'Tecnologia',
+    color: '#6B7280',
     emoji: '⌚',
   },
 };
 
-export const STORE_CONFIG: Record<AffiliateStore, {
-  name: string;
-  color: string;
-  icon: string;
-}> = {
+export const STORE_CONFIG: Record<
+  AffiliateStore,
+  {
+    name: string;
+    color: string;
+    icon: string;
+  }
+> = {
   shopee: { name: 'Shopee', color: '#EE4D2D', icon: 'cart' },
   amazon: { name: 'Amazon', color: '#FF9900', icon: 'logo-amazon' },
   mercadolivre: { name: 'Mercado Livre', color: '#FFE600', icon: 'storefront' },
@@ -91,8 +97,8 @@ export const PRODUCTS: Product[] = [
       'Silicone premium',
       'Design 3D ergonômico',
       'Reduz pressão na cabeça',
-      'Alta durabilidade'
-    ]
+      'Alta durabilidade',
+    ],
   },
 
   // CICLISMO
@@ -100,7 +106,8 @@ export const PRODUCTS: Product[] = [
     id: 'capacete-giro-aether',
     name: 'Capacete Super Aero Giro',
     category: 'ciclismo',
-    description: 'Capacete super aerodinâmico Giro com tecnologia MIPS de proteção contra impacto rotacional.',
+    description:
+      'Capacete super aerodinâmico Giro com tecnologia MIPS de proteção contra impacto rotacional.',
     image: 'https://m.media-amazon.com/images/I/71r1GYsnxQL._AC_SL1500_.jpg',
     price: 'R$ 1.299,90',
     rating: 4.9,
@@ -110,9 +117,9 @@ export const PRODUCTS: Product[] = [
       'Sistema MIPS de segurança',
       'Ventilação otimizada',
       'Peso de apenas 250g',
-      'Design aerodinâmico'
+      'Design aerodinâmico',
     ],
-    whenToUse: 'Treinos longos e provas de triathlon'
+    whenToUse: 'Treinos longos e provas de triathlon',
   },
 
   // CORRIDA
@@ -120,7 +127,8 @@ export const PRODUCTS: Product[] = [
     id: 'adidas-adios-pro-4',
     name: 'Adidas Adios Pro 4 com Placa de Carbono',
     category: 'corrida',
-    description: 'Tênis de alta performance com placa de carbono EnergyRods 2.0 para máximo retorno de energia.',
+    description:
+      'Tênis de alta performance com placa de carbono EnergyRods 2.0 para máximo retorno de energia.',
     image: 'https://m.media-amazon.com/images/I/71bQ-GZRXUL._AC_SL1500_.jpg',
     price: 'R$ 1.499,90',
     rating: 4.8,
@@ -130,9 +138,9 @@ export const PRODUCTS: Product[] = [
       'Placa de carbono EnergyRods 2.0',
       'Espuma Lightstrike Pro',
       'Drop 6.5mm',
-      'Ultraleve'
+      'Ultraleve',
     ],
-    whenToUse: 'Provas e treinos de qualidade'
+    whenToUse: 'Provas e treinos de qualidade',
   },
 
   // NUTRIÇÃO
@@ -140,7 +148,8 @@ export const PRODUCTS: Product[] = [
     id: 'gel-226ers-high-energy',
     name: 'Gel 10 Sachês 226ERS',
     category: 'nutricao',
-    description: 'Gel energético com 50g de carboidratos de múltiplas fontes e eletrólitos. Pack com 10 sachês.',
+    description:
+      'Gel energético com 50g de carboidratos de múltiplas fontes e eletrólitos. Pack com 10 sachês.',
     image: 'https://m.media-amazon.com/images/I/61bK-u3MHQL._AC_SL1200_.jpg',
     price: 'R$ 89,90',
     rating: 4.7,
@@ -150,9 +159,9 @@ export const PRODUCTS: Product[] = [
       '50g de carboidratos',
       'Ciclodextrina + frutose',
       'Cafeína 50mg (opcional)',
-      'Sódio 125mg'
+      'Sódio 125mg',
     ],
-    whenToUse: 'Durante provas e treinos longos, a cada 45-60min'
+    whenToUse: 'Durante provas e treinos longos, a cada 45-60min',
   },
   {
     id: 'whey-optimum-nutrition',
@@ -164,12 +173,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.8,
     store: 'amazon',
     affiliateLink: 'https://amazon.com.br',
-    features: [
-      '24g de proteína por dose',
-      '5.5g de BCAA',
-      'Rápida absorção',
-      'Baixo carboidrato'
-    ]
+    features: ['24g de proteína por dose', '5.5g de BCAA', 'Rápida absorção', 'Baixo carboidrato'],
   },
 
   // RECUPERAÇÃO
@@ -187,9 +191,9 @@ export const PRODUCTS: Product[] = [
       'Material EVA de alta densidade',
       'Superfície texturizada',
       'Tamanho 33cm x 14cm',
-      'Suporta até 150kg'
+      'Suporta até 150kg',
     ],
-    whenToUse: 'Pós-treino e dias de recuperação'
+    whenToUse: 'Pós-treino e dias de recuperação',
   },
   {
     id: 'pistola-massagem-hyperice',
@@ -205,8 +209,8 @@ export const PRODUCTS: Product[] = [
       '3 velocidades ajustáveis',
       'Motor QuietGlide',
       '5 cabeças intercambiáveis',
-      'Bateria de 3 horas'
-    ]
+      'Bateria de 3 horas',
+    ],
   },
 
   // TECNOLOGIA
@@ -220,13 +224,8 @@ export const PRODUCTS: Product[] = [
     rating: 4.9,
     store: 'amazon',
     affiliateLink: 'https://amzn.to/3ZC14OV',
-    features: [
-      'Tela AMOLED 1.4"',
-      'GPS multibanda',
-      'Training Readiness',
-      'Autonomia 23 dias'
-    ],
-    whenToUse: 'Todos os treinos e provas'
+    features: ['Tela AMOLED 1.4"', 'GPS multibanda', 'Training Readiness', 'Autonomia 23 dias'],
+    whenToUse: 'Todos os treinos e provas',
   },
   {
     id: 'garmin-forerunner-165',
@@ -242,9 +241,9 @@ export const PRODUCTS: Product[] = [
       'Tela AMOLED colorida',
       'GPS de alta precisão',
       'Métricas de treino essenciais',
-      'Autonomia de 11 dias'
+      'Autonomia de 11 dias',
     ],
-    whenToUse: 'Treinos diários e provas — ótimo para iniciantes'
+    whenToUse: 'Treinos diários e provas — ótimo para iniciantes',
   },
 
   // TRANSIÇÃO
@@ -258,13 +257,8 @@ export const PRODUCTS: Product[] = [
     rating: 4.6,
     store: 'amazon',
     affiliateLink: 'https://amzn.to/4aOhoCn',
-    features: [
-      'Calçamento instantâneo',
-      'Trava segura',
-      'Tensão uniforme',
-      'Kit com 2 pares'
-    ],
-    whenToUse: 'Transição T2 — elimina amarração convencional'
+    features: ['Calçamento instantâneo', 'Trava segura', 'Tensão uniforme', 'Kit com 2 pares'],
+    whenToUse: 'Transição T2 — elimina amarração convencional',
   },
   {
     id: 'porta-numero-corrida',
@@ -276,13 +270,8 @@ export const PRODUCTS: Product[] = [
     rating: 4.4,
     store: 'amazon',
     affiliateLink: 'https://amzn.to/4kzE4d2',
-    features: [
-      'Elástico ajustável',
-      'Presilhas rápidas',
-      'Giro 360°',
-      'Elimina uso de alfinetes'
-    ],
-    whenToUse: 'Provas de triathlon e corrida de rua'
+    features: ['Elástico ajustável', 'Presilhas rápidas', 'Giro 360°', 'Elimina uso de alfinetes'],
+    whenToUse: 'Provas de triathlon e corrida de rua',
   },
   {
     id: 'cafeina-capsulas-dux',
@@ -294,20 +283,15 @@ export const PRODUCTS: Product[] = [
     rating: 4.4,
     store: 'amazon',
     affiliateLink: 'https://amzn.to/3OFxcPd',
-    features: [
-      '200mg por cápsula',
-      'Liberação rápida',
-      '60 cápsulas',
-      'DUX Nutrition'
-    ],
-    whenToUse: '45-60min antes da prova para boost ergogênico'
+    features: ['200mg por cápsula', 'Liberação rápida', '60 cápsulas', 'DUX Nutrition'],
+    whenToUse: '45-60min antes da prova para boost ergogênico',
   },
 ];
 
 export function getProductById(id: string): Product | undefined {
-  return PRODUCTS.find(p => p.id === id);
+  return PRODUCTS.find((p) => p.id === id);
 }
 
 export function getProductsByCategory(category: ProductCategory): Product[] {
-  return PRODUCTS.filter(p => p.category === category);
+  return PRODUCTS.filter((p) => p.category === category);
 }

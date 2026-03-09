@@ -44,7 +44,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
 
     load();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -59,7 +61,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     persist();
   }, [choice]);
 
-  const colorScheme: 'light' | 'dark' = choice === 'system' ? (system === 'dark' ? 'dark' : 'light') : choice;
+  const colorScheme: 'light' | 'dark' =
+    choice === 'system' ? (system === 'dark' ? 'dark' : 'light') : choice;
   const colors = Colors[colorScheme];
 
   const value: ThemeContextValue = {

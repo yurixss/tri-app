@@ -18,20 +18,20 @@ export default function PersonalInfo() {
     weight?: string;
     height?: string;
   }>({});
-  
+
   const router = useRouter();
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-    
+
     if (!weight || isNaN(Number(weight)) || Number(weight) <= 0) {
       newErrors.weight = 'Por favor, insira um peso válido';
     }
-    
+
     if (!height || isNaN(Number(height)) || Number(height) <= 0) {
       newErrors.height = 'Por favor, insira uma altura válida';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -63,10 +63,8 @@ export default function PersonalInfo() {
           <ThemedText style={styles.title} fontFamily="Inter-Bold">
             Informações Pessoais
           </ThemedText>
-          
-          <ThemedText style={styles.subtitle}>
-            Ajude-nos a personalizar sua experiência
-          </ThemedText>
+
+          <ThemedText style={styles.subtitle}>Ajude-nos a personalizar sua experiência</ThemedText>
 
           <View style={styles.form}>
             <ThemedInput
@@ -100,11 +98,7 @@ export default function PersonalInfo() {
         </View>
       </ScrollView>
 
-      <ThemedButton
-        title="Continuar"
-        color={Colors.shared.primary}
-        onPress={handleContinue}
-      />
+      <ThemedButton title="Continuar" color={Colors.shared.primary} onPress={handleContinue} />
 
       <Pressable style={styles.skipButton} onPress={handleSkip}>
         <ThemedText style={styles.skipButtonText}>Pular Etapa</ThemedText>

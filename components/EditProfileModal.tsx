@@ -78,8 +78,10 @@ export function EditProfileModal({
     const newErrors: Record<string, string> = {};
     if (!draft.name?.trim()) newErrors.name = 'Nome é obrigatório';
     if (!draft.age || isNaN(Number(draft.age))) newErrors.age = 'Idade válida é obrigatória';
-    if (!draft.height || isNaN(Number(draft.height))) newErrors.height = 'Altura válida é obrigatória';
-    if (!draft.weight || isNaN(Number(draft.weight))) newErrors.weight = 'Peso válido é obrigatório';
+    if (!draft.height || isNaN(Number(draft.height)))
+      newErrors.height = 'Altura válida é obrigatória';
+    if (!draft.weight || isNaN(Number(draft.weight)))
+      newErrors.weight = 'Peso válido é obrigatório';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -99,7 +101,7 @@ export function EditProfileModal({
     if (cleaned.length > 4) {
       formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4) + '/' + cleaned.slice(4, 8);
     }
-    setDraft(prev => ({ ...prev, raceDate: formatted }));
+    setDraft((prev) => ({ ...prev, raceDate: formatted }));
   };
 
   return (
@@ -123,7 +125,11 @@ export function EditProfileModal({
           <ThemedText style={styles.modalTitle} fontFamily="Inter-Bold">
             Editar Perfil
           </ThemedText>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={styles.closeButton}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
             <X size={24} color={textColor} weight="bold" />
           </TouchableOpacity>
         </View>
@@ -142,7 +148,7 @@ export function EditProfileModal({
           <ThemedInput
             label="Nome"
             value={draft.name}
-            onChangeText={(text) => setDraft(prev => ({ ...prev, name: text }))}
+            onChangeText={(text) => setDraft((prev) => ({ ...prev, name: text }))}
             placeholder="Seu nome"
             error={errors.name}
           />
@@ -152,7 +158,7 @@ export function EditProfileModal({
               <ThemedInput
                 label="Idade"
                 value={draft.age}
-                onChangeText={(text) => setDraft(prev => ({ ...prev, age: text }))}
+                onChangeText={(text) => setDraft((prev) => ({ ...prev, age: text }))}
                 placeholder="25"
                 keyboardType="numeric"
                 error={errors.age}
@@ -167,7 +173,9 @@ export function EditProfileModal({
                 ]}
                 color={Colors.shared.primary}
                 selectedValue={draft.gender}
-                onValueChange={(value) => setDraft(prev => ({ ...prev, gender: value as 'male' | 'female' }))}
+                onValueChange={(value) =>
+                  setDraft((prev) => ({ ...prev, gender: value as 'male' | 'female' }))
+                }
                 horizontal
               />
             </View>
@@ -178,7 +186,7 @@ export function EditProfileModal({
               <ThemedInput
                 label="Altura (cm)"
                 value={draft.height}
-                onChangeText={(text) => setDraft(prev => ({ ...prev, height: text }))}
+                onChangeText={(text) => setDraft((prev) => ({ ...prev, height: text }))}
                 placeholder="175"
                 keyboardType="numeric"
                 error={errors.height}
@@ -188,7 +196,7 @@ export function EditProfileModal({
               <ThemedInput
                 label="Peso (kg)"
                 value={draft.weight}
-                onChangeText={(text) => setDraft(prev => ({ ...prev, weight: text }))}
+                onChangeText={(text) => setDraft((prev) => ({ ...prev, weight: text }))}
                 placeholder="70"
                 keyboardType="numeric"
                 error={errors.weight}
@@ -201,7 +209,7 @@ export function EditProfileModal({
             options={EXPERIENCE_OPTIONS}
             selectedValue={draft.experience}
             onValueChange={(value) =>
-              setDraft(prev => ({
+              setDraft((prev) => ({
                 ...prev,
                 experience: value as 'beginner' | 'intermediate' | 'advanced',
               }))
@@ -216,14 +224,14 @@ export function EditProfileModal({
           <ThemedInput
             label="Modelo da Bicicleta"
             value={draft.bikeModel || ''}
-            onChangeText={(text) => setDraft(prev => ({ ...prev, bikeModel: text }))}
+            onChangeText={(text) => setDraft((prev) => ({ ...prev, bikeModel: text }))}
             placeholder="Ex: Trek Speedconcept"
           />
 
           <ThemedInput
             label="Peso Bicicleta (kg)"
             value={draft.bikeWeight || ''}
-            onChangeText={(text) => setDraft(prev => ({ ...prev, bikeWeight: text }))}
+            onChangeText={(text) => setDraft((prev) => ({ ...prev, bikeWeight: text }))}
             placeholder="6.8"
             keyboardType="decimal-pad"
           />
@@ -237,7 +245,7 @@ export function EditProfileModal({
             label="Distância Alvo"
             options={GOAL_OPTIONS}
             selectedValue={draft.trainingGoal}
-            onValueChange={(value) => setDraft(prev => ({ ...prev, trainingGoal: value }))}
+            onValueChange={(value) => setDraft((prev) => ({ ...prev, trainingGoal: value }))}
           />
 
           <ThemedInput
@@ -251,10 +259,7 @@ export function EditProfileModal({
 
           {/* Actions */}
           <View style={styles.actionRow}>
-            <TouchableOpacity
-              style={[styles.cancelButton, { borderColor }]}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={[styles.cancelButton, { borderColor }]} onPress={onClose}>
               <ThemedText style={styles.cancelText} fontFamily="Inter-Medium">
                 Cancelar
               </ThemedText>

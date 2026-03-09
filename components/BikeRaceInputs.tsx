@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedButton } from '@/components/ThemedButton';
@@ -47,9 +41,7 @@ export function NumericInput({
   return (
     <View style={styles.inputContainer}>
       <ThemedText style={styles.label}>{label}</ThemedText>
-      {description && (
-        <ThemedText style={styles.description}>{description}</ThemedText>
-      )}
+      {description && <ThemedText style={styles.description}>{description}</ThemedText>}
       <View style={[styles.inputWrapper, { borderColor }]}>
         <TextInput
           style={[styles.input, { color: textColor }]}
@@ -111,20 +103,11 @@ export function SliderInput({
   return (
     <View style={styles.sliderContainer}>
       <ThemedText style={styles.label}>{label}</ThemedText>
-      {description && (
-        <ThemedText style={styles.description}>{description}</ThemedText>
-      )}
+      {description && <ThemedText style={styles.description}>{description}</ThemedText>}
 
       <View style={styles.sliderBar}>
-        <View
-          style={[
-            styles.sliderFill,
-            { width: `${percentage}%`, backgroundColor: color },
-          ]}
-        >
-          {zoneText && (
-            <ThemedText style={styles.zoneTextInSlider}>{zoneText}</ThemedText>
-          )}
+        <View style={[styles.sliderFill, { width: `${percentage}%`, backgroundColor: color }]}>
+          {zoneText && <ThemedText style={styles.zoneTextInSlider}>{zoneText}</ThemedText>}
         </View>
       </View>
 
@@ -166,11 +149,7 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
     onSegmentsChange(segments.filter((_, i) => i !== index));
   };
 
-  const updateSegment = (
-    index: number,
-    field: 'distance' | 'gradient',
-    value: string
-  ) => {
+  const updateSegment = (index: number, field: 'distance' | 'gradient', value: string) => {
     const numValue = parseFloat(value) || 0;
     const newSegments = [...segments];
     newSegments[index][field] = numValue;
@@ -186,24 +165,12 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
 
       <ScrollView style={styles.segmentList} showsVerticalScrollIndicator={false}>
         {segments.map((segment, index) => (
-          <View
-            key={index}
-            style={[styles.segmentCard, { borderColor }]}
-          >
+          <View key={index} style={[styles.segmentCard, { borderColor }]}>
             <View style={styles.segmentHeader}>
-              <ThemedText style={styles.segmentIndex}>
-                Segmento {index + 1}
-              </ThemedText>
+              <ThemedText style={styles.segmentIndex}>Segmento {index + 1}</ThemedText>
               {segments.length > 1 && (
-                <TouchableOpacity
-                  onPress={() => removeSegment(index)}
-                  style={styles.deleteButton}
-                >
-                  <Trash
-                    size={20}
-                    color={Colors.shared.run}
-                    weight="bold"
-                  />
+                <TouchableOpacity onPress={() => removeSegment(index)} style={styles.deleteButton}>
+                  <Trash size={20} color={Colors.shared.run} weight="bold" />
                 </TouchableOpacity>
               )}
             </View>
@@ -214,9 +181,7 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
                 <TextInput
                   style={[styles.segmentTextField, { color: textColor }]}
                   value={segment.distance.toString()}
-                  onChangeText={(text) =>
-                    updateSegment(index, 'distance', text)
-                  }
+                  onChangeText={(text) => updateSegment(index, 'distance', text)}
                   placeholder="0"
                   placeholderTextColor={textColor + '80'}
                   keyboardType="decimal-pad"
@@ -228,9 +193,7 @@ export function SegmentEditor({ segments, onSegmentsChange }: SegmentEditorProps
                 <TextInput
                   style={[styles.segmentTextField, { color: textColor }]}
                   value={segment.gradient.toString()}
-                  onChangeText={(text) =>
-                    updateSegment(index, 'gradient', text)
-                  }
+                  onChangeText={(text) => updateSegment(index, 'gradient', text)}
                   placeholder="0"
                   placeholderTextColor={textColor + '80'}
                   keyboardType="decimal-pad"
@@ -272,9 +235,7 @@ export function AdvancedSettings({
   const temperature = conditions.temperature ?? DEFAULT_CONDITIONS.temperature;
   const altitude = conditions.altitude ?? DEFAULT_CONDITIONS.altitude;
   const wind = conditions.wind ?? DEFAULT_CONDITIONS.wind;
-  const efficiency =
-    conditions.transmissionEfficiency ??
-    DEFAULT_CONDITIONS.transmissionEfficiency;
+  const efficiency = conditions.transmissionEfficiency ?? DEFAULT_CONDITIONS.transmissionEfficiency;
 
   const handleCdaChange = (value: number) => {
     onConditionsChange({ ...conditions, cda: value });
@@ -305,10 +266,7 @@ export function AdvancedSettings({
 
   return (
     <View>
-      <TouchableOpacity
-        onPress={onToggleExpanded}
-        style={styles.advancedHeader}
-      >
+      <TouchableOpacity onPress={onToggleExpanded} style={styles.advancedHeader}>
         <ThemedText style={styles.advancedTitle}>Modo Avançado</ThemedText>
         {isExpanded ? (
           <CaretUp size={24} color={Colors.shared.bike} weight="bold" />

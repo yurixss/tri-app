@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, Stack, SplashScreen } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
-import { SplashScreen } from 'expo-router';
 import useCachedResources from '@/hooks/useCachedResources';
 import { getOnboardingData } from '@/hooks/useStorage';
 import ThemeProvider, { useTheme } from '@/constants/Theme';

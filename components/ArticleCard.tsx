@@ -20,7 +20,7 @@ export function ArticleCard({ article, onPress }: ArticleCardProps) {
   const isDark = colorScheme === 'dark';
   const cardBg = useThemeColor({}, 'cardBackground');
   const borderColor = useThemeColor({}, 'border');
-  
+
   const categoryConfig = CATEGORY_CONFIG[article.category];
   const [isPressed, setIsPressed] = React.useState(false);
 
@@ -31,57 +31,43 @@ export function ArticleCard({ article, onPress }: ArticleCardProps) {
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
     >
-      <View 
+      <View
         style={[
           styles.card,
           {
-            backgroundColor: isPressed 
-              ? isDark ? Colors.shared.backgrounds.slateGray : Colors.shared.neutrals.gray100
+            backgroundColor: isPressed
+              ? isDark
+                ? Colors.shared.backgrounds.slateGray
+                : Colors.shared.neutrals.gray100
               : cardBg,
             borderColor: isPressed ? Colors.shared.primary : borderColor,
-          }
+          },
         ]}
       >
         {/* Header com categoria */}
         <View style={styles.header}>
-          <View 
-            style={[
-              styles.categoryBadge, 
-              { backgroundColor: categoryConfig.color + '15' }
-            ]}
-          >
-            <ThemedText style={styles.categoryEmoji}>
-              {categoryConfig.emoji}
-            </ThemedText>
-            <ThemedText 
+          <View style={[styles.categoryBadge, { backgroundColor: categoryConfig.color + '15' }]}>
+            <ThemedText style={styles.categoryEmoji}>{categoryConfig.emoji}</ThemedText>
+            <ThemedText
               style={[styles.categoryLabel, { color: categoryConfig.color }]}
               fontFamily="Inter-Medium"
             >
               {categoryConfig.label}
             </ThemedText>
           </View>
-          
+
           <View style={styles.readingTime}>
             <Clock size={12} color={isDark ? '#999' : '#666'} />
-            <ThemedText style={styles.readingTimeText}>
-              {article.readingTime} min
-            </ThemedText>
+            <ThemedText style={styles.readingTimeText}>{article.readingTime} min</ThemedText>
           </View>
         </View>
 
         {/* Conteúdo */}
-        <ThemedText 
-          style={styles.title}
-          fontFamily="Inter-Bold"
-          numberOfLines={2}
-        >
+        <ThemedText style={styles.title} fontFamily="Inter-Bold" numberOfLines={2}>
           {article.title}
         </ThemedText>
-        
-        <ThemedText 
-          style={styles.subtitle}
-          numberOfLines={2}
-        >
+
+        <ThemedText style={styles.subtitle} numberOfLines={2}>
           {article.subtitle}
         </ThemedText>
       </View>

@@ -29,7 +29,9 @@ function ExpandableSection({ title, time, color, factors, icon, pace }: Expandab
   const textColor = useThemeColor({}, 'text');
 
   return (
-    <View style={[styles.section, { backgroundColor: cardBg, borderColor, borderLeftColor: color }]}>
+    <View
+      style={[styles.section, { backgroundColor: cardBg, borderColor, borderLeftColor: color }]}
+    >
       <Pressable style={styles.sectionHeader} onPress={() => setExpanded(!expanded)}>
         <View style={styles.sectionLeft}>
           <ThemedText style={styles.sectionIcon}>{icon}</ThemedText>
@@ -49,11 +51,12 @@ function ExpandableSection({ title, time, color, factors, icon, pace }: Expandab
             </View>
           </View>
         </View>
-        {factors.length > 0 && (
-          expanded 
-            ? <CaretUp size={20} color={textColor} weight="regular" />
-            : <CaretDown size={20} color={textColor} weight="regular" />
-        )}
+        {factors.length > 0 &&
+          (expanded ? (
+            <CaretUp size={20} color={textColor} weight="regular" />
+          ) : (
+            <CaretDown size={20} color={textColor} weight="regular" />
+          ))}
       </Pressable>
 
       {expanded && factors.length > 0 && (
@@ -77,7 +80,9 @@ function TransitionSection({ label, time }: { label: string; time: string }) {
   return (
     <View style={[styles.transitionSection, { backgroundColor: cardBg, borderColor }]}>
       <ThemedText style={styles.transitionLabel}>{label}</ThemedText>
-      <ThemedText style={styles.transitionTime} fontFamily="Inter-Medium">{time}</ThemedText>
+      <ThemedText style={styles.transitionTime} fontFamily="Inter-Medium">
+        {time}
+      </ThemedText>
     </View>
   );
 }
@@ -92,10 +97,7 @@ export default function ResultStep() {
   if (!prediction) {
     return (
       <ThemedView style={styles.container}>
-        <Header 
-          title="Resultado"
-          onBackPress={() => router.back()}
-        />
+        <Header title="Resultado" onBackPress={() => router.back()} />
         <View style={styles.errorContainer}>
           <ThemedText style={styles.errorText}>
             Nenhum resultado disponível. Por favor, refaça o cálculo.
@@ -126,7 +128,7 @@ export default function ResultStep() {
 
   const calculateBikePace = () => {
     if (!prediction?.bike.timeSeconds || !data.bike?.distance) return undefined;
-    const avgSpeed = (data.bike.distance / (prediction.bike.timeSeconds / 3600));
+    const avgSpeed = data.bike.distance / (prediction.bike.timeSeconds / 3600);
     return `${avgSpeed.toFixed(1)} km/h`;
   };
 
@@ -154,25 +156,31 @@ export default function ResultStep() {
 
   const handleShare = async () => {
     if (!prediction) return;
-    
+
     setIsSharing(true);
     try {
       await shareTriathlonPredictionAsPdf({
         prediction,
         raceType,
-        swimData: data.swim ? {
-          waterType: data.swim.waterType,
-          wetsuit: data.swim.wetsuit,
-        } : undefined,
-        bikeData: data.bike ? {
-          ftp: data.bike.ftp,
-          ftpPercentage: data.bike.ftpPercentage,
-          distance: data.bike.distance,
-          elevation: data.bike.elevation,
-        } : undefined,
-        runData: data.run ? {
-          baseDistance: data.run.baseDistance,
-        } : undefined,
+        swimData: data.swim
+          ? {
+              waterType: data.swim.waterType,
+              wetsuit: data.swim.wetsuit,
+            }
+          : undefined,
+        bikeData: data.bike
+          ? {
+              ftp: data.bike.ftp,
+              ftpPercentage: data.bike.ftpPercentage,
+              distance: data.bike.distance,
+              elevation: data.bike.elevation,
+            }
+          : undefined,
+        runData: data.run
+          ? {
+              baseDistance: data.run.baseDistance,
+            }
+          : undefined,
       });
     } finally {
       setIsSharing(false);
@@ -181,14 +189,11 @@ export default function ResultStep() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header 
-        title="Previsão de Triathlon"
-        onBackPress={() => router.back()}
-      />
+      <Header title="Previsão de Triathlon" onBackPress={() => router.back()} />
 
       <WizardStepper currentStep={4} />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -199,9 +204,7 @@ export default function ResultStep() {
           <ThemedText style={styles.totalTime} fontFamily="Inter-Bold">
             {prediction.totalTimeFormatted}
           </ThemedText>
-          <ThemedText style={styles.totalRaceType}>
-            {getRaceTypeName(raceType)}
-          </ThemedText>
+          <ThemedText style={styles.totalRaceType}>{getRaceTypeName(raceType)}</ThemedText>
         </View>
 
         {/* Breakdown por modalidade */}
@@ -218,10 +221,7 @@ export default function ResultStep() {
           pace={swimPace}
         />
 
-        <TransitionSection 
-          label="T1 (Transição)" 
-          time={prediction.t1Formatted} 
-        />
+        <TransitionSection label="T1 (Transição)" time={prediction.t1Formatted} />
 
         <ExpandableSection
           icon="🚴"
@@ -232,10 +232,7 @@ export default function ResultStep() {
           pace={bikePace}
         />
 
-        <TransitionSection 
-          label="T2 (Transição)" 
-          time={prediction.t2Formatted} 
-        />
+        <TransitionSection label="T2 (Transição)" time={prediction.t2Formatted} />
 
         <ExpandableSection
           icon="🏃"
@@ -251,7 +248,7 @@ export default function ResultStep() {
           <ThemedText style={styles.summaryTitle} fontFamily="Inter-Bold">
             Resumo
           </ThemedText>
-          
+
           <View style={styles.summaryRow}>
             <ThemedText style={styles.summaryLabel}>Natação</ThemedText>
             <ThemedText style={styles.summaryValue} fontFamily="Inter-Medium">
@@ -286,7 +283,10 @@ export default function ResultStep() {
             <ThemedText style={styles.summaryTotalLabel} fontFamily="Inter-Bold">
               TOTAL
             </ThemedText>
-            <ThemedText style={[styles.summaryTotalValue, { color: Colors.shared.primary }]} fontFamily="Inter-Bold">
+            <ThemedText
+              style={[styles.summaryTotalValue, { color: Colors.shared.primary }]}
+              fontFamily="Inter-Bold"
+            >
               {prediction.totalTimeFormatted}
             </ThemedText>
           </View>
@@ -295,16 +295,15 @@ export default function ResultStep() {
         {/* Nota de calibração */}
         <View style={styles.disclaimerBox}>
           <ThemedText style={styles.disclaimerText}>
-            ⚠️ Esta é uma estimativa baseada em modelos matemáticos. 
-            O tempo real pode variar de acordo com condições de prova, 
-            estratégia de ritmo e outros fatores externos.
+            ⚠️ Esta é uma estimativa baseada em modelos matemáticos. O tempo real pode variar de
+            acordo com condições de prova, estratégia de ritmo e outros fatores externos.
           </ThemedText>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
         {/* Botão de compartilhar */}
-        <Pressable 
+        <Pressable
           style={[styles.shareButton, { backgroundColor: cardBg, borderColor }]}
           onPress={handleShare}
           disabled={isSharing}
@@ -314,7 +313,10 @@ export default function ResultStep() {
           ) : (
             <>
               <ShareNetwork size={20} color={Colors.shared.primary} weight="regular" />
-              <ThemedText style={[styles.shareButtonText, { color: Colors.shared.primary }]} fontFamily="Inter-Medium">
+              <ThemedText
+                style={[styles.shareButtonText, { color: Colors.shared.primary }]}
+                fontFamily="Inter-Medium"
+              >
                 Compartilhar PDF
               </ThemedText>
             </>
